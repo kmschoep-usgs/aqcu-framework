@@ -6,6 +6,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ### Added
-- Initial release - happy path.
+- Initial release.
 
-[Unreleased]: https://github.com/USGS-CIDA/aqcu-dv-hydro-report/compare/master...master
+[Unreleased]: https://github.com/USGS-CIDA/aqcu-framework/compare/master...master
