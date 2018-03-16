@@ -27,7 +27,7 @@ public class AquariusRetrievalService {
 	private String aquariusPassword;
 
 	protected <TResponse> TResponse executePublishApiRequest(IReturn<TResponse> request) throws AquariusException {
-		try (AquariusClient client = AquariusClient.createConnectedClient(aquariusUrl.replaceAll("/AQUARIUS/", ""), aquariusUser, aquariusPassword)) {
+		try (AquariusClient client = AquariusClient.createConnectedClient(aquariusUrl.replace("/AQUARIUS/", ""), aquariusUser, aquariusPassword)) {
 			return client.Publish.get(request);
 		} catch (WebServiceException e) {
 			String errorMessage = "A Web Service Exception occurred while executing a Publish API Request against Aquarius:\n{" +
