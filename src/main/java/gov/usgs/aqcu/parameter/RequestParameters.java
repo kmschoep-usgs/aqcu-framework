@@ -1,11 +1,16 @@
 package gov.usgs.aqcu.parameter;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import gov.usgs.aqcu.validation.ReportPeriodPresent;
@@ -31,6 +36,22 @@ public class RequestParameters {
 	@Min(value=1)
 	@Max(value=12)
 	private Integer lastMonths;
+
+	private Pair<Instant,Instant> reportPeriod;
+
+	public Instant getStartInstant() {
+		if (reportPeriod == null) {
+			determineReportPeriod();
+		}
+		return reportPeriod.getLeft();
+	}
+
+	public Instant getEndInstant() {
+		if (reportPeriod == null) {
+			determineReportPeriod();
+		}
+		return reportPeriod.getRight();
+	}
 
 	public String getPrimaryTimeseriesIdentifier() {
 		return primaryTimeseriesIdentifier;
@@ -61,6 +82,41 @@ public class RequestParameters {
 	}
 	public void setLastMonths(Integer lastMonths) {
 		this.lastMonths = lastMonths;
+	}
+
+	protected void determineReportPeriod() {
+		if (lastMonths != null) {
+			reportPeriod = lastMonthsToReportPeriod(lastMonths);
+		} else if (waterYear != null) {
+			reportPeriod = waterYearToReportPeriod(waterYear);
+		} else {
+			reportPeriod = new ImmutablePair<Instant,Instant>(dateToReportStartTime(startDate), dateToReportEndTime(endDate));
+		}
+	}
+
+	protected Pair<Instant,Instant> waterYearToReportPeriod(Integer waterYear) {
+		Instant reportStartTime = Instant.from(LocalDateTime.of(waterYear-1,10,1,0,0,0).toInstant(ZoneOffset.UTC));
+		Instant reportEndTime = Instant.from(LocalDateTime.of(waterYear,9,30,23,59,59,999999999).toInstant(ZoneOffset.UTC));
+
+		return new ImmutablePair<Instant,Instant>(reportStartTime, reportEndTime);
+	}
+
+	protected Pair<Instant,Instant> lastMonthsToReportPeriod(Integer lastMonths) {
+		LocalDate nowDate = LocalDate.now().minusMonths(lastMonths);
+		Instant reportStartTime = LocalDateTime.of(nowDate.getYear(), nowDate.getMonth(), 1, 0, 0, 0).toInstant(ZoneOffset.UTC);
+		Instant reportEndTime = LocalDate.now().atTime(23,59,59,999999999).toInstant(ZoneOffset.UTC);
+
+		return new ImmutablePair<Instant,Instant>(reportStartTime, reportEndTime);
+	}
+
+	protected Instant dateToReportStartTime(LocalDate startDate) {
+		Instant startTime = startDate.atStartOfDay().toInstant(ZoneOffset.UTC);
+		return startTime;
+	}
+
+	protected Instant dateToReportEndTime(LocalDate endDate) {
+		Instant endTime = endDate.atTime(23,59,59,999999999).toInstant(ZoneOffset.UTC);
+		return endTime;
 	}
 
 }

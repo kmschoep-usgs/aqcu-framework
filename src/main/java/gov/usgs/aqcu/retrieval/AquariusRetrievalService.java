@@ -3,6 +3,7 @@ package gov.usgs.aqcu.retrieval;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import com.aquaticinformatics.aquarius.sdk.timeseries.AquariusClient;
 
@@ -10,7 +11,8 @@ import gov.usgs.aqcu.exception.AquariusException;
 import net.servicestack.client.IReturn;
 import net.servicestack.client.WebServiceException;
 
-public abstract class AquariusRetrievalService {
+@Component
+public class AquariusRetrievalService {
 	private static final Logger LOG = LoggerFactory.getLogger(AquariusRetrievalService.class);
 
 	@Value("${aquarius.service.endpoint}")
@@ -22,7 +24,7 @@ public abstract class AquariusRetrievalService {
 	@Value("${aquarius.service.password}")
 	private String aquariusPassword;
 
-	protected <TResponse> TResponse executePublishApiRequest(IReturn<TResponse> request)  throws Exception {
+	protected <TResponse> TResponse executePublishApiRequest(IReturn<TResponse> request) throws Exception {
 		try (AquariusClient client = AquariusClient.createConnectedClient(aquariusUrl.replace("/AQUARIUS/", ""), aquariusUser, aquariusPassword)) {
 			return client.Publish.get(request);
 		} catch (WebServiceException e) {
@@ -40,4 +42,5 @@ public abstract class AquariusRetrievalService {
 			throw e;
 		}
 	}
+
 }
