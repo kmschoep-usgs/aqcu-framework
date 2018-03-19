@@ -42,7 +42,7 @@ public class ReportMetadata {
 		List<GradeMetadata> gradeMetadataList,
 		List<QualifierMetadata> qualifierMetadataList) {
 		setRequestingUser(requestingUser);
-		setTimezone((utcOffset != null) ? ("Etc/GMT+" + (int)(-1 * utcOffset)) : null);
+		setTimezone(utcOffset);
 		setRequestParameters(requestParameters);
 		setStartDate(requestParameters.getStartInstant());
 		setEndDate(requestParameters.getEndInstant());
@@ -55,23 +55,7 @@ public class ReportMetadata {
 		setGradeMetadata(gradeMetadataList);
 		setPrimaryTimeSeriesIdentifier(primaryTimeSeriesIdentifier);
 	}
-	
-	public ReportMetadata(ReportMetadata other) {
-		setRequestingUser(other.getRequestingUser());
-		setTimezone(other.getTimezone());
-		setStartDate(other.getStartDate());
-		setEndDate(other.getEndDate());
-		setTitle(other.getTitle());
-		setPrimaryParameter(other.getPrimaryParameter());
-		setStationName(other.getStationName());
-		setStationId(other.getStationId());
-		setGradeMetadata(other.getGradeMetadata());
-		setQualifierMetadata(other.getQualifierMetadata());
-		setReportType(other.getReportType());
-		setRequestParameters(other.getRequestParameters());
-		setPrimaryTimeSeriesIdentifier(other.getPrimaryTimeSeriesIdentifier());
-	}
-	
+
 	public String getPrimaryTimeSeriesIdentifier() {
 		return primaryTimeSeriesIdentifier;
 	}
@@ -141,7 +125,7 @@ public class ReportMetadata {
 	}
 	
 	public void setTimezone(Double utcOffset) {
-		timezone = "Etc/GMT+" + (int)(-1 * utcOffset);
+		timezone = (utcOffset != null) ? ("Etc/GMT+" + (int)(-1 * utcOffset)) : null;
 	}
 	
 	public void setStartDate(Instant val) {
