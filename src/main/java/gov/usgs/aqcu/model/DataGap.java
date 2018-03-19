@@ -40,7 +40,7 @@ public class DataGap {
 		gapExtent = val;
 	}
 	
-	public void calculateDurationInHours() {
+	protected void calculateDurationInHours() {
 		if(startTime != null && endTime != null) {
 			durationInHours = BigDecimal.valueOf(Duration.between(startTime, endTime).getSeconds() / 3600.0);
 		} else {
