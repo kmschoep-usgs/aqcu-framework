@@ -39,8 +39,8 @@ public class ReportMetadata {
 		Double utcOffset,
 		String stationName,
 		String stationId,
-		List<GradeMetadata> gradeMetadataList,
-		List<QualifierMetadata> qualifierMetadataList) {
+		Map<String,GradeMetadata> gradeMetadata,
+		Map<String,QualifierMetadata> qualifierMetadata) {
 		setRequestingUser(requestingUser);
 		setTimezone(utcOffset);
 		setRequestParameters(requestParameters);
@@ -51,8 +51,8 @@ public class ReportMetadata {
 		setPrimaryParameter(primaryParameter);
 		setStationName(stationName);
 		setStationId(stationId);
-		setQualifierMetadata(qualifierMetadataList);
-		setGradeMetadata(gradeMetadataList);
+		setQualifierMetadata(qualifierMetadata);
+		setGradeMetadata(gradeMetadata);
 		setPrimaryTimeSeriesIdentifier(primaryTimeSeriesIdentifier);
 	}
 
@@ -162,30 +162,6 @@ public class ReportMetadata {
 	
 	public void setRequestParameters(RequestParameters val) {
 		requestParameters = val;
-	}
-	
-	public void setGradeMetadata(List<GradeMetadata> metadataList) {
-		Map<String, GradeMetadata> map = new HashMap<>();
-
-		if(metadataList != null && !metadataList.isEmpty()) {
-			for(GradeMetadata metadata : metadataList) {
-				map.put(metadata.getIdentifier(), metadata);
-			}
-		}
-
-		gradeMetadata = map;
-	}
-	
-	public void setQualifierMetadata(List<QualifierMetadata> metadataList) {
-		Map<String, QualifierMetadata> map = new HashMap<>();
-
-		if(metadataList != null && !metadataList.isEmpty()) {
-			for(QualifierMetadata metadata : metadataList) {
-				map.put(metadata.getIdentifier(), metadata);
-			}
-		}
-
-		qualifierMetadata = map;
 	}
 }
 	
