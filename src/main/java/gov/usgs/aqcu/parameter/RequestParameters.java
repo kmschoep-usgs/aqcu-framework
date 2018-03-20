@@ -40,16 +40,6 @@ public class RequestParameters {
 
 	private Pair<Instant,Instant> reportPeriod;
 
-	public RequestParameters() {}
-
-	public RequestParameters(RequestParameters other) {
-		setPrimaryTimeseriesIdentifier(other.getPrimaryTimeseriesIdentifier());
-		setStartDate(other.getStartDate());
-		setEndDate(other.getEndDate());
-		setWaterYear(other.getWaterYear());
-		setLastMonths(other.getLastMonths());
-	}
-
 	public Instant getStartInstant() {
 		if (reportPeriod == null) {
 			determineReportPeriod();
