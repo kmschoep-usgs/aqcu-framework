@@ -19,21 +19,21 @@ public class DataGap {
 	}
 	
 	public DataGapExtent getGapExtent() {
+		calculateGapExtent();
 		return gapExtent;
 	}
 	
 	public BigDecimal getDurationInHours() {
+		calculateDurationInHours();
 		return durationInHours;
 	}
 	
 	public void setStartTime(Instant val) {
 		startTime= val;
-		calculateDurationInHours();
 	}
 	
 	public void setEndTime(Instant val) {
 		endTime = val;
-		calculateDurationInHours();
 	}
 	
 	public void setGapExtent(DataGapExtent val) {
@@ -45,6 +45,18 @@ public class DataGap {
 			durationInHours = BigDecimal.valueOf(Duration.between(startTime, endTime).getSeconds() / 3600.0);
 		} else {
 			durationInHours = null;
+		}
+	}
+
+	protected void calculateGapExtent() {
+		if(startTime != null && endTime != null) {
+			gapExtent = DataGapExtent.CONTAINED;
+		} else if(startTime == null && endTime != null) {
+			gapExtent = DataGapExtent.OVER_START;
+		} else if(startTime != null && endTime == null) {
+			gapExtent = DataGapExtent.OVER_END;
+		} else {
+			gapExtent = DataGapExtent.OVER_ALL;
 		}
 	}
 }

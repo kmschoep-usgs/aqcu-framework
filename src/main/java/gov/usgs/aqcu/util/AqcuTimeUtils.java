@@ -29,6 +29,6 @@ public abstract class AqcuTimeUtils {
 	}
 
 	public static String toQueryDate(Instant time) {
-		return time.toString().substring(1,10);
+		return time.toString().substring(0,10);
 	}
 }

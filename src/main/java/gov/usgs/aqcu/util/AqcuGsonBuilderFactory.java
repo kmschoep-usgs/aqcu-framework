@@ -6,19 +6,16 @@ import java.time.LocalDate;
 
 import com.aquaticinformatics.aquarius.sdk.timeseries.serializers.InstantSerializer;
 import com.google.gson.FieldNamingStrategy;
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import springfox.documentation.spring.web.json.Json;
 
 import com.aquaticinformatics.aquarius.sdk.timeseries.serializers.InstantDeserializer;
-import gov.usgs.aqcu.serializer.SwaggerGsonSerializer;
 import gov.usgs.aqcu.serializer.LocalDateGsonSerializer;
 
-public abstract class AqcuGsonFactory {
-	private static final Logger LOG = LoggerFactory.getLogger(AqcuGsonFactory.class);
+public abstract class AqcuGsonBuilderFactory {
+	private static final Logger LOG = LoggerFactory.getLogger(AqcuGsonBuilderFactory.class);
 	
 	private static FieldNamingStrategy LOWER_CASE_CAMEL_CASE = new FieldNamingStrategy() {  
 		@Override
@@ -34,13 +31,11 @@ public abstract class AqcuGsonFactory {
 		}
 	};
 
-	public static Gson getConfiguredGson() {
+	public static GsonBuilder getConfiguredGsonBuilder() {
 		return new GsonBuilder()
 			.registerTypeAdapter(Instant.class, new InstantSerializer())
 			.registerTypeAdapter(Instant.class, new InstantDeserializer())
-			.registerTypeAdapter(Json.class, new SwaggerGsonSerializer())
 			.registerTypeAdapter(LocalDate.class, new LocalDateGsonSerializer())
-			.setFieldNamingStrategy(LOWER_CASE_CAMEL_CASE)
-			.create();
+			.setFieldNamingStrategy(LOWER_CASE_CAMEL_CASE);
 	}
 }

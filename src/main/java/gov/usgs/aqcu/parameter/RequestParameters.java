@@ -127,17 +127,17 @@ public class RequestParameters {
 			queryString += "startDate=" + AqcuTimeUtils.toQueryDate(getStartInstant());
 			queryString += "&endDate=" + AqcuTimeUtils.toQueryDate(getEndInstant());
 		} else {
-			if(getLastMonths() != null) {
+			if (getLastMonths() != null) {
 				queryString += "lastMonths=" + getLastMonths();
-			} else if(getWaterYear() != null) {
+			} else if (getWaterYear() != null) {
 				queryString += "waterYear=" + getWaterYear();
-			} else {
+			} else if (getStartDate() != null && getEndDate() != null){
 				queryString += "startDate=" + getStartDate();
 				queryString += "&endDate=" + getEndDate();
 			}
 		}
 		
-		queryString += "&primaryTimeseriesIdentifier=" + overrideIdentifier != null ? overrideIdentifier : getPrimaryTimeseriesIdentifier();
+		queryString += "&primaryTimeseriesIdentifier=" + (overrideIdentifier != null ? overrideIdentifier : getPrimaryTimeseriesIdentifier());
 
 		return queryString;
 	}

@@ -1,16 +1,14 @@
 package gov.usgs.aqcu.model;
 
-import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import java.time.Instant;
 
-import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.GradeMetadata;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.QualifierMetadata;
 
 import gov.usgs.aqcu.parameter.RequestParameters;
 
-public class ReportMetadata {	
+public class ReportMetadata {
 	private String requestingUser;
 	private String timezone;
 	private Instant startDate;
@@ -22,11 +20,9 @@ public class ReportMetadata {
 	private String stationName;
 	private String stationId;
 	private RequestParameters requestParameters;
-	private Map<String, GradeMetadata> gradeMetadata;
 	private Map<String, QualifierMetadata> qualifierMetadata;
 	
 	public ReportMetadata() {
-		gradeMetadata = new HashMap<>();
 		qualifierMetadata = new HashMap<>();
 	}
 
@@ -39,21 +35,19 @@ public class ReportMetadata {
 		Double utcOffset,
 		String stationName,
 		String stationId,
-		Map<String,GradeMetadata> gradeMetadata,
 		Map<String,QualifierMetadata> qualifierMetadata) {
-		setRequestingUser(requestingUser);
-		setTimezone(utcOffset);
+		setReportType(reportType);
+		setTitle(reportTitle);
 		setRequestParameters(requestParameters);
 		setStartDate(requestParameters.getStartInstant());
 		setEndDate(requestParameters.getEndInstant());
-		setTitle(reportTitle);
-		setReportType(reportType);
+		setPrimaryTimeSeriesIdentifier(requestParameters.getPrimaryTimeseriesIdentifier());
+		setRequestingUser(requestingUser);
 		setPrimaryParameter(primaryParameter);
+		setTimezone(utcOffset);
 		setStationName(stationName);
 		setStationId(stationId);
 		setQualifierMetadata(qualifierMetadata);
-		setGradeMetadata(gradeMetadata);
-		setPrimaryTimeSeriesIdentifier(primaryTimeSeriesIdentifier);
 	}
 
 	public String getPrimaryTimeSeriesIdentifier() {
@@ -94,10 +88,6 @@ public class ReportMetadata {
 	
 	public String getStationId() {
 		return stationId;
-	}
-	
-	public Map<String, GradeMetadata> getGradeMetadata() {
-		return gradeMetadata;
 	}
 	
 	public Map<String, QualifierMetadata> getQualifierMetadata() {
@@ -150,10 +140,6 @@ public class ReportMetadata {
 	
 	public void setStationId(String val) {
 		stationId = val;
-	}
-	
-	public void setGradeMetadata(Map<String, GradeMetadata> val) {
-		gradeMetadata = val;
 	}
 	
 	public void setQualifierMetadata(Map<String, QualifierMetadata> val) {
