@@ -90,8 +90,10 @@ public class RequestParameters {
 			reportPeriod = lastMonthsToReportPeriod(lastMonths);
 		} else if (waterYear != null) {
 			reportPeriod = waterYearToReportPeriod(waterYear);
-		} else {
+		} else if(startDate != null && endDate != null) {
 			reportPeriod = new ImmutablePair<Instant,Instant>(dateToReportStartTime(startDate), dateToReportEndTime(endDate));
+		} else {
+			reportPeriod = new ImmutablePair<>(null,null);
 		}
 	}
 
@@ -123,7 +125,7 @@ public class RequestParameters {
 	public String getAsQueryString(String overrideIdentifier, boolean absoluteTime) {
 		String queryString = "";
 
-		if(absoluteTime) {
+		if(absoluteTime && getStartInstant() != null && getEndInstant() != null) {
 			queryString += "startDate=" + AqcuTimeUtils.toQueryDate(getStartInstant());
 			queryString += "&endDate=" + AqcuTimeUtils.toQueryDate(getEndInstant());
 		} else {
@@ -137,8 +139,10 @@ public class RequestParameters {
 			}
 		}
 		
-		queryString += "&primaryTimeseriesIdentifier=" + (overrideIdentifier != null ? overrideIdentifier : getPrimaryTimeseriesIdentifier());
-
+		if(overrideIdentifier != null || getPrimaryTimeseriesIdentifier() != null) {
+			queryString += "&primaryTimeseriesIdentifier=" + (overrideIdentifier != null ? overrideIdentifier : getPrimaryTimeseriesIdentifier());
+		}
+		
 		return queryString;
 	}
 }

@@ -7,10 +7,6 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -23,8 +19,6 @@ import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.Doub
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.StatisticalDateTimeOffset;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.TimeSeriesPoint;
 
-@RunWith(SpringRunner.class)
-@ActiveProfiles("test")
 public class DataGapListBuilderTest {
 	List<TimeSeriesPoint> pointList;
 	DataGapListBuilderService service;

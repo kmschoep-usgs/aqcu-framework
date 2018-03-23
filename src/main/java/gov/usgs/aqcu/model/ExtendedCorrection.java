@@ -6,6 +6,8 @@ import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.Corr
 public class ExtendedCorrection extends Correction {	
 	private ExtendedCorrectionType aqcuExtendedCorrectionType;
 	private String dominantType;
+
+	public ExtendedCorrection() {}
 	
 	public ExtendedCorrection(Correction source) {
 		//Construct Base Correction
@@ -31,10 +33,10 @@ public class ExtendedCorrection extends Correction {
 	}
 
 	@Override
-	public Correction setType(CorrectionType val) {
-		Correction toReturn = super.setType(val);
+	public ExtendedCorrection setType(CorrectionType val) {
+		super.setType(val);
 		setDominantType();
-		return toReturn;
+		return this;
 	}
 
 	public void setAqcuExtendedCorrectionType(ExtendedCorrectionType val) {

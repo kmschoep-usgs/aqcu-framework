@@ -8,7 +8,16 @@ public class DataGap {
 	private Instant startTime = null;
 	private Instant endTime = null;
 	private BigDecimal durationInHours = null;
-	private DataGapExtent gapExtent;
+	private DataGapExtent gapExtent = DataGapExtent.OVER_ALL;
+
+	public DataGap() {}
+
+	public DataGap(Instant startTime, Instant endTime) {
+		this.startTime = startTime;
+		this.endTime = endTime;
+		calculateDurationInHours();
+		calculateGapExtent();
+	}
 		
 	public Instant getStartTime() {
 		return startTime;
@@ -19,25 +28,23 @@ public class DataGap {
 	}
 	
 	public DataGapExtent getGapExtent() {
-		calculateGapExtent();
 		return gapExtent;
 	}
 	
 	public BigDecimal getDurationInHours() {
-		calculateDurationInHours();
 		return durationInHours;
 	}
 	
 	public void setStartTime(Instant val) {
 		startTime= val;
+		calculateDurationInHours();
+		calculateGapExtent();
 	}
 	
 	public void setEndTime(Instant val) {
 		endTime = val;
-	}
-	
-	public void setGapExtent(DataGapExtent val) {
-		gapExtent = val;
+		calculateDurationInHours();
+		calculateGapExtent();
 	}
 	
 	protected void calculateDurationInHours() {
