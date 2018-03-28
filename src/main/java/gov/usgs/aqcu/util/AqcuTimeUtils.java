@@ -16,8 +16,9 @@ public abstract class AqcuTimeUtils {
 		return doesTimeRangeOverlap(p1.getStartTime(), p1.getEndTime(), p2.getStartTime(), p2.getEndTime());
 	}
 
+	//Note: Aquarius Time Ranges have INCLUSIVE Start Dates and EXCLUSIVE End Dates
 	public static boolean doesTimeRangeOverlap(Instant start1, Instant end1, Instant start2, Instant end2) {
-		return (start1.compareTo(end2) <= 0 && end1.compareTo(start2) >= 0);
+		return (start1.compareTo(end2) < 0 && end1.compareTo(start2) > 0);
 	}
 
 	public static boolean isOpenEndedTime(Instant time) {
