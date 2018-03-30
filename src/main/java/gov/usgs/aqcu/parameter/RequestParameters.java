@@ -15,6 +15,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import gov.usgs.aqcu.validation.ReportPeriodPresent;
 import gov.usgs.aqcu.validation.StartDateBeforeEndDate;
+import gov.usgs.aqcu.util.AqcuTimeUtils;
 
 @ReportPeriodPresent
 @StartDateBeforeEndDate
@@ -89,8 +90,10 @@ public class RequestParameters {
 			reportPeriod = lastMonthsToReportPeriod(lastMonths);
 		} else if (waterYear != null) {
 			reportPeriod = waterYearToReportPeriod(waterYear);
-		} else {
+		} else if(startDate != null && endDate != null) {
 			reportPeriod = new ImmutablePair<Instant,Instant>(dateToReportStartTime(startDate), dateToReportEndTime(endDate));
+		} else {
+			reportPeriod = new ImmutablePair<>(null,null);
 		}
 	}
 
@@ -119,4 +122,27 @@ public class RequestParameters {
 		return endTime;
 	}
 
+	public String getAsQueryString(String overrideIdentifier, boolean absoluteTime) {
+		String queryString = "";
+
+		if(absoluteTime && getStartInstant() != null && getEndInstant() != null) {
+			queryString += "startDate=" + AqcuTimeUtils.toQueryDate(getStartInstant());
+			queryString += "&endDate=" + AqcuTimeUtils.toQueryDate(getEndInstant());
+		} else {
+			if (getLastMonths() != null) {
+				queryString += "lastMonths=" + getLastMonths();
+			} else if (getWaterYear() != null) {
+				queryString += "waterYear=" + getWaterYear();
+			} else if (getStartDate() != null && getEndDate() != null){
+				queryString += "startDate=" + getStartDate();
+				queryString += "&endDate=" + getEndDate();
+			}
+		}
+		
+		if(overrideIdentifier != null || getPrimaryTimeseriesIdentifier() != null) {
+			queryString += "&primaryTimeseriesIdentifier=" + (overrideIdentifier != null ? overrideIdentifier : getPrimaryTimeseriesIdentifier());
+		}
+		
+		return queryString;
+	}
 }

@@ -21,6 +21,7 @@ public class RequestParametersTest {
 	public static final Instant REPORT_START_INSTANT = Instant.parse("2018-03-16T00:00:00.000000000Z");
 	public static final LocalDate REPORT_END_DATE = LocalDate.of(2018, 03, 16);
 	public static final LocalDate REPORT_START_DATE = LocalDate.of(2018, 03, 16);
+	String primaryIdentifier = "test-identifier";
 
 	@Before
 	public void setup() {
@@ -129,4 +130,126 @@ public class RequestParametersTest {
 		assertEquals(last3MonthsEnd, params.getEndInstant());
 	}
 
+	@Test
+	public void getAsQueryStringAbsoluteBasicTest() {
+		params.setEndDate(reportEndDate);
+		params.setStartDate(reportStartDate);
+		params.setPrimaryTimeseriesIdentifier(primaryIdentifier);
+		params.determineReportPeriod();
+		String expected = "startDate=" + reportStartDate.toString().substring(0, 10) + 
+						"&endDate=" + reportStartDate.toString().substring(0, 10) + "&primaryTimeseriesIdentifier=test-identifier";
+		assertEquals(0, params.getAsQueryString(null, true).compareTo(expected));
+	}
+
+	@Test
+	public void getAsQueryStringAbsoluteWYTest() {
+		params.setWaterYear(2018);
+		params.setPrimaryTimeseriesIdentifier(primaryIdentifier);
+		params.determineReportPeriod();
+		String expected = "startDate=" + waterYear2018Begin.toString().substring(0, 10) + 
+						"&endDate=" + waterYear2018End.toString().substring(0, 10) + "&primaryTimeseriesIdentifier=test-identifier";
+		assertEquals(0, params.getAsQueryString(null, true).compareTo(expected));
+	}
+
+	@Test
+	public void getAsQueryStringAbsoluteLastMonthsTest() {
+		params.setLastMonths(3);
+		params.setPrimaryTimeseriesIdentifier(primaryIdentifier);
+		params.determineReportPeriod();
+		String expected = "startDate=" + last3MonthsBegin.toString().substring(0, 10) + 
+						"&endDate=" + last3MonthsEnd.toString().substring(0, 10) + "&primaryTimeseriesIdentifier=test-identifier";
+		assertEquals(0, params.getAsQueryString(null, true).compareTo(expected));
+	}
+
+	@Test
+	public void getAsQueryStringBasicTest() {
+		params.setEndDate(reportEndDate);
+		params.setStartDate(reportStartDate);
+		params.setPrimaryTimeseriesIdentifier(primaryIdentifier);
+		params.determineReportPeriod();
+		String expected = "startDate=" + reportStartDate.toString().substring(0, 10) + 
+						"&endDate=" + reportStartDate.toString().substring(0, 10) + "&primaryTimeseriesIdentifier=test-identifier";
+		assertEquals(0, params.getAsQueryString(null, false).compareTo(expected));
+	}
+
+	@Test
+	public void getAsQueryStringWYTest() {
+		params.setWaterYear(2018);
+		params.setPrimaryTimeseriesIdentifier(primaryIdentifier);
+		params.determineReportPeriod();
+		String expected = "waterYear=2018&primaryTimeseriesIdentifier=test-identifier";
+		assertEquals(0, params.getAsQueryString(null, false).compareTo(expected));
+	}
+
+	@Test
+	public void getAsQueryStringLastMonthsTest() {
+		params.setLastMonths(3);
+		params.setPrimaryTimeseriesIdentifier(primaryIdentifier);
+		params.determineReportPeriod();
+		String expected = "lastMonths=3&primaryTimeseriesIdentifier=test-identifier";
+		assertEquals(0, params.getAsQueryString(null, false).compareTo(expected));
+	}
+
+	@Test
+	public void getAsQueryStringAbsoluteWYOverDatesTest() {
+		params.setEndDate(reportEndDate);
+		params.setStartDate(reportStartDate);
+		params.setWaterYear(2018);
+		params.setPrimaryTimeseriesIdentifier(primaryIdentifier);
+		params.determineReportPeriod();
+		String expected = "startDate=" + waterYear2018Begin.toString().substring(0, 10) + 
+						"&endDate=" + waterYear2018End.toString().substring(0, 10) + "&primaryTimeseriesIdentifier=test-identifier";
+		assertEquals(0, params.getAsQueryString(null, true).compareTo(expected));
+	}
+
+	@Test
+	public void getAsQueryStringWYOverDatesTest() {
+		params.setEndDate(reportEndDate);
+		params.setStartDate(reportStartDate);
+		params.setWaterYear(2018);
+		params.setPrimaryTimeseriesIdentifier(primaryIdentifier);
+		params.determineReportPeriod();
+		String expected = "waterYear=2018&primaryTimeseriesIdentifier=test-identifier";
+		assertEquals(0, params.getAsQueryString(null, false).compareTo(expected));
+	}
+
+	@Test
+	public void getAsQueryStringAbsoluteAllTest() {
+		params.setEndDate(reportEndDate);
+		params.setStartDate(reportStartDate);
+		params.setWaterYear(2018);
+		params.setLastMonths(3);
+		params.setPrimaryTimeseriesIdentifier(primaryIdentifier);
+		params.determineReportPeriod();
+		String expected = "startDate=" + last3MonthsBegin.toString().substring(0, 10) + 
+						"&endDate=" + last3MonthsEnd.toString().substring(0, 10) + "&primaryTimeseriesIdentifier=test-identifier";
+		assertEquals(0, params.getAsQueryString(null, true).compareTo(expected));
+	}
+
+	@Test
+	public void getAsQueryStringAllTest() {
+		params.setEndDate(reportEndDate);
+		params.setStartDate(reportStartDate);
+		params.setWaterYear(2018);
+		params.setLastMonths(3);
+		params.setPrimaryTimeseriesIdentifier(primaryIdentifier);
+		params.determineReportPeriod();
+		String expected = "lastMonths=3&primaryTimeseriesIdentifier=test-identifier";
+		assertEquals(0, params.getAsQueryString(null, false).compareTo(expected));
+	}
+
+	@Test
+	public void getAsQueryStringOverrideTest() {
+		params.setLastMonths(3);
+		params.setPrimaryTimeseriesIdentifier(primaryIdentifier);
+		params.determineReportPeriod();
+		String expected = "lastMonths=3&primaryTimeseriesIdentifier=test-override";
+		assertEquals(0, params.getAsQueryString("test-override", false).compareTo(expected));
+	}
+
+	@Test
+	public void getAsQueryStringEmptyTest() {
+		assertEquals("", params.getAsQueryString(null, true));
+		assertEquals("", params.getAsQueryString(null, false));
+	}
 }
