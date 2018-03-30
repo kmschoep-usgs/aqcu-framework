@@ -138,11 +138,11 @@ public class RequestParameters {
 				queryString += "&endDate=" + getEndDate();
 			}
 		}
-		
+
 		if(overrideIdentifier != null || getPrimaryTimeseriesIdentifier() != null) {
 			queryString += "&primaryTimeseriesIdentifier=" + (overrideIdentifier != null ? overrideIdentifier : getPrimaryTimeseriesIdentifier());
 		}
-		
+
 		return queryString;
 	}
 }
