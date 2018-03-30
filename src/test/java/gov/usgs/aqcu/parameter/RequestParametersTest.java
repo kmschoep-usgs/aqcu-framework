@@ -132,12 +132,12 @@ public class RequestParametersTest {
 
 	@Test
 	public void getAsQueryStringAbsoluteBasicTest() {
-		params.setEndDate(reportEndDate);
-		params.setStartDate(reportStartDate);
+		params.setEndDate(REPORT_END_DATE);
+		params.setStartDate(REPORT_START_DATE);
 		params.setPrimaryTimeseriesIdentifier(primaryIdentifier);
 		params.determineReportPeriod();
-		String expected = "startDate=" + reportStartDate.toString().substring(0, 10) + 
-						"&endDate=" + reportStartDate.toString().substring(0, 10) + "&primaryTimeseriesIdentifier=test-identifier";
+		String expected = "startDate=" + REPORT_START_DATE.toString().substring(0, 10) + 
+						"&endDate=" + REPORT_START_DATE.toString().substring(0, 10) + "&primaryTimeseriesIdentifier=test-identifier";
 		assertEquals(0, params.getAsQueryString(null, true).compareTo(expected));
 	}
 
@@ -163,12 +163,12 @@ public class RequestParametersTest {
 
 	@Test
 	public void getAsQueryStringBasicTest() {
-		params.setEndDate(reportEndDate);
-		params.setStartDate(reportStartDate);
+		params.setEndDate(REPORT_END_DATE);
+		params.setStartDate(REPORT_START_DATE);
 		params.setPrimaryTimeseriesIdentifier(primaryIdentifier);
 		params.determineReportPeriod();
-		String expected = "startDate=" + reportStartDate.toString().substring(0, 10) + 
-						"&endDate=" + reportStartDate.toString().substring(0, 10) + "&primaryTimeseriesIdentifier=test-identifier";
+		String expected = "startDate=" + REPORT_START_DATE.toString().substring(0, 10) + 
+						"&endDate=" + REPORT_END_DATE.toString().substring(0, 10) + "&primaryTimeseriesIdentifier=test-identifier";
 		assertEquals(0, params.getAsQueryString(null, false).compareTo(expected));
 	}
 
@@ -192,8 +192,8 @@ public class RequestParametersTest {
 
 	@Test
 	public void getAsQueryStringAbsoluteWYOverDatesTest() {
-		params.setEndDate(reportEndDate);
-		params.setStartDate(reportStartDate);
+		params.setEndDate(REPORT_END_DATE);
+		params.setStartDate(REPORT_START_DATE);
 		params.setWaterYear(2018);
 		params.setPrimaryTimeseriesIdentifier(primaryIdentifier);
 		params.determineReportPeriod();
@@ -204,8 +204,8 @@ public class RequestParametersTest {
 
 	@Test
 	public void getAsQueryStringWYOverDatesTest() {
-		params.setEndDate(reportEndDate);
-		params.setStartDate(reportStartDate);
+		params.setEndDate(REPORT_END_DATE);
+		params.setStartDate(REPORT_START_DATE);
 		params.setWaterYear(2018);
 		params.setPrimaryTimeseriesIdentifier(primaryIdentifier);
 		params.determineReportPeriod();
@@ -215,8 +215,8 @@ public class RequestParametersTest {
 
 	@Test
 	public void getAsQueryStringAbsoluteAllTest() {
-		params.setEndDate(reportEndDate);
-		params.setStartDate(reportStartDate);
+		params.setEndDate(REPORT_END_DATE);
+		params.setStartDate(REPORT_START_DATE);
 		params.setWaterYear(2018);
 		params.setLastMonths(3);
 		params.setPrimaryTimeseriesIdentifier(primaryIdentifier);
@@ -228,8 +228,8 @@ public class RequestParametersTest {
 
 	@Test
 	public void getAsQueryStringAllTest() {
-		params.setEndDate(reportEndDate);
-		params.setStartDate(reportStartDate);
+		params.setEndDate(REPORT_END_DATE);
+		params.setStartDate(REPORT_START_DATE);
 		params.setWaterYear(2018);
 		params.setLastMonths(3);
 		params.setPrimaryTimeseriesIdentifier(primaryIdentifier);
