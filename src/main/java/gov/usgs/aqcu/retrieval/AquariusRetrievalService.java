@@ -3,7 +3,7 @@ package gov.usgs.aqcu.retrieval;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com.aquaticinformatics.aquarius.sdk.timeseries.AquariusClient;
 
@@ -12,7 +12,7 @@ import gov.usgs.aqcu.exception.AquariusRetrievalException;
 import net.servicestack.client.IReturn;
 import net.servicestack.client.WebServiceException;
 
-@Component
+@Repository
 public class AquariusRetrievalService {
 	private static final Logger LOG = LoggerFactory.getLogger(AquariusRetrievalService.class);
 

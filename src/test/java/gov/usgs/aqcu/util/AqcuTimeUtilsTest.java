@@ -4,10 +4,9 @@ import static org.junit.Assert.assertEquals;
 
 import java.time.Instant;
 
-import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.PeriodOfApplicability;
-
-import org.junit.Before;
 import org.junit.Test;
+
+import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.PeriodOfApplicability;
 
 public class AqcuTimeUtilsTest {
 	Instant start1 = Instant.parse("2017-01-01T00:00:00Z");
@@ -29,11 +28,6 @@ public class AqcuTimeUtilsTest {
 	Instant end8 = Instant.parse("2017-01-01T23:59:59Z");
 	Instant open1 = Instant.parse("0001-01-01T00:00:00Z");
 	Instant open2 = Instant.parse("9999-12-31T23:59:59.9999999Z");
-
-	@Before
-	public void setup() {
-		
-	}
 
 	@Test
 	public void doPeriodsOverlapTest() {
