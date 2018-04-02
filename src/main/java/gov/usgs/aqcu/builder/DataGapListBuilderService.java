@@ -1,21 +1,17 @@
 package gov.usgs.aqcu.builder;
 
-import java.util.List;
-import java.util.ArrayList;
 import java.time.Instant;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.TimeSeriesPoint;
 
 import gov.usgs.aqcu.model.DataGap;
-import gov.usgs.aqcu.model.DataGapExtent;
 
-@Component
+@Service
 public class DataGapListBuilderService {	
-	private static final Logger LOG = LoggerFactory.getLogger(DataGapListBuilderService.class);
 
 	public List<DataGap> buildGapList(List<TimeSeriesPoint> timeSeriesPoints) {
 		List<DataGap> gapList = new ArrayList<>();
@@ -37,4 +33,3 @@ public class DataGapListBuilderService {
 		return gapList;
 	}
 }
-	

@@ -98,7 +98,7 @@ public class RequestParameters {
 	}
 
 	protected Pair<Instant,Instant> waterYearToReportPeriod(Integer waterYear) {
-		Instant reportStartTime = Instant.from(LocalDateTime.of(waterYear-1,10,1,0,0,0).toInstant(ZoneOffset.UTC));
+		Instant reportStartTime = Instant.from(LocalDateTime.of(waterYear-1,10,1,0,0,0,0).toInstant(ZoneOffset.UTC));
 		Instant reportEndTime = Instant.from(LocalDateTime.of(waterYear,9,30,23,59,59,999999999).toInstant(ZoneOffset.UTC));
 
 		return new ImmutablePair<Instant,Instant>(reportStartTime, reportEndTime);
@@ -106,7 +106,7 @@ public class RequestParameters {
 
 	protected Pair<Instant,Instant> lastMonthsToReportPeriod(Integer lastMonths) {
 		LocalDate nowDate = LocalDate.now().minusMonths(lastMonths);
-		Instant reportStartTime = LocalDateTime.of(nowDate.getYear(), nowDate.getMonth(), 1, 0, 0, 0).toInstant(ZoneOffset.UTC);
+		Instant reportStartTime = LocalDateTime.of(nowDate.getYear(), nowDate.getMonth(),1,0,0,0,0).toInstant(ZoneOffset.UTC);
 		Instant reportEndTime = LocalDate.now().atTime(23,59,59,999999999).toInstant(ZoneOffset.UTC);
 
 		return new ImmutablePair<Instant,Instant>(reportStartTime, reportEndTime);
@@ -138,11 +138,11 @@ public class RequestParameters {
 				queryString += "&endDate=" + getEndDate();
 			}
 		}
-		
+
 		if(overrideIdentifier != null || getPrimaryTimeseriesIdentifier() != null) {
 			queryString += "&primaryTimeseriesIdentifier=" + (overrideIdentifier != null ? overrideIdentifier : getPrimaryTimeseriesIdentifier());
 		}
-		
+
 		return queryString;
 	}
 }

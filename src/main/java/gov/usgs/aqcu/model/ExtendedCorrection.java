@@ -8,7 +8,7 @@ public class ExtendedCorrection extends Correction {
 	private String dominantType;
 
 	public ExtendedCorrection() {}
-	
+
 	public ExtendedCorrection(Correction source) {
 		//Construct Base Correction
 		super.setType(source.getType());
@@ -19,7 +19,7 @@ public class ExtendedCorrection extends Correction {
 		super.setUser(source.getUser());
 		super.setParameters(source.getParameters());
 		super.setProcessingOrder(source.getProcessingOrder());
-		
+
 		//Construct Extended Correction
 		setAqcuExtendedCorrectionType(ExtendedCorrectionType.fromCorrection(source));
 	}

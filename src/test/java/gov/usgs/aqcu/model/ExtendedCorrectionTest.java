@@ -2,16 +2,12 @@ package gov.usgs.aqcu.model;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Test;
+
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.Correction;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.CorrectionType;
 
-import org.junit.Before;
-import org.junit.Test;
-
 public class ExtendedCorrectionTest {
-	@Before
-	public void setup() {
-	}
 
 	@Test
 	public void extendedTypeAssignmentTest() {

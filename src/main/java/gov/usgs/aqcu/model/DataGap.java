@@ -18,35 +18,35 @@ public class DataGap {
 		calculateDurationInHours();
 		calculateGapExtent();
 	}
-		
+
 	public Instant getStartTime() {
 		return startTime;
 	}
-	
+
 	public Instant getEndTime() {
 		return endTime;
 	}
-	
+
 	public DataGapExtent getGapExtent() {
 		return gapExtent;
 	}
-	
+
 	public BigDecimal getDurationInHours() {
 		return durationInHours;
 	}
-	
+
 	public void setStartTime(Instant val) {
 		startTime= val;
 		calculateDurationInHours();
 		calculateGapExtent();
 	}
-	
+
 	public void setEndTime(Instant val) {
 		endTime = val;
 		calculateDurationInHours();
 		calculateGapExtent();
 	}
-	
+
 	protected void calculateDurationInHours() {
 		if(startTime != null && endTime != null) {
 			durationInHours = BigDecimal.valueOf(Duration.between(startTime, endTime).getSeconds() / 3600.0);
