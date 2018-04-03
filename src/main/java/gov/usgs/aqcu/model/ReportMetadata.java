@@ -9,17 +9,12 @@ import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.Qual
 import gov.usgs.aqcu.parameter.RequestParameters;
 
 public class ReportMetadata {
-	private String requestingUser;
 	private String timezone;
 	private Instant startDate;
 	private Instant endDate;
 	private String title;
-	private String reportType;
-	private String primaryParameter;
-	private String primaryTimeSeriesIdentifier;
 	private String stationName;
 	private String stationId;
-	private RequestParameters requestParameters;
 	private Map<String, QualifierMetadata> qualifierMetadata;
 
 	public ReportMetadata() {
@@ -27,41 +22,21 @@ public class ReportMetadata {
 	}
 
 	public ReportMetadata(
-		String reportType,
 		String reportTitle,
 		RequestParameters requestParameters,
-		String requestingUser,
-		String primaryParameter,
 		Double utcOffset,
 		String stationName,
 		String stationId,
 		Map<String,QualifierMetadata> qualifierMetadata) {
-		setReportType(reportType);
 		setTitle(reportTitle);
-		setRequestParameters(requestParameters);
 		setStartDate(requestParameters.getStartInstant());
 		setEndDate(requestParameters.getEndInstant());
-		setPrimaryTimeSeriesIdentifier(requestParameters.getPrimaryTimeseriesIdentifier());
-		setRequestingUser(requestingUser);
-		setPrimaryParameter(primaryParameter);
 		setTimezone(utcOffset);
 		setStationName(stationName);
 		setStationId(stationId);
 		setQualifierMetadata(qualifierMetadata);
 	}
-
-	public String getPrimaryTimeSeriesIdentifier() {
-		return primaryTimeSeriesIdentifier;
-	}
-
-	public String getReportType() {
-		return reportType;
-	}
-
-	public String getRequestingUser() {
-		return requestingUser;
-	}
-
+	
 	public String getTimezone() {
 		return timezone;
 	}
@@ -77,11 +52,7 @@ public class ReportMetadata {
 	public String getTitle() {
 		return title;
 	}
-
-	public String getPrimaryParameter() {
-		return primaryParameter;
-	}
-
+	
 	public String getStationName() {
 		return stationName;
 	}
@@ -93,23 +64,7 @@ public class ReportMetadata {
 	public Map<String, QualifierMetadata> getQualifierMetadata() {
 		return qualifierMetadata;
 	}
-
-	public RequestParameters getRequestParameters() {
-		return requestParameters;
-	}
-
-	public void setPrimaryTimeSeriesIdentifier(String val) {
-		primaryTimeSeriesIdentifier = val;
-	}
-
-	public void setReportType(String val) {
-		reportType = val;
-	}
-
-	public void setRequestingUser(String val) {
-		requestingUser = val;
-	}
-
+	
 	public void setTimezone(String val) {
 		timezone = val;
 	}
@@ -129,11 +84,7 @@ public class ReportMetadata {
 	public void setTitle(String val) {
 		title = val;
 	}
-
-	public void setPrimaryParameter(String val) {
-		primaryParameter = val;
-	}
-
+	
 	public void setStationName(String val) {
 		stationName = val;
 	}
@@ -144,9 +95,5 @@ public class ReportMetadata {
 
 	public void setQualifierMetadata(Map<String, QualifierMetadata> val) {
 		qualifierMetadata = val;
-	}
-
-	public void setRequestParameters(RequestParameters val) {
-		requestParameters = val;
 	}
 }
