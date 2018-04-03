@@ -28,8 +28,8 @@ public class LocationDescriptionServiceTest {
 	private AquariusRetrievalService aquariusService;
 
 	private LocationDescriptionService service;
-	LocationDescription locationDescriptionA = new LocationDescription().setIdentifier("a");
-	LocationDescription locationDescriptionB = new LocationDescription().setIdentifier("b");
+	private LocationDescription locationDescriptionA = new LocationDescription().setIdentifier("a");
+	private LocationDescription locationDescriptionB = new LocationDescription().setIdentifier("b");
 
 	@Before
 	@SuppressWarnings("unchecked")

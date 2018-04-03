@@ -34,17 +34,17 @@ public class QualifierLookupServiceTest {
 	private Qualifier qualifierB = new Qualifier().setIdentifier("b");
 	private Qualifier qualifierC = new Qualifier().setIdentifier("c");
 	private Qualifier qualifierD = new Qualifier().setIdentifier("d");
-	public static final QualifierMetadata QUALIFIER_METADATA_A = new QualifierMetadata().setIdentifier("a");
-	public static final QualifierMetadata QUALIFIER_METADATA_B = new QualifierMetadata().setIdentifier("b");
-	public static final QualifierMetadata QUALIFIER_METADATA_C = new QualifierMetadata().setIdentifier("c");
-	public static final QualifierMetadata QUALIFIER_METADATA_D = new QualifierMetadata().setIdentifier("d");
+	private QualifierMetadata qualifierMetadataA = new QualifierMetadata().setIdentifier("a");
+	private QualifierMetadata qualifierMetadataB = new QualifierMetadata().setIdentifier("b");
+	private QualifierMetadata qualifierMetadataC = new QualifierMetadata().setIdentifier("c");
+	private QualifierMetadata qualifierMetadataD = new QualifierMetadata().setIdentifier("d");
 
 	@Before
 	@SuppressWarnings("unchecked")
 	public void setup() throws Exception {
 		service = new QualifierLookupService(aquariusService);
 		given(aquariusService.executePublishApiRequest(any(IReturn.class))).willReturn(new QualifierListServiceResponse()
-				.setQualifiers(new ArrayList<QualifierMetadata>(Arrays.asList(QUALIFIER_METADATA_A, QUALIFIER_METADATA_B, QUALIFIER_METADATA_C, QUALIFIER_METADATA_D))));
+				.setQualifiers(new ArrayList<QualifierMetadata>(Arrays.asList(qualifierMetadataA, qualifierMetadataB, qualifierMetadataC, qualifierMetadataD))));
 	}
 
 	@Test
@@ -56,27 +56,27 @@ public class QualifierLookupServiceTest {
 
 	@Test
 	public void filterListTest() {
-		Map<String, QualifierMetadata> actual = service.filterList(Arrays.asList("a", "c", "d"), Arrays.asList(QUALIFIER_METADATA_A, QUALIFIER_METADATA_B, QUALIFIER_METADATA_C, QUALIFIER_METADATA_D));
+		Map<String, QualifierMetadata> actual = service.filterList(Arrays.asList("a", "c", "d"), Arrays.asList(qualifierMetadataA, qualifierMetadataB, qualifierMetadataC, qualifierMetadataD));
 		assertEquals(3, actual.size());
-		assertThat(actual, IsMapContaining.hasEntry("a", QUALIFIER_METADATA_A));
-		assertThat(actual, IsMapContaining.hasEntry("c", QUALIFIER_METADATA_C));
-		assertThat(actual, IsMapContaining.hasEntry("d", QUALIFIER_METADATA_D));
+		assertThat(actual, IsMapContaining.hasEntry("a", qualifierMetadataA));
+		assertThat(actual, IsMapContaining.hasEntry("c", qualifierMetadataC));
+		assertThat(actual, IsMapContaining.hasEntry("d", qualifierMetadataD));
 		}
 
 	@Test
 	public void getTest() throws Exception {
 		List<QualifierMetadata> actual = service.get();
 		assertEquals(4, actual.size());
-		assertThat(actual, containsInAnyOrder(QUALIFIER_METADATA_A, QUALIFIER_METADATA_B, QUALIFIER_METADATA_C, QUALIFIER_METADATA_D));
+		assertThat(actual, containsInAnyOrder(qualifierMetadataA, qualifierMetadataB, qualifierMetadataC, qualifierMetadataD));
 	}
 
 	@Test
 	public void getByQualifierList_happyPathTest() {
 		Map<String, QualifierMetadata> actual = service.getByQualifierList(Arrays.asList(qualifierA, qualifierC, qualifierD));
 		assertEquals(3, actual.size());
-		assertThat(actual, IsMapContaining.hasEntry("a", QUALIFIER_METADATA_A));
-		assertThat(actual, IsMapContaining.hasEntry("c", QUALIFIER_METADATA_C));
-		assertThat(actual, IsMapContaining.hasEntry("d", QUALIFIER_METADATA_D));
+		assertThat(actual, IsMapContaining.hasEntry("a", qualifierMetadataA));
+		assertThat(actual, IsMapContaining.hasEntry("c", qualifierMetadataC));
+		assertThat(actual, IsMapContaining.hasEntry("d", qualifierMetadataD));
 	}
 
 }
