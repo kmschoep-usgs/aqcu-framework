@@ -1,9 +1,13 @@
 package gov.usgs.aqcu.util;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.temporal.Temporal;
 
 import com.aquaticinformatics.aquarius.sdk.timeseries.serializers.InstantDeserializer;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.PeriodOfApplicability;
+import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.StatisticalDateTimeOffset;
 
 public abstract class AqcuTimeUtils {
 	public static final Instant OPEN_ENDED_START_THRESHOLD = InstantDeserializer.MinConcreteValue;
@@ -28,5 +32,14 @@ public abstract class AqcuTimeUtils {
 
 	public static String toQueryDate(Instant time) {
 		return time.toString().substring(0,10);
+	}
+
+	public static Temporal getTemporal(StatisticalDateTimeOffset dateTimeOffset, boolean isDaily, ZoneOffset zoneOffset) {
+		if (dateTimeOffset.isRepresentsEndOfTimePeriod() && isDaily) {
+			// Daily values with isRepresentsEndOfTimePeriod() end up with an Instant of midnight on the next day, rather than "2400" on the actual day.
+			return LocalDateTime.ofInstant(dateTimeOffset.getDateTimeOffset(), zoneOffset).toLocalDate().minusDays(1);
+		} else {
+			return dateTimeOffset.getDateTimeOffset();
+		}
 	}
 }
