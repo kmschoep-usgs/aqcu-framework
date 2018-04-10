@@ -35,7 +35,7 @@ public abstract class AqcuTimeUtils {
 	}
 
 	public static Temporal getTemporal(StatisticalDateTimeOffset dateTimeOffset, boolean isDaily, ZoneOffset zoneOffset) {
-		if (dateTimeOffset.isRepresentsEndOfTimePeriod() && isDaily) {
+		if (dateTimeOffset.isRepresentsEndOfTimePeriod() != null && dateTimeOffset.isRepresentsEndOfTimePeriod() && isDaily) {
 			// Daily values with isRepresentsEndOfTimePeriod() end up with an Instant of midnight on the next day, rather than "2400" on the actual day.
 			return LocalDateTime.ofInstant(dateTimeOffset.getDateTimeOffset(), zoneOffset).toLocalDate().minusDays(1);
 		} else {
