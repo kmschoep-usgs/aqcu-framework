@@ -1,29 +1,37 @@
 package gov.usgs.aqcu.model;
 
-import java.time.Instant;
-import java.time.Duration;
 import java.math.BigDecimal;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.Temporal;
 
+/** 
+ * DataGaps come in two flavors, Daily and Instantaneous. Instantaneous work on a Instant and work right off the raw value.
+ * Daily only contain a LocalDate component. Durations are calculated based on start of day at UTC.
+ *
+ */
 public class DataGap {
-	private Instant startTime = null;
-	private Instant endTime = null;
+	private Temporal startTime = null;
+	private Temporal endTime = null;
 	private BigDecimal durationInHours = null;
 	private DataGapExtent gapExtent = DataGapExtent.OVER_ALL;
 
 	public DataGap() {}
 
-	public DataGap(Instant startTime, Instant endTime) {
+	public DataGap(Temporal startTime, Temporal endTime) {
 		this.startTime = startTime;
 		this.endTime = endTime;
 		calculateDurationInHours();
 		calculateGapExtent();
 	}
 
-	public Instant getStartTime() {
+	public Temporal getStartTime() {
 		return startTime;
 	}
 
-	public Instant getEndTime() {
+	public Temporal getEndTime() {
 		return endTime;
 	}
 
@@ -35,13 +43,13 @@ public class DataGap {
 		return durationInHours;
 	}
 
-	public void setStartTime(Instant val) {
+	public void setStartTime(Temporal val) {
 		startTime= val;
 		calculateDurationInHours();
 		calculateGapExtent();
 	}
 
-	public void setEndTime(Instant val) {
+	public void setEndTime(Temporal val) {
 		endTime = val;
 		calculateDurationInHours();
 		calculateGapExtent();
@@ -49,7 +57,11 @@ public class DataGap {
 
 	protected void calculateDurationInHours() {
 		if(startTime != null && endTime != null) {
-			durationInHours = BigDecimal.valueOf(Duration.between(startTime, endTime).getSeconds() / 3600.0);
+			if(startTime instanceof Instant && endTime instanceof Instant) {
+				durationInHours = BigDecimal.valueOf(Duration.between(startTime, endTime).getSeconds() / 3600.0);
+			} else if(startTime instanceof LocalDate && endTime instanceof LocalDate) {
+				durationInHours = BigDecimal.valueOf(Duration.between(((LocalDate) startTime).atStartOfDay(ZoneId.of("Z")), ((LocalDate) endTime).atStartOfDay(ZoneId.of("Z"))).getSeconds() / 3600.0);
+			}
 		} else {
 			durationInHours = null;
 		}

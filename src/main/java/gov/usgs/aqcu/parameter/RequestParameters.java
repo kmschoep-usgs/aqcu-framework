@@ -2,7 +2,6 @@ package gov.usgs.aqcu.parameter;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 import javax.validation.constraints.Max;
@@ -15,7 +14,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import gov.usgs.aqcu.validation.ReportPeriodPresent;
 import gov.usgs.aqcu.validation.StartDateBeforeEndDate;
-import gov.usgs.aqcu.util.AqcuTimeUtils;
 
 @ReportPeriodPresent
 @StartDateBeforeEndDate
@@ -38,20 +36,20 @@ public class RequestParameters {
 	@Max(value=12)
 	private Integer lastMonths;
 
-	private Pair<Instant,Instant> reportPeriod;
+	private Pair<LocalDate, LocalDate> reportPeriod;
 
-	public Instant getStartInstant() {
+	public Instant getStartInstant(ZoneOffset zoneOffset) {
 		if (reportPeriod == null) {
 			determineReportPeriod();
 		}
-		return reportPeriod.getLeft();
+		return reportPeriod.getLeft().atStartOfDay().toInstant(zoneOffset);
 	}
 
-	public Instant getEndInstant() {
+	public Instant getEndInstant(ZoneOffset zoneOffset) {
 		if (reportPeriod == null) {
 			determineReportPeriod();
 		}
-		return reportPeriod.getRight();
+		return reportPeriod.getRight().atTime(23,59,59,999999999).toInstant(zoneOffset);
 	}
 
 	public String getPrimaryTimeseriesIdentifier() {
@@ -91,43 +89,41 @@ public class RequestParameters {
 		} else if (waterYear != null) {
 			reportPeriod = waterYearToReportPeriod(waterYear);
 		} else if(startDate != null && endDate != null) {
-			reportPeriod = new ImmutablePair<Instant,Instant>(dateToReportStartTime(startDate), dateToReportEndTime(endDate));
+			reportPeriod = datesToReportPeriod(startDate, endDate);
 		} else {
-			reportPeriod = new ImmutablePair<>(null,null);
+			//Should never get here - Validation of parameters should have failed and control logic baled...
+			//TODO Perhaps throw a runtime exception?
 		}
 	}
 
-	protected Pair<Instant,Instant> waterYearToReportPeriod(Integer waterYear) {
-		Instant reportStartTime = Instant.from(LocalDateTime.of(waterYear-1,10,1,0,0,0,0).toInstant(ZoneOffset.UTC));
-		Instant reportEndTime = Instant.from(LocalDateTime.of(waterYear,9,30,23,59,59,999999999).toInstant(ZoneOffset.UTC));
+	protected Pair<LocalDate, LocalDate> waterYearToReportPeriod(Integer waterYear) {
+		LocalDate reportStartDate = LocalDate.of(waterYear-1,10,1);
+		LocalDate reportEndDate  = LocalDate.of(waterYear,9,30);
 
-		return new ImmutablePair<Instant,Instant>(reportStartTime, reportEndTime);
+		return new ImmutablePair<LocalDate, LocalDate>(reportStartDate, reportEndDate );
 	}
 
-	protected Pair<Instant,Instant> lastMonthsToReportPeriod(Integer lastMonths) {
-		LocalDate nowDate = LocalDate.now().minusMonths(lastMonths);
-		Instant reportStartTime = LocalDateTime.of(nowDate.getYear(), nowDate.getMonth(),1,0,0,0,0).toInstant(ZoneOffset.UTC);
-		Instant reportEndTime = LocalDate.now().atTime(23,59,59,999999999).toInstant(ZoneOffset.UTC);
+	protected Pair<LocalDate, LocalDate> lastMonthsToReportPeriod(Integer lastMonths) {
+		LocalDate nowMinusMonths = LocalDate.now().minusMonths(lastMonths);
+		LocalDate reportStartDate  = LocalDate.of(nowMinusMonths.getYear(), nowMinusMonths.getMonth(), 1);
+		LocalDate reportEndDate  = LocalDate.now();
 
-		return new ImmutablePair<Instant,Instant>(reportStartTime, reportEndTime);
+		return new ImmutablePair<LocalDate, LocalDate>(reportStartDate , reportEndDate);
 	}
 
-	protected Instant dateToReportStartTime(LocalDate startDate) {
-		Instant startTime = startDate.atStartOfDay().toInstant(ZoneOffset.UTC);
-		return startTime;
-	}
-
-	protected Instant dateToReportEndTime(LocalDate endDate) {
-		Instant endTime = endDate.atTime(23,59,59,999999999).toInstant(ZoneOffset.UTC);
-		return endTime;
+	protected Pair<LocalDate, LocalDate> datesToReportPeriod(LocalDate startDate, LocalDate endDate) {
+		return new ImmutablePair<LocalDate, LocalDate>(startDate, endDate);
 	}
 
 	public String getAsQueryString(String overrideIdentifier, boolean absoluteTime) {
 		String queryString = "";
+		if (reportPeriod == null) {
+			determineReportPeriod();
+		}
 
-		if(absoluteTime && getStartInstant() != null && getEndInstant() != null) {
-			queryString += "startDate=" + AqcuTimeUtils.toQueryDate(getStartInstant());
-			queryString += "&endDate=" + AqcuTimeUtils.toQueryDate(getEndInstant());
+		if(absoluteTime && reportPeriod != null) {
+			queryString += "startDate=" + reportPeriod.getLeft();
+			queryString += "&endDate=" + reportPeriod.getRight();
 		} else {
 			if (getLastMonths() != null) {
 				queryString += "lastMonths=" + getLastMonths();

@@ -2,6 +2,7 @@ package gov.usgs.aqcu.builder;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +45,8 @@ public class DataGapListBuilderTest {
 		.setTimestamp(new StatisticalDateTimeOffset().setDateTimeOffset(Instant.parse("2017-01-04T00:00:00Z")))
 		.setValue(POINT_VALUE);
 
+	final ZoneOffset zoneOffset = ZoneOffset.of("-6");
+
 	@Before
 	public void setup() {
 		service = new DataGapListBuilderService();
@@ -55,14 +58,14 @@ public class DataGapListBuilderTest {
 
 	@Test
 	public void noPointsTest() {
-		List<DataGap> result = service.buildGapList(new ArrayList<>());
+		List<DataGap> result = service.buildGapList(new ArrayList<>(), false, null);
 		assertTrue(result.isEmpty());
 	}
 
 	@Test
 	public void nullPointsTest() {
 		try {
-			service.buildGapList(null);
+			service.buildGapList(null, false, null);
 		} catch (NullPointerException e) {
 			return;
 		} catch (Exception e) {
@@ -73,14 +76,14 @@ public class DataGapListBuilderTest {
 
 	@Test 
 	public void noGapsTest() {
-		List<DataGap> result = service.buildGapList(pointList);
+		List<DataGap> result = service.buildGapList(pointList, false, null);
 		assertTrue(result.isEmpty());
 	}
 
 	@Test
 	public void containedGapTest() {
 		pointList.add(1, GAP_MARKER_CONTAINED);
-		List<DataGap> result = service.buildGapList(pointList);
+		List<DataGap> result = service.buildGapList(pointList, false, ZoneOffset.UTC);
 		assertEquals(1, result.size());
 		assertEquals(POINT_1.getTimestamp().getDateTimeOffset(), result.get(0).getStartTime());
 		assertEquals(POINT_2.getTimestamp().getDateTimeOffset(), result.get(0).getEndTime());
@@ -91,7 +94,7 @@ public class DataGapListBuilderTest {
 	@Test
 	public void overStartGapTest() {
 		pointList.add(0, GAP_MARKER_OVER_START);
-		List<DataGap> result = service.buildGapList(pointList);
+		List<DataGap> result = service.buildGapList(pointList, false, ZoneOffset.UTC);
 		assertEquals(1, result.size());
 		assertEquals(null, result.get(0).getStartTime());
 		assertEquals(POINT_1.getTimestamp().getDateTimeOffset(), result.get(0).getEndTime());
@@ -102,7 +105,7 @@ public class DataGapListBuilderTest {
 	@Test
 	public void overEndGapTest() {
 		pointList.add(3, GAP_MARKER_OVER_END);
-		List<DataGap> result = service.buildGapList(pointList);
+		List<DataGap> result = service.buildGapList(pointList, false, ZoneOffset.UTC);
 		assertEquals(1, result.size());
 		assertEquals(POINT_3.getTimestamp().getDateTimeOffset(), result.get(0).getStartTime());
 		assertEquals(null, result.get(0).getEndTime());
@@ -114,7 +117,7 @@ public class DataGapListBuilderTest {
 	public void overAllGapTest() {
 		List<TimeSeriesPoint> singleMarkerList = new ArrayList<>();
 		singleMarkerList.add(GAP_MARKER_CONTAINED);
-		List<DataGap> result = service.buildGapList(singleMarkerList);
+		List<DataGap> result = service.buildGapList(singleMarkerList, false, ZoneOffset.UTC);
 		assertEquals(1, result.size());
 		assertEquals(null, result.get(0).getStartTime());
 		assertEquals(null, result.get(0).getEndTime());
@@ -127,7 +130,7 @@ public class DataGapListBuilderTest {
 		pointList.add(0, GAP_MARKER_OVER_START);
 		pointList.add(2, GAP_MARKER_CONTAINED);
 		pointList.add(5, GAP_MARKER_OVER_END);
-		List<DataGap> result = service.buildGapList(pointList);
+		List<DataGap> result = service.buildGapList(pointList, false, ZoneOffset.UTC);
 		assertEquals(3, result.size());
 		assertEquals(null, result.get(0).getStartTime());
 		assertEquals(POINT_1.getTimestamp().getDateTimeOffset(), result.get(0).getEndTime());
@@ -141,5 +144,39 @@ public class DataGapListBuilderTest {
 		assertEquals(null, result.get(2).getEndTime());
 		assertEquals(null, result.get(2).getDurationInHours());
 		assertEquals(DataGapExtent.OVER_END, result.get(2).getGapExtent());
+	}
+
+	@Test
+	public void otherTimezoneTest() {
+		pointList.add(1, GAP_MARKER_CONTAINED);
+		List<DataGap> result = service.buildGapList(pointList, false, zoneOffset);
+		assertEquals(1, result.size());
+		assertEquals(POINT_1.getTimestamp().getDateTimeOffset(), result.get(0).getStartTime());
+		assertEquals(POINT_2.getTimestamp().getDateTimeOffset(), result.get(0).getEndTime());
+		assertEquals(BigDecimal.valueOf(24.0), result.get(0).getDurationInHours());
+		assertEquals(DataGapExtent.CONTAINED, result.get(0).getGapExtent());
+	}
+
+	@Test
+	public void dvTest() {
+		TimeSeriesPoint point1 = new TimeSeriesPoint()
+				.setTimestamp(new StatisticalDateTimeOffset().setDateTimeOffset(Instant.parse("2017-01-01T06:00:00Z")).setRepresentsEndOfTimePeriod(true))
+				.setValue(POINT_VALUE);
+		TimeSeriesPoint point2 = new TimeSeriesPoint()
+				.setTimestamp(new StatisticalDateTimeOffset().setDateTimeOffset(Instant.parse("2017-01-02T06:00:00Z")).setRepresentsEndOfTimePeriod(true))
+				.setValue(GAP_MARKER_VALUE);
+		TimeSeriesPoint point3 = new TimeSeriesPoint()
+				.setTimestamp(new StatisticalDateTimeOffset().setDateTimeOffset(Instant.parse("2017-01-03T06:00:00Z")).setRepresentsEndOfTimePeriod(true))
+				.setValue(POINT_VALUE);
+		List<TimeSeriesPoint> dvList = new ArrayList<>();
+		dvList.add(point1);
+		dvList.add(point2);
+		dvList.add(point3);
+		List<DataGap> result = service.buildGapList(dvList, true, zoneOffset);
+		assertEquals(1, result.size());
+		assertEquals("2016-12-31", result.get(0).getStartTime().toString());
+		assertEquals("2017-01-02", result.get(0).getEndTime().toString());
+		assertEquals(BigDecimal.valueOf(48.0), result.get(0).getDurationInHours());
+		assertEquals(DataGapExtent.CONTAINED, result.get(0).getGapExtent());
 	}
 }

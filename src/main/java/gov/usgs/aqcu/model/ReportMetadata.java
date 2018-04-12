@@ -1,12 +1,10 @@
 package gov.usgs.aqcu.model;
 
-import java.util.Map;
-import java.util.HashMap;
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.QualifierMetadata;
-
-import gov.usgs.aqcu.parameter.RequestParameters;
 
 public class ReportMetadata {
 	private String timezone;
@@ -23,20 +21,17 @@ public class ReportMetadata {
 
 	public ReportMetadata(
 		String reportTitle,
-		RequestParameters requestParameters,
 		Double utcOffset,
 		String stationName,
 		String stationId,
 		Map<String,QualifierMetadata> qualifierMetadata) {
 		setTitle(reportTitle);
-		setStartDate(requestParameters.getStartInstant());
-		setEndDate(requestParameters.getEndInstant());
 		setTimezone(utcOffset);
 		setStationName(stationName);
 		setStationId(stationId);
 		setQualifierMetadata(qualifierMetadata);
 	}
-	
+
 	public String getTimezone() {
 		return timezone;
 	}
@@ -52,7 +47,7 @@ public class ReportMetadata {
 	public String getTitle() {
 		return title;
 	}
-	
+
 	public String getStationName() {
 		return stationName;
 	}
@@ -64,7 +59,7 @@ public class ReportMetadata {
 	public Map<String, QualifierMetadata> getQualifierMetadata() {
 		return qualifierMetadata;
 	}
-	
+
 	public void setTimezone(String val) {
 		timezone = val;
 	}
@@ -84,7 +79,7 @@ public class ReportMetadata {
 	public void setTitle(String val) {
 		title = val;
 	}
-	
+
 	public void setStationName(String val) {
 		stationName = val;
 	}
