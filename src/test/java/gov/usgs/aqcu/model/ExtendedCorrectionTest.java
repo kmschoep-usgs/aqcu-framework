@@ -11,14 +11,15 @@ public class ExtendedCorrectionTest {
 
 	@Test
 	public void extendedTypeAssignmentTest() {
-		assertEquals(ExtendedCorrectionType.fromCorrection(new Correction().setType(CorrectionType.Offset)), null);
-		assertEquals(ExtendedCorrectionType.fromCorrection(new Correction().setType(CorrectionType.DeleteRegion)), null);
-		assertEquals(ExtendedCorrectionType.fromCorrection(new Correction().setType(CorrectionType.UsgsMultiPoint)), null);
-		assertEquals(ExtendedCorrectionType.fromCorrection(new Correction().setType(CorrectionType.CopyPaste)), null);
-		assertEquals(ExtendedCorrectionType.fromCorrection(new Correction().setType(CorrectionType.CopyPaste).setComment("freehand")), ExtendedCorrectionType.Freehand);
-		assertEquals(ExtendedCorrectionType.fromCorrection(new Correction().setType(CorrectionType.CopyPaste).setComment("FREEHAND")), ExtendedCorrectionType.Freehand);
-		assertEquals(ExtendedCorrectionType.fromCorrection(new Correction().setType(CorrectionType.CopyPaste).setComment("freeHAND")), ExtendedCorrectionType.Freehand);
-		assertEquals(ExtendedCorrectionType.fromCorrection(new Correction().setType(CorrectionType.CopyPaste).setComment("text including the word freehand")), ExtendedCorrectionType.Freehand);
+		assertEquals(new ExtendedCorrection(new Correction()).getAqcuExtendedCorrectionType(), null);
+		assertEquals(new ExtendedCorrection(new Correction().setType(CorrectionType.Offset)).getAqcuExtendedCorrectionType(), null);
+		assertEquals(new ExtendedCorrection(new Correction().setType(CorrectionType.DeleteRegion)).getAqcuExtendedCorrectionType(), null);
+		assertEquals(new ExtendedCorrection(new Correction().setType(CorrectionType.UsgsMultiPoint)).getAqcuExtendedCorrectionType(), null);
+		assertEquals(new ExtendedCorrection(new Correction().setType(CorrectionType.CopyPaste)).getAqcuExtendedCorrectionType(), null);
+		assertEquals(new ExtendedCorrection(new Correction().setType(CorrectionType.CopyPaste).setComment("freehand")).getAqcuExtendedCorrectionType(), ExtendedCorrectionType.Freehand);
+		assertEquals(new ExtendedCorrection(new Correction().setType(CorrectionType.CopyPaste).setComment("FREEHAND")).getAqcuExtendedCorrectionType(), ExtendedCorrectionType.Freehand);
+		assertEquals(new ExtendedCorrection(new Correction().setType(CorrectionType.CopyPaste).setComment("freeHAND")).getAqcuExtendedCorrectionType(), ExtendedCorrectionType.Freehand);
+		assertEquals(new ExtendedCorrection(new Correction().setType(CorrectionType.CopyPaste).setComment("text including the word freehand")).getAqcuExtendedCorrectionType(), ExtendedCorrectionType.Freehand);
 	}
 
 	@Test
