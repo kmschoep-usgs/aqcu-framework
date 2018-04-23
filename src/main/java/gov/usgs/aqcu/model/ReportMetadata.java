@@ -6,6 +6,8 @@ import java.util.Map;
 
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.QualifierMetadata;
 
+import gov.usgs.aqcu.util.AqcuTimeUtils;
+
 public class ReportMetadata {
 	private String timezone;
 	private Instant startDate;
@@ -17,19 +19,6 @@ public class ReportMetadata {
 
 	public ReportMetadata() {
 		qualifierMetadata = new HashMap<>();
-	}
-
-	public ReportMetadata(
-		String reportTitle,
-		Double utcOffset,
-		String stationName,
-		String stationId,
-		Map<String,QualifierMetadata> qualifierMetadata) {
-		setTitle(reportTitle);
-		setTimezone(utcOffset);
-		setStationName(stationName);
-		setStationId(stationId);
-		setQualifierMetadata(qualifierMetadata);
 	}
 
 	public String getTimezone() {
@@ -60,35 +49,34 @@ public class ReportMetadata {
 		return qualifierMetadata;
 	}
 
-	public void setTimezone(String val) {
-		timezone = val;
+	public void setTimezone(String timezone) {
+		this.timezone = timezone;
+	}
+	public void setTimezone(Double offset) {
+		this.timezone = AqcuTimeUtils.getTimezone(offset);
 	}
 
-	public void setTimezone(Double utcOffset) {
-		timezone = (utcOffset != null) ? ("Etc/GMT+" + (int)(-1 * utcOffset)) : null;
+	public void setStartDate(Instant startDate) {
+		this.startDate = startDate;
 	}
 
-	public void setStartDate(Instant val) {
-		startDate = val;
+	public void setEndDate(Instant endDate) {
+		this.endDate = endDate;
 	}
 
-	public void setEndDate(Instant val) {
-		endDate = val;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
-	public void setTitle(String val) {
-		title = val;
+	public void setStationName(String stationName) {
+		this.stationName = stationName;
 	}
 
-	public void setStationName(String val) {
-		stationName = val;
+	public void setStationId(String stationId) {
+		this.stationId = stationId;
 	}
 
-	public void setStationId(String val) {
-		stationId = val;
-	}
-
-	public void setQualifierMetadata(Map<String, QualifierMetadata> val) {
-		qualifierMetadata = val;
+	public void setQualifierMetadata(Map<String, QualifierMetadata> qualifierMetadata) {
+		this.qualifierMetadata = qualifierMetadata;
 	}
 }

@@ -116,4 +116,15 @@ public class AqcuTimeUtilsTest {
 	public void getZoneOffsetEatExceptionTest() {
 		assertEquals(ZoneOffset.UTC, AqcuTimeUtils.getZoneOffset(24.0));
 	}
+
+	@Test
+	public void getTimezoneMinusTest() {
+		assertEquals("Etc/GMT+4", AqcuTimeUtils.getTimezone(Double.parseDouble("-4")));
+		assertEquals("Etc/GMT+0", AqcuTimeUtils.getTimezone(Double.parseDouble("0")));
+	}
+
+	@Test
+	public void getTimezonePlusTest() {
+		assertEquals("Etc/GMT-4", AqcuTimeUtils.getTimezone(Double.parseDouble("4")));
+	}
 }

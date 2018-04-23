@@ -6,6 +6,9 @@ import static org.junit.Assert.assertEquals;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 
 import com.google.gson.Gson;
 
@@ -35,8 +38,8 @@ public class GsonSerializationTest {
 
 	@Test
 	public void instantSerializationTest() {
-		assertEquals(gson.toJson(reportEndInstant).compareTo("\"2018-03-16T23:59:59.9999999Z\""), 0);
-		assertEquals(gson.toJson(reportStartInstant).compareTo("\"2018-02-16T00:00:00.0000000Z\""), 0);
+		assertEquals("\"2018-03-16T23:59:59.9999999Z\"", gson.toJson(reportEndInstant));
+		assertEquals("\"2018-02-16T00:00:00.0000000Z\"", gson.toJson(reportStartInstant));
 	}
 
 	@Test
@@ -45,16 +48,23 @@ public class GsonSerializationTest {
 		assertEquals(reportStartInstant, gson.fromJson("\"2018-02-16T00:00:00.00Z\"", Instant.class));
 	}
 
-	@Test 
+	@Test
 	public void localDateSerializationTest() {
-		assertEquals(0, gson.toJson(reportEndDate).compareTo("\"2018-03-16\""));
-		assertEquals(0, gson.toJson(reportStartDate).compareTo("\"2018-02-16\""));
+		assertEquals("\"2018-03-16\"", gson.toJson(reportEndDate));
+		assertEquals("\"2018-02-16\"", gson.toJson(reportStartDate));
 	}
 
-	@Test 
+	@Test
 	public void lowerCamelCaseTest() {
 		SerializationTestClass testClass = new SerializationTestClass();
 		testClass.setUpperCamelCaseString("test");
-		assertEquals(0, gson.toJson(testClass).compareTo("{\"upperCamelCaseString\":\"test\"}"));
+		assertEquals("{\"upperCamelCaseString\":\"test\"}", gson.toJson(testClass));
+	}
+
+	@Test
+	public void offsetDateTimeSerializationTest() {
+		LocalDateTime ldt = LocalDateTime.of(2018, 4, 23, 9, 8, 12, 3000);
+		assertEquals("\"2018-04-23T15:08:12.0000030Z\"", gson.toJson(OffsetDateTime.of(ldt, ZoneOffset.of("-6"))));
+		assertEquals("\"2018-04-23T09:08:12.0000030Z\"", gson.toJson(OffsetDateTime.of(ldt, ZoneOffset.UTC)));
 	}
 }
