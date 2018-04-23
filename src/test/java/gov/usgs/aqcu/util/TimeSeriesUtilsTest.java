@@ -14,6 +14,7 @@ public class TimeSeriesUtilsTest {
 	@Test
 	public void getZoneOffsetNullTest() {
 		assertEquals(ZoneOffset.UTC, TimeSeriesUtils.getZoneOffset(null));
+		assertEquals(ZoneOffset.UTC, TimeSeriesUtils.getZoneOffset(new TimeSeriesDescription()));
 	}
 
 	@Test
