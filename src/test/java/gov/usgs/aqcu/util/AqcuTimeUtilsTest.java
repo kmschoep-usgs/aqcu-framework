@@ -3,6 +3,7 @@ package gov.usgs.aqcu.util;
 import static org.junit.Assert.assertEquals;
 
 import java.time.Instant;
+import java.time.ZoneOffset;
 
 import org.junit.Test;
 
@@ -94,5 +95,25 @@ public class AqcuTimeUtilsTest {
 		assertEquals(AqcuTimeUtils.toQueryDate(end1).compareTo("2017-03-01"), 0);
 		assertEquals(AqcuTimeUtils.toQueryDate(open1).compareTo("0001-01-01"), 0);
 		assertEquals(AqcuTimeUtils.toQueryDate(open2).compareTo("9999-12-31"), 0);
+	}
+
+	@Test
+	public void getZoneOffsetNullTest() {
+		assertEquals(ZoneOffset.UTC, AqcuTimeUtils.getZoneOffset(null));
+	}
+
+	@Test
+	public void getZoneOffsetMinutesTest() {
+		assertEquals(ZoneOffset.ofHoursMinutes(-5, -30), AqcuTimeUtils.getZoneOffset(-5.3));
+	}
+
+	@Test
+	public void getZoneOffsetHoursTest() {
+		assertEquals(ZoneOffset.ofHours(6), AqcuTimeUtils.getZoneOffset(6.0));
+	}
+
+	@Test
+	public void getZoneOffsetEatExceptionTest() {
+		assertEquals(ZoneOffset.UTC, AqcuTimeUtils.getZoneOffset(24.0));
 	}
 }

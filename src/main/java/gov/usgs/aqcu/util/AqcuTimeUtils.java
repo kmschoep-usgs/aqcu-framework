@@ -4,12 +4,15 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.Temporal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.aquaticinformatics.aquarius.sdk.timeseries.serializers.InstantDeserializer;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.PeriodOfApplicability;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.StatisticalDateTimeOffset;
 
 public abstract class AqcuTimeUtils {
+	private static final Logger LOG = LoggerFactory.getLogger(AqcuTimeUtils.class);
 	public static final Instant OPEN_ENDED_START_THRESHOLD = InstantDeserializer.MinConcreteValue;
 	public static final Instant OPEN_ENDED_END_THRESHOLD = InstantDeserializer.MaxConcreteValue;
 
@@ -42,4 +45,25 @@ public abstract class AqcuTimeUtils {
 			return dateTimeOffset.getDateTimeOffset();
 		}
 	}
+
+	public static ZoneOffset getZoneOffset(Double utcOffset) {
+		// Default to UTC
+		ZoneOffset zoneOffset = ZoneOffset.UTC;
+		utcOffset = utcOffset == null ? 0 : utcOffset;
+
+		try {
+			Double minutes = utcOffset % 1;
+			if (minutes != 0) {
+				Double hours = utcOffset - minutes;
+				zoneOffset = ZoneOffset.ofHoursMinutes(hours.intValue(), (int) Math.round(minutes * 100));
+			} else {
+				zoneOffset = ZoneOffset.ofHours(utcOffset.intValue());
+			}
+		} catch (Exception e) {
+			LOG.info("Error converting utcOffset({}) to ZoneOffset", utcOffset);
+		}
+
+		return zoneOffset;
+	}
+
 }
