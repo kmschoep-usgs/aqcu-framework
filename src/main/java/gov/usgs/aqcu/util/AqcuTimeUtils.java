@@ -66,4 +66,14 @@ public abstract class AqcuTimeUtils {
 		return zoneOffset;
 	}
 
+	public static String getTimezone(Double offset) {
+		StringBuilder timezone = new StringBuilder("Etc/GMT");
+		if (offset <= 0) {
+			timezone.append("+");
+		} else {
+			timezone.append("-");
+		}
+		timezone.append(Math.abs(offset.intValue()));
+		return timezone.toString();
+	}
 }

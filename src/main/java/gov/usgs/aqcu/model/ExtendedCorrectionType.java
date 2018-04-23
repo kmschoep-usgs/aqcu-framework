@@ -3,7 +3,7 @@ package gov.usgs.aqcu.model;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.Correction;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.CorrectionType;
 
-public enum ExtendedCorrectionType  {	
+public enum ExtendedCorrectionType {	
 	Freehand;
 
 	public static ExtendedCorrectionType fromCorrection(Correction correction) {
