@@ -58,6 +58,7 @@ public class GsonSerializationTest {
 	public void lowerCamelCaseTest() {
 		SerializationTestClass testClass = new SerializationTestClass();
 		testClass.setUpperCamelCaseString("test");
+		assertEquals(testClass.getUpperCamelCaseString(), "test");
 		assertEquals("{\"upperCamelCaseString\":\"test\"}", gson.toJson(testClass));
 	}
 

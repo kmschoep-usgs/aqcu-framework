@@ -15,6 +15,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <additionalparam>-Xdoclint:none</additionalparam>
         <failOnMissingWebXml>false</failOnMissingWebXml>
+        <aquarius.sdk.version>18.5.2</aquarius.sdk.version>
     </properties>
 
     <distributionManagement>
@@ -66,7 +67,7 @@
         <dependency>
             <groupId>com.aquaticinformatics</groupId>
             <artifactId>aquarius.sdk</artifactId>
-            <version>17.4.3</version>
+            <version>${aquarius.sdk.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -115,6 +116,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
+                <version>latest</version>
                 <configuration>
                     <skip>true</skip>
                 </configuration>
