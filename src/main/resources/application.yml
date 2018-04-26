@@ -17,9 +17,8 @@
 #    enabled: false
 
 javaToR:
-  ribbon:
-    listOfServers: ${javaToRServers}
-    IsSecure: ${javaToRIsSecure:true}
+  service:
+    endpoint: ${javaToRServiceEndpoint}
 
 #eureka:
 #  client:
