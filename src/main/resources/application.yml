@@ -20,6 +20,11 @@ javaToR:
   service:
     endpoint: ${javaToRServiceEndpoint}
 
+aquarius:
+  service:
+    retries:
+      unauthorized: ${aquariusUnauthorizedRetires:3}
+
 #eureka:
 #  client:
 #    enabled: false
