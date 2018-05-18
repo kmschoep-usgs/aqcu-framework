@@ -12,10 +12,10 @@ import javax.validation.Payload;
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Constraint(validatedBy = { ReportPeriodPresentValidator.class })
-public @interface ReportPeriodPresent {
+@Constraint(validatedBy = { RequestPeriodPresentValidator.class })
+public @interface RequestPeriodPresent {
 
-	String message() default "Missing information required to build report time period. Must include at least one of: [lastMonths, waterYear, {startDate, endDate}].";
+	String message() default "Missing information required to build request time period. Must include at least one of: [lastMonths, waterYear, {startDate, endDate}].";
 
 	Class<?>[] groups() default {};
 

@@ -3,12 +3,12 @@ package gov.usgs.aqcu.validation;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import gov.usgs.aqcu.parameter.RequestParameters;
+import gov.usgs.aqcu.parameter.DateRangeRequestParameters;
 
-public class ReportPeriodPresentValidator implements ConstraintValidator<ReportPeriodPresent, RequestParameters> {
+public class RequestPeriodPresentValidator implements ConstraintValidator<RequestPeriodPresent, DateRangeRequestParameters> {
 
 	@Override
-	public void initialize(ReportPeriodPresent constraintAnnotation) {
+	public void initialize(RequestPeriodPresent constraintAnnotation) {
 		// Nothing to see here.
 	}
 
@@ -16,7 +16,7 @@ public class ReportPeriodPresentValidator implements ConstraintValidator<ReportP
 	/** 
 	 * This validation is based on a hierarchy - the first valid situation is accepted and used.
 	 */
-	public boolean isValid(RequestParameters value, ConstraintValidatorContext context) {
+	public boolean isValid(DateRangeRequestParameters value, ConstraintValidatorContext context) {
 		if (value.getLastMonths() != null) {
 			return true;
 		} else if (value.getWaterYear() != null) {

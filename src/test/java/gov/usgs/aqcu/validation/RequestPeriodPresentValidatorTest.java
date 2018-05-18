@@ -11,21 +11,21 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import gov.usgs.aqcu.parameter.RequestParameters;
-import gov.usgs.aqcu.validation.ReportPeriodPresentValidator;
+import gov.usgs.aqcu.parameter.DateRangeRequestParameters;
+import gov.usgs.aqcu.validation.RequestPeriodPresentValidator;
 
-public class ReportPeriodPresentValidatorTest {
+public class RequestPeriodPresentValidatorTest {
 
 	@Mock
 	protected ConstraintValidatorContext context;
 
-	protected ReportPeriodPresentValidator validator;
-	protected RequestParameters params;
+	protected RequestPeriodPresentValidator validator;
+	protected DateRangeRequestParameters params;
 
 	@Before
 	public void setup() {
-		validator = new ReportPeriodPresentValidator();
-		params = new RequestParameters();
+		validator = new RequestPeriodPresentValidator();
+		params = new DateRangeRequestParameters();
 	}
 
 	@Test

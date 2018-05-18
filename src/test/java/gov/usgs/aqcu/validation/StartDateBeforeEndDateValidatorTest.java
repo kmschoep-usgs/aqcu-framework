@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import gov.usgs.aqcu.parameter.RequestParameters;
+import gov.usgs.aqcu.parameter.DateRangeRequestParameters;
 import gov.usgs.aqcu.validation.StartDateBeforeEndDateValidator;
 
 public class StartDateBeforeEndDateValidatorTest {
@@ -20,12 +20,12 @@ public class StartDateBeforeEndDateValidatorTest {
 	protected ConstraintValidatorContext context;
 
 	protected StartDateBeforeEndDateValidator validator;
-	protected RequestParameters params;
+	protected DateRangeRequestParameters params;
 
 	@Before
 	public void setup() {
 		validator = new StartDateBeforeEndDateValidator();
-		params = new RequestParameters();
+		params = new DateRangeRequestParameters();
 	}
 
 	@Test
