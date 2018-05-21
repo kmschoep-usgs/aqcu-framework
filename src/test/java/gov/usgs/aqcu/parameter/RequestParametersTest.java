@@ -13,7 +13,7 @@ import org.junit.Test;
 
 public class RequestParametersTest {
 
-	private RequestParameters params;
+	private ReportRequestParameters params;
 	private LocalDate last3MonthsBeginDate = LocalDate.parse(LocalDate.now().minusMonths(3).format(DateTimeFormatter.ofPattern("yyyy-MM")) + "-01");
 	private LocalDate last3MonthsEndDate = LocalDate.now();
 	private LocalDate waterYear2018BeginDate = LocalDate.parse("2017-10-01");
@@ -30,92 +30,92 @@ public class RequestParametersTest {
 
 	@Before
 	public void setup() {
-		params = new RequestParameters();
+		params = new ReportRequestParameters();
 	}
 
 	@Test
-	public void datesToReportPeriodTest() {
-		Pair<LocalDate,LocalDate> reportPeriod = params.datesToReportPeriod(reportStartDate, reportEndDate);
-		assertEquals(reportStartDate, reportPeriod.getLeft());
-		assertEquals(reportEndDate, reportPeriod.getRight());
+	public void datesToRequestPeriodTest() {
+		Pair<LocalDate,LocalDate> requestPeriod = params.datesToRequestPeriod(reportStartDate, reportEndDate);
+		assertEquals(reportStartDate, requestPeriod.getLeft());
+		assertEquals(reportEndDate, requestPeriod.getRight());
 	}
 
 	@Test
-	public void lastMonthsToReportPeriodTest() {
-		Pair<LocalDate,LocalDate> reportPeriod = params.lastMonthsToReportPeriod(3);
-		assertEquals(last3MonthsBeginDate, reportPeriod.getLeft());
-		assertEquals(last3MonthsEndDate, reportPeriod.getRight());
+	public void lastMonthsToRequestPeriodTest() {
+		Pair<LocalDate,LocalDate> requestPeriod = params.lastMonthsToRequestPeriod(3);
+		assertEquals(last3MonthsBeginDate, requestPeriod.getLeft());
+		assertEquals(last3MonthsEndDate, requestPeriod.getRight());
 	}
 
 	@Test
-	public void waterYearToReportPeriodTest() {
-		Pair<LocalDate,LocalDate> reportPeriod = params.waterYearToReportPeriod(2018);
-		assertEquals(waterYear2018BeginDate, reportPeriod.getLeft());
-		assertEquals(waterYear2018EndDate, reportPeriod.getRight());
+	public void waterYearToRequestPeriodTest() {
+		Pair<LocalDate,LocalDate> requestPeriod = params.waterYearToRequestPeriod(2018);
+		assertEquals(waterYear2018BeginDate, requestPeriod.getLeft());
+		assertEquals(waterYear2018EndDate, requestPeriod.getRight());
 	}
 
 	@Test
-	public void determineReportPeriod_lastmonthsTest() {
+	public void determineRequestPeriod_lastmonthsTest() {
 		params.setLastMonths(3);
-		params.determineReportPeriod();
+		params.determineRequestPeriod();
 		assertEquals(last3MonthsBeginUtc, params.getStartInstant(ZoneOffset.UTC));
 		assertEquals(last3MonthsEndUtc, params.getEndInstant(ZoneOffset.UTC));
 	}
 
 	@Test
-	public void determineReportPeriod_waterYearTest() {
+	public void determineRequestPeriod_waterYearTest() {
 		params.setWaterYear(2018);
-		params.determineReportPeriod();
+		params.determineRequestPeriod();
 		assertEquals(waterYear2018BeginUtc, params.getStartInstant(ZoneOffset.UTC));
 		assertEquals(waterYear2018EndUtc, params.getEndInstant(ZoneOffset.UTC));
 	}
 
 	@Test
-	public void determineReportPeriod_fromDatesTest() {
+	public void determineRequestPeriod_fromDatesTest() {
 		params.setEndDate(reportEndDate);
 		params.setStartDate(reportStartDate);
-		params.determineReportPeriod();
+		params.determineRequestPeriod();
 		assertEquals(reportStartInstantUtc, params.getStartInstant(ZoneOffset.UTC));
 		assertEquals(reportEndInstantUtc, params.getEndInstant(ZoneOffset.UTC));
 	}
 
 
 	@Test
-	public void determineReportPeriod_waterYearOverridesDatesTest() {
+	public void determineRequestPeriod_waterYearOverridesDatesTest() {
 		params.setWaterYear(2018);
 		params.setEndDate(reportEndDate);
 		params.setStartDate(reportStartDate);
-		params.determineReportPeriod();
+		params.determineRequestPeriod();
 		assertEquals(waterYear2018BeginUtc, params.getStartInstant(ZoneOffset.UTC));
 		assertEquals(waterYear2018EndUtc, params.getEndInstant(ZoneOffset.UTC));
 	}
 
 	@Test
-	public void determineReportPeriod_lastmonthsOverridesDatesTest() {
+	public void determineRequestPeriod_lastmonthsOverridesDatesTest() {
 		params.setLastMonths(3);
 		params.setEndDate(reportEndDate);
 		params.setStartDate(reportStartDate);
-		params.determineReportPeriod();
+		params.determineRequestPeriod();
 		assertEquals(last3MonthsBeginUtc, params.getStartInstant(ZoneOffset.UTC));
 		assertEquals(last3MonthsEndUtc, params.getEndInstant(ZoneOffset.UTC));
 	}
 
 	@Test
-	public void determineReportPeriod_lastmonthsOverridesWaterYearTest() {
+	public void determineRequestPeriod_lastmonthsOverridesWaterYearTest() {
 		params.setLastMonths(3);
 		params.setWaterYear(2018);
-		params.determineReportPeriod();
+		params.determineRequestPeriod();
 		assertEquals(last3MonthsBeginUtc, params.getStartInstant(ZoneOffset.UTC));
 		assertEquals(last3MonthsEndUtc, params.getEndInstant(ZoneOffset.UTC));
 	}
 
 	@Test
-	public void determineReportPeriod_lastmonthsOverridesAllTest() {
+	public void determineRequestPeriod_lastmonthsOverridesAllTest() {
 		params.setLastMonths(3);
 		params.setWaterYear(2018);
 		params.setEndDate(reportEndDate);
 		params.setStartDate(reportStartDate);
-		params.determineReportPeriod();
+		params.determineRequestPeriod();
 		assertEquals(last3MonthsBeginUtc, params.getStartInstant(ZoneOffset.UTC));
 		assertEquals(last3MonthsEndUtc, params.getEndInstant(ZoneOffset.UTC));
 	}
@@ -137,7 +137,7 @@ public class RequestParametersTest {
 		params.setEndDate(reportEndDate);
 		params.setStartDate(reportStartDate);
 		params.setPrimaryTimeseriesIdentifier(primaryIdentifier);
-		params.determineReportPeriod();
+		params.determineRequestPeriod();
 		String expected = "startDate=" + reportStartDate.toString().substring(0, 10) + 
 						"&endDate=" + reportStartDate.toString().substring(0, 10) + "&primaryTimeseriesIdentifier=test-identifier";
 		assertEquals(0, params.getAsQueryString(null, true).compareTo(expected));
@@ -147,7 +147,7 @@ public class RequestParametersTest {
 	public void getAsQueryStringAbsoluteWYTest() {
 		params.setWaterYear(2018);
 		params.setPrimaryTimeseriesIdentifier(primaryIdentifier);
-		params.determineReportPeriod();
+		params.determineRequestPeriod();
 		String expected = "startDate=" + waterYear2018BeginUtc.toString().substring(0, 10) + 
 						"&endDate=" + waterYear2018EndUtc.toString().substring(0, 10) + "&primaryTimeseriesIdentifier=test-identifier";
 		assertEquals(0, params.getAsQueryString(null, true).compareTo(expected));
@@ -157,7 +157,7 @@ public class RequestParametersTest {
 	public void getAsQueryStringAbsoluteLastMonthsTest() {
 		params.setLastMonths(3);
 		params.setPrimaryTimeseriesIdentifier(primaryIdentifier);
-		params.determineReportPeriod();
+		params.determineRequestPeriod();
 		String expected = "startDate=" + last3MonthsBeginUtc.toString().substring(0, 10) + 
 						"&endDate=" + last3MonthsEndUtc.toString().substring(0, 10) + "&primaryTimeseriesIdentifier=test-identifier";
 		assertEquals(0, params.getAsQueryString(null, true).compareTo(expected));
@@ -168,7 +168,7 @@ public class RequestParametersTest {
 		params.setEndDate(reportEndDate);
 		params.setStartDate(reportStartDate);
 		params.setPrimaryTimeseriesIdentifier(primaryIdentifier);
-		params.determineReportPeriod();
+		params.determineRequestPeriod();
 		String expected = "startDate=" + reportStartDate.toString().substring(0, 10) + 
 						"&endDate=" + reportEndDate.toString().substring(0, 10) + "&primaryTimeseriesIdentifier=test-identifier";
 		assertEquals(0, params.getAsQueryString(null, false).compareTo(expected));
@@ -178,7 +178,7 @@ public class RequestParametersTest {
 	public void getAsQueryStringWYTest() {
 		params.setWaterYear(2018);
 		params.setPrimaryTimeseriesIdentifier(primaryIdentifier);
-		params.determineReportPeriod();
+		params.determineRequestPeriod();
 		String expected = "waterYear=2018&primaryTimeseriesIdentifier=test-identifier";
 		assertEquals(0, params.getAsQueryString(null, false).compareTo(expected));
 	}
@@ -187,7 +187,7 @@ public class RequestParametersTest {
 	public void getAsQueryStringLastMonthsTest() {
 		params.setLastMonths(3);
 		params.setPrimaryTimeseriesIdentifier(primaryIdentifier);
-		params.determineReportPeriod();
+		params.determineRequestPeriod();
 		String expected = "lastMonths=3&primaryTimeseriesIdentifier=test-identifier";
 		assertEquals(0, params.getAsQueryString(null, false).compareTo(expected));
 	}
@@ -198,7 +198,7 @@ public class RequestParametersTest {
 		params.setStartDate(reportStartDate);
 		params.setWaterYear(2018);
 		params.setPrimaryTimeseriesIdentifier(primaryIdentifier);
-		params.determineReportPeriod();
+		params.determineRequestPeriod();
 		String expected = "startDate=" + waterYear2018BeginUtc.toString().substring(0, 10) + 
 						"&endDate=" + waterYear2018EndUtc.toString().substring(0, 10) + "&primaryTimeseriesIdentifier=test-identifier";
 		assertEquals(0, params.getAsQueryString(null, true).compareTo(expected));
@@ -210,7 +210,7 @@ public class RequestParametersTest {
 		params.setStartDate(reportStartDate);
 		params.setWaterYear(2018);
 		params.setPrimaryTimeseriesIdentifier(primaryIdentifier);
-		params.determineReportPeriod();
+		params.determineRequestPeriod();
 		String expected = "waterYear=2018&primaryTimeseriesIdentifier=test-identifier";
 		assertEquals(0, params.getAsQueryString(null, false).compareTo(expected));
 	}
@@ -222,7 +222,7 @@ public class RequestParametersTest {
 		params.setWaterYear(2018);
 		params.setLastMonths(3);
 		params.setPrimaryTimeseriesIdentifier(primaryIdentifier);
-		params.determineReportPeriod();
+		params.determineRequestPeriod();
 		String expected = "startDate=" + last3MonthsBeginUtc.toString().substring(0, 10) + 
 						"&endDate=" + last3MonthsEndUtc.toString().substring(0, 10) + "&primaryTimeseriesIdentifier=test-identifier";
 		assertEquals(0, params.getAsQueryString(null, true).compareTo(expected));
@@ -235,7 +235,7 @@ public class RequestParametersTest {
 		params.setWaterYear(2018);
 		params.setLastMonths(3);
 		params.setPrimaryTimeseriesIdentifier(primaryIdentifier);
-		params.determineReportPeriod();
+		params.determineRequestPeriod();
 		String expected = "lastMonths=3&primaryTimeseriesIdentifier=test-identifier";
 		assertEquals(0, params.getAsQueryString(null, false).compareTo(expected));
 	}
@@ -244,7 +244,7 @@ public class RequestParametersTest {
 	public void getAsQueryStringOverrideTest() {
 		params.setLastMonths(3);
 		params.setPrimaryTimeseriesIdentifier(primaryIdentifier);
-		params.determineReportPeriod();
+		params.determineRequestPeriod();
 		String expected = "lastMonths=3&primaryTimeseriesIdentifier=test-override";
 		assertEquals(0, params.getAsQueryString("test-override", false).compareTo(expected));
 	}
