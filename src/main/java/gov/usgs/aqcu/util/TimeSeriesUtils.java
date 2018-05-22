@@ -17,7 +17,7 @@ public abstract class TimeSeriesUtils {
 
 	public static boolean isPrimaryTimeSeries(TimeSeriesDescription timeSeriesDescription) {
 		ExtendedAttributeFilter primaryFilter = AquariusRetrievalUtils.getPrimaryFilter();
-		if(timeSeriesDescription != null) {
+		if(timeSeriesDescription != null && timeSeriesDescription.getExtendedAttributes() != null && !timeSeriesDescription.getExtendedAttributes().isEmpty()) {
 			for(ExtendedAttribute ext : timeSeriesDescription.getExtendedAttributes()) {
 				if(ext.getName() != null && ext.getValue() != null) {
 					if(ext.getName().equals(primaryFilter.getFilterName()) && ext.getValue().equals(primaryFilter.getFilterValue())) {
