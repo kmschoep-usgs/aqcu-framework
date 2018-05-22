@@ -9,12 +9,17 @@ import java.time.ZoneOffset;
 import org.junit.Test;
 
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.TimeSeriesDescription;
+import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.LocationDataServiceResponse;
 
 public class TimeSeriesUtilsTest {	
 	@Test
 	public void getZoneOffsetNullTest() {
-		assertEquals(ZoneOffset.UTC, TimeSeriesUtils.getZoneOffset(null));
+		TimeSeriesDescription nullTsDesc = null;
+		LocationDataServiceResponse nullLocData = null;
+		assertEquals(ZoneOffset.UTC, TimeSeriesUtils.getZoneOffset(nullTsDesc));
+		assertEquals(ZoneOffset.UTC, TimeSeriesUtils.getZoneOffset(nullLocData));
 		assertEquals(ZoneOffset.UTC, TimeSeriesUtils.getZoneOffset(new TimeSeriesDescription()));
+		assertEquals(ZoneOffset.UTC, TimeSeriesUtils.getZoneOffset(new LocationDataServiceResponse()));
 	}
 
 	@Test
