@@ -26,46 +26,46 @@ import net.servicestack.client.IReturn;
 
 @RunWith(SpringRunner.class)
 public class UpchainProcessorListServiceTest {
-    
+	
 	@MockBean
 	private AquariusRetrievalService aquariusService;
-    private UpchainProcessorListService service;
-    public static final Processor PROC_A = new Processor()
-        .setDescription("desc-a")
-        .setInputRatingModelIdentifier("rating-a")
-        .setInputTimeSeriesUniqueIds(new ArrayList<String>(Arrays.asList("ts-in-a1", "ts-in-a2")))
-        .setOutputTimeSeriesUniqueId("ts-out-a")
-        .setProcessorPeriod(new TimeRange().setStartTime(Instant.parse("2017-01-01T00:00:00Z")).setEndTime(Instant.parse("2017-02-01T00:00:00Z")))
-        .setProcessorType("type-a")
-        .setSettings(new HashMap<>());
-    public static final Processor PROC_B = new Processor()
-        .setDescription("desc-b")
-        .setInputRatingModelIdentifier("rating-b")
-        .setInputTimeSeriesUniqueIds(new ArrayList<String>(Arrays.asList("ts-in-b1", "ts-in-b2", "ts-in-a1")))
-        .setOutputTimeSeriesUniqueId("ts-out-b")
-        .setProcessorPeriod(new TimeRange().setStartTime(Instant.parse("2017-01-01T00:00:00Z")).setEndTime(Instant.parse("2017-02-01T00:00:00Z")))
-        .setProcessorType("type-b")
-        .setSettings(new HashMap<>());
-    public static final ArrayList<Processor> PROCESSOR_LIST = new ArrayList<>(Arrays.asList(PROC_A, PROC_B));
+	private UpchainProcessorListService service;
+	public static final Processor PROC_A = new Processor()
+		.setDescription("desc-a")
+		.setInputRatingModelIdentifier("rating-a")
+		.setInputTimeSeriesUniqueIds(new ArrayList<String>(Arrays.asList("ts-in-a1", "ts-in-a2")))
+		.setOutputTimeSeriesUniqueId("ts-out-a")
+		.setProcessorPeriod(new TimeRange().setStartTime(Instant.parse("2017-01-01T00:00:00Z")).setEndTime(Instant.parse("2017-02-01T00:00:00Z")))
+		.setProcessorType("type-a")
+		.setSettings(new HashMap<>());
+	public static final Processor PROC_B = new Processor()
+		.setDescription("desc-b")
+		.setInputRatingModelIdentifier("rating-b")
+		.setInputTimeSeriesUniqueIds(new ArrayList<String>(Arrays.asList("ts-in-b1", "ts-in-b2", "ts-in-a1")))
+		.setOutputTimeSeriesUniqueId("ts-out-b")
+		.setProcessorPeriod(new TimeRange().setStartTime(Instant.parse("2017-01-01T00:00:00Z")).setEndTime(Instant.parse("2017-02-01T00:00:00Z")))
+		.setProcessorType("type-b")
+		.setSettings(new HashMap<>());
+	public static final ArrayList<Processor> PROCESSOR_LIST = new ArrayList<>(Arrays.asList(PROC_A, PROC_B));
 
-    @Before
+	@Before
 	@SuppressWarnings("unchecked")
 	public void setup() {
 		service = new UpchainProcessorListService(aquariusService);
 		given(aquariusService.executePublishApiRequest(any(IReturn.class))).willReturn(new ProcessorListServiceResponse()
 				.setProcessors(PROCESSOR_LIST));
-    }
-    
-    @Test
-    public void getRawResponseTest() {
-        List<Processor> actual = service.getRawResponse("ts-identifier", Instant.parse("2017-01-01T00:00:00Z"), Instant.parse("2017-02-01T00:00:00Z")).getProcessors();
+	}
+	
+	@Test
+	public void getRawResponseTest() {
+		List<Processor> actual = service.getRawResponse("ts-identifier", Instant.parse("2017-01-01T00:00:00Z"), Instant.parse("2017-02-01T00:00:00Z")).getProcessors();
 		assertThat(actual, containsInAnyOrder(PROC_A, PROC_B));
-    }
+	}
 
-    @Test
-    public void getInputTimeseriesUniqueIdListTest() {
+	@Test
+	public void getInputTimeseriesUniqueIdListTest() {
 		List<String> inputTsIdList = service.getInputTimeSeriesUniqueIdList(PROCESSOR_LIST);
 		assertEquals(inputTsIdList.size(), 4);
-        assertThat(inputTsIdList, containsInAnyOrder("ts-in-a1", "ts-in-a2", "ts-in-b1", "ts-in-b2"));
-    }
+		assertThat(inputTsIdList, containsInAnyOrder("ts-in-a1", "ts-in-a2", "ts-in-b1", "ts-in-b2"));
+	}
 }
