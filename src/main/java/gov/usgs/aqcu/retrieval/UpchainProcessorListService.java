@@ -42,7 +42,9 @@ public class UpchainProcessorListService {
 		Set<String> uniqueIds = new HashSet<>();
 
 		for(Processor proc : processors) {
-			uniqueIds.addAll(proc.getInputTimeSeriesUniqueIds());
+			if(proc != null && proc.getInputTimeSeriesUniqueIds() != null && !proc.getInputTimeSeriesUniqueIds().isEmpty()) {
+				uniqueIds.addAll(proc.getInputTimeSeriesUniqueIds());
+			}
 		}
 
 		return new ArrayList<>(uniqueIds);
@@ -52,7 +54,9 @@ public class UpchainProcessorListService {
 		Set<String> uniqueIds = new HashSet<>();
 
 		for(Processor proc : processors) {
-			uniqueIds.add(proc.getInputRatingModelIdentifier());
+			if(proc != null && proc.getInputRatingModelIdentifier() != null && !proc.getInputRatingModelIdentifier().isEmpty()) {
+				uniqueIds.add(proc.getInputRatingModelIdentifier());
+			}
 		}
 
 		return new ArrayList<>(uniqueIds);
