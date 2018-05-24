@@ -22,34 +22,50 @@ import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.Loca
 import net.servicestack.client.IReturn;
 
 @RunWith(SpringRunner.class)
-public class LocationDescriptionServiceTest {
+public class LocationDescriptionListServiceTest {
 
 	@MockBean
 	private AquariusRetrievalService aquariusService;
 
-	private LocationDescriptionService service;
+	private LocationDescriptionListService service;
 	private LocationDescription locationDescriptionA = new LocationDescription().setIdentifier("a");
 	private LocationDescription locationDescriptionB = new LocationDescription().setIdentifier("b");
 
 	@Before
-	@SuppressWarnings("unchecked")
 	public void setup() throws Exception {
-		service = new LocationDescriptionService(aquariusService);
-		given(aquariusService.executePublishApiRequest(any(IReturn.class))).willReturn(new LocationDescriptionListServiceResponse()
-				.setLocationDescriptions(new ArrayList<LocationDescription>(Arrays.asList(locationDescriptionA, locationDescriptionB))));
+		service = new LocationDescriptionListService(aquariusService);
 	}
 
 	@Test
+	@SuppressWarnings("unchecked")
 	public void getTest() throws Exception {
-		List<LocationDescription> actual = service.get("abc");
+		given(aquariusService.executePublishApiRequest(any(IReturn.class))).willReturn(new LocationDescriptionListServiceResponse()
+				.setLocationDescriptions(new ArrayList<LocationDescription>(Arrays.asList(locationDescriptionA, locationDescriptionB))));
+		List<LocationDescription> actual = service.getRawResponse("abc", null).getLocationDescriptions();
 		assertEquals(2, actual.size());
 		assertThat(actual, containsInAnyOrder(locationDescriptionA, locationDescriptionB));
 	}
 
 	@Test
+	@SuppressWarnings("unchecked")
 	public void getByQualifierList_happyPathTest() {
+		given(aquariusService.executePublishApiRequest(any(IReturn.class))).willReturn(new LocationDescriptionListServiceResponse()
+				.setLocationDescriptions(new ArrayList<LocationDescription>(Arrays.asList(locationDescriptionA, locationDescriptionB))));
 		LocationDescription actual = service.getByLocationIdentifier("abc");
 		assertEquals(actual, locationDescriptionA);
 	}
 
+	@Test
+	@SuppressWarnings("unchecked")
+	public void searchSitesTest() {
+		given(aquariusService.executePublishApiRequest(any(IReturn.class))).willReturn(new LocationDescriptionListServiceResponse()
+				.setLocationDescriptions(new ArrayList<LocationDescription>(Arrays.asList(locationDescriptionA, locationDescriptionB))));
+
+		List<LocationDescription> results = service.searchSites("test", 1);
+		assertEquals(results.size(), 1);
+		assertThat(results, containsInAnyOrder(locationDescriptionA));
+		results = service.searchSites("test", 2);
+		assertEquals(results.size(), 2);
+		assertThat(results, containsInAnyOrder(locationDescriptionA, locationDescriptionB));
+	}
 }
