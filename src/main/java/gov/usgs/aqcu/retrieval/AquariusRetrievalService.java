@@ -15,20 +15,20 @@ import net.servicestack.client.WebServiceException;
 
 @Repository
 public class AquariusRetrievalService {
-	private static final Logger LOG = LoggerFactory.getLogger(AquariusRetrievalService.class);
+	protected static final Logger LOG = LoggerFactory.getLogger(AquariusRetrievalService.class);
 	public static final String NO_ACTIVE_SESSION_ERROR_DESCRIPTION = "NoActiveSessionException";
 
 	@Value("${aquarius.service.endpoint}")
-	private String aquariusUrl;
+	protected String aquariusUrl;
 
 	@Value("${aquarius.service.user}")
-	private String aquariusUser;
+	protected String aquariusUser;
 
 	@Value("${aquarius.service.password}")
-	private String aquariusPassword;
+	protected String aquariusPassword;
 
 	@Value("${aquarius.service.retries.unauthorized}")
-	private int aquariusUnauthorizedRetryCount;
+	protected int aquariusUnauthorizedRetryCount;
 
 	protected <TResponse> TResponse executePublishApiRequest(IReturn<TResponse> request) throws AquariusRetrievalException {
 		String errorMessage = "";

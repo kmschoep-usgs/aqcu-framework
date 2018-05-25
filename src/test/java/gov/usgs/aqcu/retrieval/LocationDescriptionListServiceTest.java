@@ -57,6 +57,16 @@ public class LocationDescriptionListServiceTest {
 
 	@Test
 	@SuppressWarnings("unchecked")
+	public void getByIdentifierEmptyTest() {
+		given(aquariusService.executePublishApiRequest(any(IReturn.class))).willReturn(new LocationDescriptionListServiceResponse()
+				.setLocationDescriptions(new ArrayList<LocationDescription>()));
+
+		LocationDescription result = service.getByLocationIdentifier("test");
+		assertEquals(result, null);
+	}
+
+	@Test
+	@SuppressWarnings("unchecked")
 	public void searchSitesTest() {
 		given(aquariusService.executePublishApiRequest(any(IReturn.class))).willReturn(new LocationDescriptionListServiceResponse()
 				.setLocationDescriptions(new ArrayList<LocationDescription>(Arrays.asList(locationDescriptionA, locationDescriptionB))));

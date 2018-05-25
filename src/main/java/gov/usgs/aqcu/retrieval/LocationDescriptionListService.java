@@ -34,10 +34,12 @@ public class LocationDescriptionListService {
 	}
 
 	public LocationDescription getByLocationIdentifier(String locationIdentifier) {
-		LocationDescription locationDescription;
+		LocationDescription locationDescription = null;
 		try {
 			List<LocationDescription> locationDescriptions = getRawResponse(null, locationIdentifier).getLocationDescriptions();
-			locationDescription = locationDescriptions.get(0);
+			if(!locationDescriptions.isEmpty()) {
+				locationDescription = locationDescriptions.get(0);
+			}
 		} catch (Exception e) {
 			String msg = "An unexpected error occurred while attempting to fetch LocationDescriptions from Aquarius: ";
 			LOG.error(msg, e);
