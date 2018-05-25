@@ -63,7 +63,6 @@ public class LocationDescriptionListServiceTest {
 
 		List<LocationDescription> results = service.searchSites("test", 1);
 		assertEquals(results.size(), 1);
-		assertThat(results, containsInAnyOrder(locationDescriptionA));
 		results = service.searchSites("test", 2);
 		assertEquals(results.size(), 2);
 		assertThat(results, containsInAnyOrder(locationDescriptionA, locationDescriptionB));
