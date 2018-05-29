@@ -40,7 +40,7 @@ public class LocationDescriptionListServiceTest {
 	@SuppressWarnings("unchecked")
 	public void getTest() throws Exception {
 		given(aquariusService.executePublishApiRequest(any(IReturn.class))).willReturn(new LocationDescriptionListServiceResponse()
-				.setLocationDescriptions(new ArrayList<LocationDescription>(Arrays.asList(locationDescriptionA, locationDescriptionB))));
+			.setLocationDescriptions(new ArrayList<LocationDescription>(Arrays.asList(locationDescriptionA, locationDescriptionB))));
 		List<LocationDescription> actual = service.getRawResponse("abc", null).getLocationDescriptions();
 		assertEquals(2, actual.size());
 		assertThat(actual, containsInAnyOrder(locationDescriptionA, locationDescriptionB));
@@ -50,16 +50,26 @@ public class LocationDescriptionListServiceTest {
 	@SuppressWarnings("unchecked")
 	public void getByQualifierList_happyPathTest() {
 		given(aquariusService.executePublishApiRequest(any(IReturn.class))).willReturn(new LocationDescriptionListServiceResponse()
-				.setLocationDescriptions(new ArrayList<LocationDescription>(Arrays.asList(locationDescriptionA, locationDescriptionB))));
+			.setLocationDescriptions(new ArrayList<LocationDescription>(Arrays.asList(locationDescriptionA, locationDescriptionB))));
 		LocationDescription actual = service.getByLocationIdentifier("abc");
 		assertEquals(actual, locationDescriptionA);
 	}
 
 	@Test
 	@SuppressWarnings("unchecked")
+	public void getByIdentifierEmptyTest() {
+		given(aquariusService.executePublishApiRequest(any(IReturn.class))).willReturn(new LocationDescriptionListServiceResponse()
+			.setLocationDescriptions(new ArrayList<LocationDescription>()));
+
+		LocationDescription result = service.getByLocationIdentifier("test");
+		assertEquals(result, null);
+	}
+
+	@Test
+	@SuppressWarnings("unchecked")
 	public void searchSitesTest() {
 		given(aquariusService.executePublishApiRequest(any(IReturn.class))).willReturn(new LocationDescriptionListServiceResponse()
-				.setLocationDescriptions(new ArrayList<LocationDescription>(Arrays.asList(locationDescriptionA, locationDescriptionB))));
+			.setLocationDescriptions(new ArrayList<LocationDescription>(Arrays.asList(locationDescriptionA, locationDescriptionB))));
 
 		List<LocationDescription> results = service.searchSites("test", 1);
 		assertEquals(results.size(), 1);
