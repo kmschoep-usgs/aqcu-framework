@@ -16,8 +16,9 @@ import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.Para
 
 @Repository
 public class ParameterListService {
-	private static final Logger LOG = LoggerFactory.getLogger(ParameterListService.class);
+	public static final String VOLUMETRIC_FLOW_UNIT_GROUP_VALUE = "Volumetric Flow";
 
+	private static final Logger LOG = LoggerFactory.getLogger(ParameterListService.class);
 	private AquariusRetrievalService aquariusRetrievalService;
 
 	@Autowired
@@ -39,6 +40,11 @@ public class ParameterListService {
 		return buildMap(metadataList);
 	}
 
+	public Boolean isVolumetricFlow(Map<String, ParameterMetadata> parameterMetadata, String parameter) {
+		return parameterMetadata != null && parameterMetadata.containsKey(parameter) && VOLUMETRIC_FLOW_UNIT_GROUP_VALUE
+				.equalsIgnoreCase(parameterMetadata.get(parameter).getUnitGroupIdentifier());
+	}
+
 	protected List<ParameterMetadata> get() throws Exception {
 		ParameterListServiceRequest request = new ParameterListServiceRequest();
 		ParameterListServiceResponse response = aquariusRetrievalService.executePublishApiRequest(request);
@@ -51,5 +57,4 @@ public class ParameterListService {
 
 		return map;
 	}
-
 }

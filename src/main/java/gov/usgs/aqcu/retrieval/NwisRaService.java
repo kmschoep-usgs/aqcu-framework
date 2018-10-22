@@ -3,6 +3,7 @@ package gov.usgs.aqcu.retrieval;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +64,32 @@ public class NwisRaService {
 				QW_COLUMN_GROUPS_TO_RETRIEVE, "true", "true", nwisPcode, nwisPcode,
 				getPartialDateString(requestParameters, zoneOffset));
 		return deseriealize(responseEntity.getBody(), WaterQualitySampleRecords.class).getRecords();
+	}
+
+	public String getNwisPcode(String aqName, String unit) {
+		return getNwisPcode(this.getAqParameterNames(), this.getAqParameterUnits(), aqName, unit);
+	}
+
+	public String getNwisPcode(List<ParameterRecord> aqParameterNames, List<ParameterRecord> aqParameterUnits, 
+			String aqName, String unit) 
+	{
+		String pcode = null;
+
+		// First find the NWIS name using the nameAliases
+		Optional<ParameterRecord> nwisName = aqParameterNames.parallelStream()
+				.filter(x -> x.getAlias().equals(aqName))
+				.findFirst();
+
+		if (nwisName.isPresent()) {
+			// then find the pcode using the name and unit
+			Optional<ParameterRecord> unitAlias = aqParameterUnits.parallelStream()
+					.filter(x -> x.getAlias().equals(unit) && x.getName().equals(nwisName.get().getName()))
+					.findAny();
+			if (unitAlias.isPresent()) {
+				pcode = unitAlias.get().getCode();
+			}
+		}
+		return pcode;
 	}
 
 	protected String getPartialDateString(DateRangeRequestParameters requestParameters, ZoneOffset zoneOffset) {

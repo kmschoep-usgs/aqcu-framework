@@ -45,6 +45,21 @@ public class FieldVisitDataService {
 		}
 	}
 
+	public List<Reading> filterToParameter(List<Reading> readings, String parameter) {
+		// Filter to parameter
+		if(!readings.isEmpty() && parameter != null && !parameter.isEmpty()) {
+			return readings.stream()
+				.filter(r -> r.getParameter().contentEquals(parameter))
+				.collect(Collectors.toList());
+		} else {
+			return new ArrayList<>();
+		}
+	}
+
+	public List<Reading> extractFieldVisitReadings(FieldVisitDataServiceResponse response, String filterToParameter) {
+		return filterToParameter(response.getInspectionActivity().getReadings(), filterToParameter);
+	}
+
 	public List<Reading> extractFieldVisitReadings(FieldVisitDataServiceResponse response) {
 		return response.getInspectionActivity().getReadings();
 	}
