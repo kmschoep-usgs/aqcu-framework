@@ -1,9 +1,12 @@
 package gov.usgs.aqcu.retrieval;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.never;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -21,7 +24,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import gov.usgs.aqcu.NwisObjectCompare;
+import gov.usgs.aqcu.ObjectCompare;
 import gov.usgs.aqcu.client.NwisRaClient;
 import gov.usgs.aqcu.model.nwis.WaterLevelRecord;
 import gov.usgs.aqcu.model.nwis.WaterQualitySampleRecord;
@@ -61,7 +64,7 @@ public class NwisRaServiceTest {
 		List<ParameterRecord> expected = Stream.of(getParameterRecord("A"), getParameterRecord("B"))
 				.collect(Collectors.toList());
 		List<ParameterRecord> actual = service.getAqParameterUnits();
-		NwisObjectCompare.compare(expected, actual);
+		ObjectCompare.compare(expected, actual);
 	}
 
 	@Test
@@ -71,7 +74,7 @@ public class NwisRaServiceTest {
 		List<ParameterRecord> expected = Stream.of(getParameterRecord("C"), getParameterRecord("D"))
 				.collect(Collectors.toList());
 		List<ParameterRecord> actual = service.getAqParameterNames();
-		NwisObjectCompare.compare(expected, actual);
+		ObjectCompare.compare(expected, actual);
 	}
 
 	@Test
@@ -84,7 +87,7 @@ public class NwisRaServiceTest {
 				.collect(Collectors.toList());
 		List<WaterLevelRecord> actual = service.getGwLevels(parameters, "123", GroundWaterParameter.FAQ209,
 				ZoneOffset.UTC).getRecords();
-		NwisObjectCompare.compare(expected, actual);
+		ObjectCompare.compare(expected, actual);
 		verify(nwisRaClient).getWaterLevelRecords("123", NwisRaService.GW_LEV_COLUMN_GROUPS_TO_RETRIEVE,
 				"20180401,20180423", "S", "LMSL");
 	}
@@ -98,9 +101,50 @@ public class NwisRaServiceTest {
 				getWaterQualitySampleRecord("b", OffsetDateTime.of(2018, 04, 12, 13, 15, 0, 0, ZoneOffset.of("-6")), "00600", BigDecimal.TEN))
 				.collect(Collectors.toList());
 		List<WaterQualitySampleRecord> actual = service.getQwData(parameters, "123", "00600", ZoneOffset.UTC);
-		NwisObjectCompare.compare(expected, actual);
+		ObjectCompare.compare(expected, actual);
 		verify(nwisRaClient).getWaterQualitySampleRecords("123", NwisRaService.QW_COLUMN_GROUPS_TO_RETRIEVE,
 				"true", "true", "00600", "00600", "20180401,20180423");
+	}
+
+	@Test
+	public void getNwisPcodeNameNotFoundTest() {
+		given(nwisRaClient.getParameters(NwisRaService.AQ_NAME_PARAMS_FILTER_VALUE))
+				.willReturn(getAqParameterNamesResponseEntityLinked());
+		assertNull(service.getNwisPcode("aqname", "unit"));
+		verify(nwisRaClient, times(1)).getParameters(NwisRaService.AQ_NAME_PARAMS_FILTER_VALUE);
+		verify(nwisRaClient, never()).getParameters(NwisRaService.AQ_PARAMS_FILTER_VALUE);
+	}
+
+	@Test
+	public void getNwisPcodeNameFoundUnitNotFoundTest() {
+		given(nwisRaClient.getParameters(NwisRaService.AQ_NAME_PARAMS_FILTER_VALUE))
+				.willReturn(getAqParameterNamesResponseEntityLinked());
+		given(nwisRaClient.getParameters(NwisRaService.AQ_PARAMS_FILTER_VALUE))
+				.willReturn(getAqParameterUnitsResponseEntityLinked());
+		assertNull(service.getNwisPcode("aqNameA", "unit"));
+		assertNull(service.getNwisPcode("aqNameB", "unitA"));
+		assertNull(service.getNwisPcode("aqNameA", "unitB"));
+		verify(nwisRaClient, times(3)).getParameters(NwisRaService.AQ_NAME_PARAMS_FILTER_VALUE);
+		verify(nwisRaClient, times(3)).getParameters(NwisRaService.AQ_PARAMS_FILTER_VALUE);
+	}
+
+	@Test
+	public void getNwisPcodeTest() {
+		given(nwisRaClient.getParameters(NwisRaService.AQ_NAME_PARAMS_FILTER_VALUE))
+				.willReturn(getAqParameterNamesResponseEntityLinked());
+		given(nwisRaClient.getParameters(NwisRaService.AQ_PARAMS_FILTER_VALUE))
+				.willReturn(getAqParameterUnitsResponseEntityLinked());
+		assertEquals("A", service.getNwisPcode("aqNameA", "unitA"));
+		assertEquals("B", service.getNwisPcode("aqNameB", "unitB"));
+		verify(nwisRaClient, times(2)).getParameters(NwisRaService.AQ_NAME_PARAMS_FILTER_VALUE);
+		verify(nwisRaClient, times(2)).getParameters(NwisRaService.AQ_PARAMS_FILTER_VALUE);
+	}
+
+	private ResponseEntity<String> getAqParameterNamesResponseEntity() {
+		return new ResponseEntity<String>("{\"records\": ["
+				+ "{\"PARM_CD\":\"C\", \"PARM_NM\":\"nameC\", \"PARM_ALIAS_NM\":\"aliasC\", \"PARM_UNT_TX\":\"unitC\", \"PARM_DS\":\"descC\", \"PARM_MEDIUM_TX\":\"mediumC\"}"
+				+ ",{\"PARM_CD\":\"D\", \"PARM_NM\":\"nameD\", \"PARM_ALIAS_NM\":\"aliasD\", \"PARM_UNT_TX\":\"unitD\", \"PARM_DS\":\"descD\", \"PARM_MEDIUM_TX\":\"mediumD\"}"
+				+ " ]}", HttpStatus.OK);
 	}
 
 	private ResponseEntity<String> getAqParameterUnitsResponseEntity() {
@@ -110,10 +154,17 @@ public class NwisRaServiceTest {
 				+ " ]}", HttpStatus.OK);
 	}
 
-	private ResponseEntity<String> getAqParameterNamesResponseEntity() {
+	private ResponseEntity<String> getAqParameterNamesResponseEntityLinked() {
 		return new ResponseEntity<String>("{\"records\": ["
-				+ "{\"PARM_CD\":\"C\", \"PARM_NM\":\"nameC\", \"PARM_ALIAS_NM\":\"aliasC\", \"PARM_UNT_TX\":\"unitC\", \"PARM_DS\":\"descC\", \"PARM_MEDIUM_TX\":\"mediumC\"}"
-				+ ",{\"PARM_CD\":\"D\", \"PARM_NM\":\"nameD\", \"PARM_ALIAS_NM\":\"aliasD\", \"PARM_UNT_TX\":\"unitD\", \"PARM_DS\":\"descD\", \"PARM_MEDIUM_TX\":\"mediumD\"}"
+				+ "{\"PARM_CD\":\"A\", \"PARM_NM\":\"nameA\", \"PARM_ALIAS_NM\":\"aqNameA\", \"PARM_UNT_TX\":\"unitC\", \"PARM_DS\":\"descC\", \"PARM_MEDIUM_TX\":\"mediumC\"}"
+				+ ",{\"PARM_CD\":\"B\", \"PARM_NM\":\"nameB\", \"PARM_ALIAS_NM\":\"aqNameB\", \"PARM_UNT_TX\":\"unitD\", \"PARM_DS\":\"descD\", \"PARM_MEDIUM_TX\":\"mediumD\"}"
+				+ " ]}", HttpStatus.OK);
+	}
+
+	private ResponseEntity<String> getAqParameterUnitsResponseEntityLinked() {
+		return new ResponseEntity<String>("{\"records\": ["
+				+ "{\"PARM_CD\":\"A\", \"PARM_NM\":\"nameA\", \"PARM_ALIAS_NM\":\"unitA\", \"PARM_UNT_TX\":\"unitA\", \"PARM_DS\":\"descA\", \"PARM_MEDIUM_TX\":\"mediumA\"}"
+				+ ",{\"PARM_CD\":\"B\", \"PARM_NM\":\"nameB\", \"PARM_ALIAS_NM\":\"unitB\", \"PARM_UNT_TX\":\"unitB\", \"PARM_DS\":\"descB\", \"PARM_MEDIUM_TX\":\"mediumB\"}"
 				+ " ]}", HttpStatus.OK);
 	}
 

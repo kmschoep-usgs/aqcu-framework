@@ -3,6 +3,8 @@ package gov.usgs.aqcu.retrieval;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 
@@ -31,8 +33,8 @@ public class ParameterListServiceTest {
 
 	private ParameterListService service;
 
-	private ParameterMetadata parameterMetadataA = new ParameterMetadata().setIdentifier("a");
-	private ParameterMetadata parameterMetadataB = new ParameterMetadata().setIdentifier("b");
+	private ParameterMetadata parameterMetadataA = new ParameterMetadata().setIdentifier("a").setUnitGroupIdentifier(ParameterListService.VOLUMETRIC_FLOW_UNIT_GROUP_VALUE);
+	private ParameterMetadata parameterMetadataB = new ParameterMetadata().setIdentifier("b").setUnitGroupIdentifier("Not Volumetric");
 	private ParameterMetadata parameterMetadataC = new ParameterMetadata().setIdentifier("c");
 
 	@Before
@@ -68,6 +70,14 @@ public class ParameterListServiceTest {
 		assertThat(map, IsMapContaining.hasEntry("a", parameterMetadataA));
 		assertThat(map, IsMapContaining.hasEntry("b", parameterMetadataB));
 		assertThat(map, IsMapContaining.hasEntry("c", parameterMetadataC));
+	}
+
+	@Test
+	public void isVolumetricFlowTest() {
+		Map<String, ParameterMetadata> map = service.getParameterMetadata();
+		assertTrue(service.isVolumetricFlow(map, "a"));
+		assertFalse(service.isVolumetricFlow(map, "b"));
+		assertFalse(service.isVolumetricFlow(map, "c"));
 	}
 
 }

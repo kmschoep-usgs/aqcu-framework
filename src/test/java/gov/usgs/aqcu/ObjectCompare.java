@@ -14,9 +14,9 @@ import com.google.gson.Gson;
 
 import gov.usgs.aqcu.util.AqcuGsonBuilderFactory;
 
-public final class NwisObjectCompare {
+public final class ObjectCompare {
 
-	private NwisObjectCompare() {}
+	private ObjectCompare() {}
 
 	public static void compare(final Object expectedObject, final Object actualObject) {
 		Gson gson = AqcuGsonBuilderFactory.getConfiguredGsonBuilder()

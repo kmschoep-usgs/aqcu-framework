@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.ControlConditionType;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.DischargeSummary;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.FieldVisitDataServiceRequest;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.FieldVisitDataServiceResponse;
@@ -45,17 +46,6 @@ public class FieldVisitDataService {
 		}
 	}
 
-	public List<Reading> filterToParameter(List<Reading> readings, String parameter) {
-		// Filter to parameter
-		if(!readings.isEmpty() && parameter != null && !parameter.isEmpty()) {
-			return readings.stream()
-				.filter(r -> r.getParameter().contentEquals(parameter))
-				.collect(Collectors.toList());
-		} else {
-			return new ArrayList<>();
-		}
-	}
-
 	public List<Reading> extractFieldVisitReadings(FieldVisitDataServiceResponse response, String filterToParameter) {
 		return filterToParameter(response.getInspectionActivity().getReadings(), filterToParameter);
 	}
@@ -77,6 +67,26 @@ public class FieldVisitDataService {
 
 		return ret;
 	}
+
+	protected String extractControlCondition(FieldVisitDataServiceResponse fieldVisitDataServiceResponse) {
+		ControlConditionType controlCondition = fieldVisitDataServiceResponse.getControlConditionActivity() != null
+				? fieldVisitDataServiceResponse.getControlConditionActivity().getControlCondition()
+				: null;
+
+		return controlCondition != null ? controlCondition.toString() : null;
+	}
+
+	protected List<Reading> filterToParameter(List<Reading> readings, String parameter) {
+		// Filter to parameter
+		if(readings != null && !readings.isEmpty() && parameter != null && !parameter.isEmpty()) {
+			return readings.stream()
+				.filter(r -> r.getParameter().contentEquals(parameter))
+				.collect(Collectors.toList());
+		} else {
+			return new ArrayList<>();
+		}
+	}
+
 
 	protected FieldVisitMeasurement createFieldVisitMeasurement(DischargeSummary dischargeSummary) {
 		MeasurementGrade grade = MeasurementGrade.fromMeasurementGradeType(dischargeSummary.getMeasurementGrade());

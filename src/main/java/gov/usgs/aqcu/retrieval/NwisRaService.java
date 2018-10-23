@@ -66,23 +66,18 @@ public class NwisRaService {
 		return deseriealize(responseEntity.getBody(), WaterQualitySampleRecords.class).getRecords();
 	}
 
-	public String getNwisPcode(String aqName, String unit) {
-		return getNwisPcode(this.getAqParameterNames(), this.getAqParameterUnits(), aqName, unit);
-	}
-
-	public String getNwisPcode(List<ParameterRecord> aqParameterNames, List<ParameterRecord> aqParameterUnits, 
-			String aqName, String unit) 
+	public String getNwisPcode(String aqName, String unit) 
 	{
 		String pcode = null;
 
 		// First find the NWIS name using the nameAliases
-		Optional<ParameterRecord> nwisName = aqParameterNames.parallelStream()
+		Optional<ParameterRecord> nwisName = this.getAqParameterNames().parallelStream()
 				.filter(x -> x.getAlias().equals(aqName))
 				.findFirst();
 
 		if (nwisName.isPresent()) {
 			// then find the pcode using the name and unit
-			Optional<ParameterRecord> unitAlias = aqParameterUnits.parallelStream()
+			Optional<ParameterRecord> unitAlias = this.getAqParameterUnits().parallelStream()
 					.filter(x -> x.getAlias().equals(unit) && x.getName().equals(nwisName.get().getName()))
 					.findAny();
 			if (unitAlias.isPresent()) {
