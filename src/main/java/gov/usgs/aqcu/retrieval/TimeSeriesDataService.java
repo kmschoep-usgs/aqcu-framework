@@ -26,7 +26,7 @@ public class TimeSeriesDataService {
 		this.aquariusRetrievalService = aquariusRetrievalService;
 	}
 
-	public TimeSeriesDataServiceResponse get(String timeseriesIdentifier, DateRangeRequestParameters requestParameters, boolean raw, boolean isDaily, ZoneOffset zoneOffset) {
+	public TimeSeriesDataServiceResponse get(String timeseriesIdentifier, DateRangeRequestParameters requestParameters, ZoneOffset zoneOffset, Boolean isDaily, Boolean isRaw, Boolean doIncludeGaps, String getParts) {
 		TimeSeriesDataServiceResponse timeSeriesResponse = new TimeSeriesDataServiceResponse();
 
 		//Daily values time series need to be offset a day into the future to handle the "2400" situation.
@@ -34,33 +34,35 @@ public class TimeSeriesDataService {
 		Instant endDate = adjustIfDv(requestParameters.getEndInstant(zoneOffset), isDaily);
 
 		try {
-			timeSeriesResponse = get(timeseriesIdentifier, startDate, endDate, raw);
+			timeSeriesResponse = get(timeseriesIdentifier, startDate, endDate, isRaw, doIncludeGaps, getParts);
 		} catch (Exception e) {
 			String msg = "An unexpected error occurred while attempting to fetch TimeSeriesData" + 
-				(raw ? "Raw" : "Corrected") + "Request from Aquarius: ";
+				(isRaw ? "Raw" : "Corrected") + "ServiceRequest from Aquarius: ";
 			LOG.error(msg, e);
 			throw new RuntimeException(msg, e);
 		}
 		return timeSeriesResponse;
 	}
 
-	protected TimeSeriesDataServiceResponse get(String timeSeriesIdentifier, Instant startDate, Instant endDate, Boolean raw) {
+	protected TimeSeriesDataServiceResponse get(String timeSeriesIdentifier, Instant startDate, Instant endDate, Boolean isRaw, Boolean doIncludeGaps, String getParts) {
 		TimeSeriesDataServiceResponse timeSeriesResponse;
 
-		if(raw != null && !raw) {
+		if(isRaw != null && !isRaw) {
 			TimeSeriesDataCorrectedServiceRequest request = new TimeSeriesDataCorrectedServiceRequest()
 				.setTimeSeriesUniqueId(timeSeriesIdentifier)
 				.setQueryFrom(startDate)
 				.setQueryTo(endDate)
 				.setApplyRounding(true)
-				.setIncludeGapMarkers(true);
+				.setIncludeGapMarkers(doIncludeGaps)
+				.setGetParts(getParts);
 			timeSeriesResponse = aquariusRetrievalService.executePublishApiRequest(request);
 		} else {
 			TimeSeriesDataRawServiceRequest request = new TimeSeriesDataRawServiceRequest()
 				.setTimeSeriesUniqueId(timeSeriesIdentifier)
 				.setQueryFrom(startDate)
 				.setQueryTo(endDate)
-				.setApplyRounding(true);
+				.setApplyRounding(true)
+				.setGetParts(getParts);
 			timeSeriesResponse = aquariusRetrievalService.executePublishApiRequest(request);
 		}
 		

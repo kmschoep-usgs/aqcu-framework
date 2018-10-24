@@ -15,26 +15,20 @@ import java.time.Instant;
  *      2) errorMaxDischarge
  */
 public class FieldVisitMeasurement {
-
-	//Required Properties
+	private BigDecimal shiftInFeet;
+	private BigDecimal errorMinShiftInFeet;
+	private BigDecimal errorMaxShiftInFeet;
 	private BigDecimal discharge;
-	private Instant measurementStartDate;
 	private BigDecimal errorMinDischarge;
 	private BigDecimal errorMaxDischarge;
+	private BigDecimal meanGageHeight;
+	private Integer shiftNumber;
+	private Instant measurementStartDate;
 	private String measurementNumber;
 	private Boolean publish;
+	private Boolean historic;
 
 	public FieldVisitMeasurement(){
-	}
-
-	public FieldVisitMeasurement(String measurementNumber, BigDecimal dischargeValue, BigDecimal errorMaxDischarge,
-			BigDecimal errorMinDischarge, Instant measurementStartDate, Boolean publish) {
-		this.measurementNumber = measurementNumber;
-		this.discharge = dischargeValue;
-		this.errorMinDischarge = errorMinDischarge;
-		this.errorMaxDischarge = errorMaxDischarge;
-		this.measurementStartDate = measurementStartDate;
-		this.publish = publish;
 	}
 
 	public BigDecimal getDischarge() {
@@ -72,5 +66,41 @@ public class FieldVisitMeasurement {
 	}
 	public void setPublish(Boolean publish) {
 		this.publish = publish;
+	}
+	public BigDecimal getShiftInFeet() {
+		return shiftInFeet;
+	}
+	public void setShiftInFeet(BigDecimal shiftInFeet) {
+		this.shiftInFeet = shiftInFeet;
+	}
+	public BigDecimal getErrorMaxShiftInFeet() {
+		return errorMaxShiftInFeet;
+	}
+	public void setErrorMaxShiftInFeet(BigDecimal errorMaxShiftInFeet) {
+		this.errorMaxShiftInFeet = errorMaxShiftInFeet;
+	}
+	public BigDecimal getErrorMinShiftInFeet() {
+		return errorMinShiftInFeet;
+	}
+	public void setErrorMinShiftInFeet(BigDecimal errorMinShiftInFeet) {
+		this.errorMinShiftInFeet = errorMinShiftInFeet;
+	}
+	public BigDecimal getMeanGageHeight() {
+		return meanGageHeight;
+	}
+	public void setMeanGageHeight(BigDecimal meanGageHeight) {
+		this.meanGageHeight = meanGageHeight;
+	}
+	public Boolean isHistoric() {
+		return historic;
+	}
+	public void setHistoric(Boolean historic) {
+		this.historic = historic;
+	}
+	public Integer getShiftNumber() {
+		return shiftNumber;
+	}
+	public void setShiftNumber(Integer shiftNumber) {
+		this.shiftNumber = shiftNumber;
 	}
 }

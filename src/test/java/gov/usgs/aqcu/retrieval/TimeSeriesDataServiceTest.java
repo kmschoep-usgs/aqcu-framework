@@ -124,7 +124,7 @@ public class TimeSeriesDataServiceTest {
 
 	@Test
 	public void getQualifiersTest1() throws Exception {
-		TimeSeriesDataServiceResponse actual = service.get("", null, null, null);
+		TimeSeriesDataServiceResponse actual = service.get("", null, null, null, null, null);
 		assertEquals(3, actual.getQualifiers().size());
 		assertThat(actual.getQualifiers(), containsInAnyOrder(qualifierA, qualifierB, qualifierC));
 	}
@@ -133,7 +133,7 @@ public class TimeSeriesDataServiceTest {
 	public void getQualifiersTest2() throws Exception {
 		parameters.setStartDate(LocalDate.parse("2018-01-01"));
 		parameters.setEndDate(LocalDate.parse("2018-01-02"));
-		TimeSeriesDataServiceResponse actual = service.get(parameters.getPrimaryTimeseriesIdentifier(), parameters, false, true, ZoneOffset.UTC);
+		TimeSeriesDataServiceResponse actual = service.get(parameters.getPrimaryTimeseriesIdentifier(), parameters, ZoneOffset.UTC, true, false, null, null);
 		assertEquals(3, actual.getQualifiers().size());
 		assertThat(actual.getQualifiers(), containsInAnyOrder(qualifierA, qualifierB, qualifierC));
 	}
@@ -148,7 +148,7 @@ public class TimeSeriesDataServiceTest {
 
 	@Test
 	public void getFullTest() {
-		TimeSeriesDataServiceResponse result = service.get("tsid", Instant.parse("2017-01-01T00:00:00Z"), Instant.parse("2017-03-01T00:00:00Z"), false);
+		TimeSeriesDataServiceResponse result = service.get("tsid", Instant.parse("2017-01-01T00:00:00Z"), Instant.parse("2017-03-01T00:00:00Z"), false, null, null);
 		assertEquals(result, TS_DATA_RESPONSE);
 	}
 }

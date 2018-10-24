@@ -7,11 +7,13 @@ import org.springframework.stereotype.Repository;
 
 import gov.usgs.aqcu.model.FieldVisitMeasurement;
 import gov.usgs.aqcu.model.MeasurementGrade;
+import gov.usgs.aqcu.model.RatingModelErrorVector;
 import gov.usgs.aqcu.util.DoubleWithDisplayUtil;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +21,7 @@ import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.Cont
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.DischargeSummary;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.FieldVisitDataServiceRequest;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.FieldVisitDataServiceResponse;
+import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.RatingCurve;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.Reading;
 
 @Repository
@@ -26,10 +29,15 @@ public class FieldVisitDataService {
 	private static final Logger LOG = LoggerFactory.getLogger(FieldVisitDataService.class);
 
 	private AquariusRetrievalService aquariusRetrievalService;
+	private RatingModelInputValuesService ratingModelInputValuesService;
 
 	@Autowired
-	public FieldVisitDataService(AquariusRetrievalService aquariusRetrievalService) {
+	public FieldVisitDataService(
+		AquariusRetrievalService aquariusRetrievalService, 
+		RatingModelInputValuesService ratingModelInputValuesService) 
+	{
 		this.aquariusRetrievalService = aquariusRetrievalService;
+		this.ratingModelInputValuesService = ratingModelInputValuesService;
 	}
 
 	public FieldVisitDataServiceResponse get(String fieldVisitIdentifier) {
@@ -54,14 +62,14 @@ public class FieldVisitDataService {
 		return response.getInspectionActivity().getReadings();
 	}
 
-	public List<FieldVisitMeasurement> extractFieldVisitMeasurements(FieldVisitDataServiceResponse response) {
+	public List<FieldVisitMeasurement> extractFieldVisitMeasurements(FieldVisitDataServiceResponse response, String ratingModelIdentifier) {
 		List<FieldVisitMeasurement> ret = new ArrayList<>();
 
 		if (response.getDischargeActivities() != null) {
 			ret = response.getDischargeActivities().stream()
 				.filter(x -> x.getDischargeSummary() != null)
 				.filter(y -> y.getDischargeSummary().getDischarge() != null).map(z -> {
-					return createFieldVisitMeasurement(z.getDischargeSummary());
+					return createFieldVisitMeasurement(z.getDischargeSummary(), ratingModelIdentifier);
 				}).collect(Collectors.toList());
 		}
 
@@ -87,28 +95,54 @@ public class FieldVisitDataService {
 		}
 	}
 
-
-	protected FieldVisitMeasurement createFieldVisitMeasurement(DischargeSummary dischargeSummary) {
+	protected FieldVisitMeasurement createFieldVisitMeasurement(DischargeSummary dischargeSummary, String ratingModelIdentifier) {
 		MeasurementGrade grade = MeasurementGrade.fromMeasurementGradeType(dischargeSummary.getMeasurementGrade());
+		FieldVisitMeasurement fieldVisitMeasurement = new FieldVisitMeasurement();
+		BigDecimal dischargeValue = DoubleWithDisplayUtil.getRoundedValue(dischargeSummary.getDischarge());
+		BigDecimal meanGageHeight = DoubleWithDisplayUtil.getRoundedValue(dischargeSummary.getMeanGageHeight());
+		RatingModelErrorVector dischargeError = calculateDsichargeError(grade, dischargeValue);		
+		
+		fieldVisitMeasurement.setDischarge(dischargeValue);
+		fieldVisitMeasurement.setMeanGageHeight(meanGageHeight);
+		fieldVisitMeasurement.setPublish(dischargeSummary.isPublish());
+		fieldVisitMeasurement.setMeasurementStartDate(dischargeSummary.getMeasurementStartTime());
+		fieldVisitMeasurement.setMeasurementNumber(dischargeSummary.getMeasurementId());
+		fieldVisitMeasurement.setErrorMaxDischarge(dischargeError.getMaxErrorValue());
+		fieldVisitMeasurement.setErrorMinDischarge(dischargeError.getMinErrorValue());
 
-		FieldVisitMeasurement fieldVisitMeasurement = calculateError(grade, dischargeSummary.getMeasurementId(),
-				DoubleWithDisplayUtil.getRoundedValue(dischargeSummary.getDischarge()),
-				dischargeSummary.getMeasurementStartTime(),
-				dischargeSummary.isPublish());
-
+		if(ratingModelIdentifier != null && !ratingModelIdentifier.isEmpty()) {
+			RatingModelErrorVector gageHeightError = getGageHeightError(ratingModelIdentifier, dischargeSummary.getMeasurementStartTime(), dischargeError, meanGageHeight);
+			fieldVisitMeasurement.setErrorMaxShiftInFeet(gageHeightError.getMaxErrorValue());
+			fieldVisitMeasurement.setShiftInFeet(gageHeightError.getValue());
+			fieldVisitMeasurement.setErrorMinShiftInFeet(gageHeightError.getMinErrorValue());
+		}
+		
 		return fieldVisitMeasurement;
 	}
 
-	protected FieldVisitMeasurement calculateError(MeasurementGrade grade, String measurementNumber,
-			BigDecimal dischargeValue, Instant dateTime, Boolean publish) 
+	protected RatingModelErrorVector calculateDsichargeError(MeasurementGrade grade, BigDecimal dischargeValue) 
 	{
-
 		BigDecimal errorAmt = dischargeValue.multiply(grade.getPercentageOfError());
-		BigDecimal errorMaxDischargeInFeet = dischargeValue.add(errorAmt);
-		BigDecimal errorMinDischargeInFeet = dischargeValue.subtract(errorAmt);
+		return new RatingModelErrorVector(dischargeValue.add(errorAmt), dischargeValue, dischargeValue.subtract(errorAmt));
+	}
 
-		FieldVisitMeasurement ret = new FieldVisitMeasurement(measurementNumber, dischargeValue,
-				errorMaxDischargeInFeet, errorMinDischargeInFeet, dateTime, publish);
+	protected RatingModelErrorVector getGageHeightError(String ratingModelIdentifier, Instant effectiveTime, RatingModelErrorVector dischargeError, BigDecimal meanGageHeight) {
+		List<BigDecimal> inputValues = ratingModelInputValuesService.get(
+			ratingModelIdentifier, 
+			effectiveTime, 
+			dischargeError.getAsList()
+		);
+		RatingModelErrorVector ret = new RatingModelErrorVector();
+
+		if (inputValues.size() > 0 && inputValues.get(0) != null) {
+			ret.setMaxErrorValue(inputValues.get(0).subtract(meanGageHeight));
+		}
+		if (inputValues.size() > 1 && inputValues.get(1) != null) {
+			ret.setValue(inputValues.get(1).subtract(meanGageHeight));
+		}
+		if (inputValues.size() > 2 && inputValues.get(2) != null) {
+			ret.setMinErrorValue(inputValues.get(2).subtract(meanGageHeight));
+		}
 
 		return ret;
 	}
