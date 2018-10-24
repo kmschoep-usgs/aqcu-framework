@@ -13,7 +13,6 @@ import gov.usgs.aqcu.util.DoubleWithDisplayUtil;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +20,6 @@ import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.Cont
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.DischargeSummary;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.FieldVisitDataServiceRequest;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.FieldVisitDataServiceResponse;
-import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.RatingCurve;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.Reading;
 
 @Repository
