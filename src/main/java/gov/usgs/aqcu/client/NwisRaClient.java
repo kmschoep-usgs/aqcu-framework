@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name="nwisRa", url="${nwis-ra.service.endpoint}")
+@FeignClient(name="nwisRa", url="${nwis-ra.service.endpoint:https://placeholder.gov}")
 public interface NwisRaClient {
 
 	@RequestMapping(method=RequestMethod.GET, value="/data/view/parameters/json", consumes="application/json")
