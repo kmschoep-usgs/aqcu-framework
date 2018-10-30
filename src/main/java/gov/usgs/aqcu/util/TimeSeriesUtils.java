@@ -1,7 +1,9 @@
 package gov.usgs.aqcu.util;
 
+import java.math.BigDecimal;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.ExtendedAttribute;
@@ -9,8 +11,11 @@ import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.Exte
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.LocationDataServiceResponse;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.Qualifier;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.TimeSeriesDescription;
+import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.TimeSeriesPoint;
 
 import gov.usgs.aqcu.model.InstantRange;
+import gov.usgs.aqcu.model.MinMaxData;
+import gov.usgs.aqcu.model.MinMaxPoint;
 
 public abstract class TimeSeriesUtils {
 	public static final String DV_SERIES_COMPUTATION_PERIOD_IDENTIFIER = "Daily";
@@ -52,5 +57,25 @@ public abstract class TimeSeriesUtils {
 			})
 			.collect(Collectors.toList());
 		return estimatedPeriods;
+	}
+
+	/**
+	 * This method should only be called if the timeSeriesPoints list is not null.
+	 */
+	public static MinMaxData getMinMaxData(List<TimeSeriesPoint> timeSeriesPoints) {
+		Map<BigDecimal, List<MinMaxPoint>> minMaxPoints = timeSeriesPoints.parallelStream()
+				.map(x -> {
+					MinMaxPoint point = new MinMaxPoint(x.getTimestamp().getDateTimeOffset(), DoubleWithDisplayUtil.getRoundedValue(x.getValue()));
+					return point;
+				})
+				.filter(x -> x.getValue() != null)
+				.collect(Collectors.groupingByConcurrent(MinMaxPoint::getValue));
+
+		BigDecimalSummaryStatistics stats = minMaxPoints.keySet().parallelStream()
+				.collect(BigDecimalSummaryStatistics::new,
+						BigDecimalSummaryStatistics::accept,
+						BigDecimalSummaryStatistics::combine);
+
+		return new MinMaxData(stats.getMin(), stats.getMax(), minMaxPoints);
 	}
 }
