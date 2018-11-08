@@ -142,7 +142,7 @@ public class RatingCurveListServiceTest {
 
 	public static final List<RatingCurve> CURVE_LIST = new ArrayList<RatingCurve>(Arrays.asList(CURVE_A, CURVE_B, CURVE_C, CURVE_D));
 
-    @Before
+	@Before
 	@SuppressWarnings("unchecked")
 	public void setup() {
 		service = new RatingCurveListService(aquariusService);

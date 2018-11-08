@@ -7,12 +7,12 @@ import java.time.Instant;
  * This is an abbreviated version of com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.DischargeSummary
  * It has:
  * a) Several fields renamed;
- *      1) MeasurementId -> measurementNumber;
- *      2) MeasurementStartTime -> measurementStartDate;
+ *	  1) MeasurementId -> measurementNumber;
+ *	  2) MeasurementStartTime -> measurementStartDate;
  * b) Discharge from the rounded value;
  * c) Error range calculated from the rounded value:
- *      1) errorMinDischarge;
- *      2) errorMaxDischarge
+ *	  1) errorMinDischarge;
+ *	  2) errorMaxDischarge
  */
 public class FieldVisitMeasurement {
 	private BigDecimal shiftInFeet;

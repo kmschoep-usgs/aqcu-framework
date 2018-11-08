@@ -6,7 +6,7 @@ import static org.junit.Assert.assertNull;
 import org.junit.Test;
 
 public class AqcuReportUtilsTest {
-    @Test
+	@Test
 	public void getSimsUrlNullTest() {
 		assertNull(AqcuReportUtils.getSimsUrl(null, null));
 		assertNull(AqcuReportUtils.getSimsUrl("stationid", null));
