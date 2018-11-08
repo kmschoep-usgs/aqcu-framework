@@ -34,9 +34,12 @@ public class FieldVisitMeasurementsBuilderService {
 		if (response.getDischargeActivities() != null) {
 			ret = response.getDischargeActivities().stream()
 				.filter(x -> x.getDischargeSummary() != null)
-				.filter(y -> y.getDischargeSummary().getDischarge() != null).map(z -> {
-					return createFieldVisitMeasurement(z.getDischargeSummary(), ratingModelIdentifier);
-				}).collect(Collectors.toList());
+                .filter(y -> y.getDischargeSummary().getDischarge() != null).map(z -> 
+                    {
+                        return createFieldVisitMeasurement(z.getDischargeSummary(), ratingModelIdentifier);
+                    }
+                )
+                .collect(Collectors.toList());
 		}
 	
 		return ret;
@@ -75,8 +78,7 @@ public class FieldVisitMeasurementsBuilderService {
 		return fieldVisitMeasurement;
 	}
 	
-	protected RatingModelErrorVector calculateDsichargeError(MeasurementGrade grade, BigDecimal dischargeValue) 
-	{
+	protected RatingModelErrorVector calculateDsichargeError(MeasurementGrade grade, BigDecimal dischargeValue) {
 		BigDecimal errorAmt = dischargeValue.multiply(grade.getPercentageOfError());
 		return new RatingModelErrorVector(dischargeValue.add(errorAmt), dischargeValue, dischargeValue.subtract(errorAmt));
 	}
