@@ -24,9 +24,7 @@ public class FieldVisitMeasurementsBuilderService {
 	private RatingModelInputValuesService ratingModelInputValuesService;
 
 	@Autowired
-	public FieldVisitMeasurementsBuilderService(
-		RatingModelInputValuesService ratingModelInputValuesService
-	) {
+	public FieldVisitMeasurementsBuilderService(RatingModelInputValuesService ratingModelInputValuesService) {
 		this.ratingModelInputValuesService = ratingModelInputValuesService;
 	}
 
