@@ -57,3 +57,6 @@ aquarius:
 #    name: aqcu-dv-hydro-report
 #  jmx:
 #    default-domain: aqcu-dv-hydro-report
+logging:
+  level:
+    root: INFO

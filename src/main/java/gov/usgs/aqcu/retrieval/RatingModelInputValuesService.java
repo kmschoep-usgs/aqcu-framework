@@ -21,7 +21,7 @@ public class RatingModelInputValuesService {
 		this.aquariusRetrievalService = aquariusRetrievalService;
 	}
 
-	protected List<BigDecimal> get(String ratingModelIdentifier, Instant effectiveTime, List<BigDecimal> outputValues) {
+	public List<BigDecimal> get(String ratingModelIdentifier, Instant effectiveTime, List<BigDecimal> outputValues) {
         ArrayList<Double> outputValueDoubles = outputValues.stream()
             .map(v -> v.doubleValue())
             .collect(Collectors.toCollection(ArrayList::new));
