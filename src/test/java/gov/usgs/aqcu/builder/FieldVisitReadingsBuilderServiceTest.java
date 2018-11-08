@@ -73,7 +73,7 @@ public class FieldVisitReadingsBuilderServiceTest {
 	public void extractFieldVisitReadingsNullDataTest() {
 		FieldVisitDataServiceResponse resp = getFieldVisitDataServiceResponse(null, null);
 		
-		List<FieldVisitReading> readings = service.extractReadings(null, resp, null);
+		List<FieldVisitReading> readings = service.extractReadings(null, resp, null, null);
 		assertNotNull(readings);
 		assertTrue(readings.isEmpty());
 	}
@@ -82,7 +82,7 @@ public class FieldVisitReadingsBuilderServiceTest {
 	public void extractFieldVisitReadingsNullInspectionTest() {
 		FieldVisitDataServiceResponse resp = getFieldVisitDataServiceResponse(getDischargeActivities(), null);
 		
-		List<FieldVisitReading> readings = service.extractReadings(null, resp, null);
+		List<FieldVisitReading> readings = service.extractReadings(null, resp, null, null);
 		assertNotNull(readings);
 		assertTrue(readings.isEmpty());
 	}
@@ -91,7 +91,7 @@ public class FieldVisitReadingsBuilderServiceTest {
 	public void extractFieldVisitReadingsNullInspectionInspectionsTest() {
 		FieldVisitDataServiceResponse resp = getFieldVisitDataServiceResponse(getDischargeActivities(), getInspectionActivity(getReadings(), null));
 		
-		List<FieldVisitReading> readings = service.extractReadings(null, resp, null);
+		List<FieldVisitReading> readings = service.extractReadings(null, resp, null, null);
 		assertNotNull(readings);
 		assertEquals(2, readings.size());
 	}
@@ -100,7 +100,7 @@ public class FieldVisitReadingsBuilderServiceTest {
 	public void extractFieldVisitReadingsNullInspectionReadingsTest() {
 		FieldVisitDataServiceResponse resp = getFieldVisitDataServiceResponse(getDischargeActivities(), getInspectionActivity(null, getInspections()));
 		
-		List<FieldVisitReading> readings = service.extractReadings(null, resp, null);
+		List<FieldVisitReading> readings = service.extractReadings(null, resp, null, null);
 		assertNotNull(readings);
 		assertTrue(readings.isEmpty());
 	}
@@ -109,7 +109,7 @@ public class FieldVisitReadingsBuilderServiceTest {
 	public void extractFieldVisitReadingsEmptyInspectionInspectionsTest() {
 		FieldVisitDataServiceResponse resp = getFieldVisitDataServiceResponse(getDischargeActivities(), getInspectionActivity(getReadings(), new ArrayList<>()));
 		
-		List<FieldVisitReading> readings = service.extractReadings(null, resp, null);
+		List<FieldVisitReading> readings = service.extractReadings(null, resp, null, null);
 		assertNotNull(readings);
 		assertEquals(2, readings.size());
 	}
@@ -118,7 +118,7 @@ public class FieldVisitReadingsBuilderServiceTest {
 	public void extractFieldVisitReadingsEmptyInspectionReadingsTest() {
 		FieldVisitDataServiceResponse resp = getFieldVisitDataServiceResponse(getDischargeActivities(), getInspectionActivity(new ArrayList<>(), getInspections()));
 		
-		List<FieldVisitReading> readings = service.extractReadings(null, resp, null);
+		List<FieldVisitReading> readings = service.extractReadings(null, resp, null, null);
 		assertNotNull(readings);
 		assertTrue(readings.isEmpty());
 	}
@@ -127,7 +127,7 @@ public class FieldVisitReadingsBuilderServiceTest {
 	public void extractFieldVisitReadingsEmptyInspectionDataTest() {
 		FieldVisitDataServiceResponse resp = getFieldVisitDataServiceResponse(getDischargeActivities(), getInspectionActivity(new ArrayList<>(), new ArrayList<>()));
 		
-		List<FieldVisitReading> readings = service.extractReadings(null, resp, null);
+		List<FieldVisitReading> readings = service.extractReadings(null, resp, null, null);
 		assertNotNull(readings);
 		assertTrue(readings.isEmpty());
 	}
@@ -136,7 +136,7 @@ public class FieldVisitReadingsBuilderServiceTest {
 	public void extractFieldVisitReadingsFilterToParamNullTest() {
 		FieldVisitDataServiceResponse resp = getFieldVisitDataServiceResponse(getDischargeActivities(), getInspectionActivity(getReadings(), getInspections()));
 		
-		List<FieldVisitReading> readings = service.extractReadings(null, resp, null);
+		List<FieldVisitReading> readings = service.extractReadings(null, resp, null, null);
 		assertNotNull(readings);
 		assertEquals(4, readings.size());
 	}
@@ -145,7 +145,7 @@ public class FieldVisitReadingsBuilderServiceTest {
 	public void extractFieldVisitReadingsFilterToParamEmptyTest() {
 		FieldVisitDataServiceResponse resp = getFieldVisitDataServiceResponse(getDischargeActivities(), getInspectionActivity(getReadings(), getInspections()));
 		
-		List<FieldVisitReading> readings = service.extractReadings(null, resp, "");
+		List<FieldVisitReading> readings = service.extractReadings(null, resp, "", null);
 		assertNotNull(readings);
 		assertEquals(4, readings.size());
 	}
@@ -154,7 +154,7 @@ public class FieldVisitReadingsBuilderServiceTest {
 	public void extractFieldVisitReadingsFilterToParamTest1() {
 		FieldVisitDataServiceResponse resp = getFieldVisitDataServiceResponse(getDischargeActivities(), getInspectionActivity(getReadings(), getInspections()));
 		
-		List<FieldVisitReading> readings = service.extractReadings(null, resp, "param1");
+		List<FieldVisitReading> readings = service.extractReadings(null, resp, "param1", null);
 		assertNotNull(readings);
 		assertEquals(1, readings.size());
 	}
@@ -163,7 +163,7 @@ public class FieldVisitReadingsBuilderServiceTest {
 	public void extractFieldVisitReadingsFilterToParamTest2() {
 		FieldVisitDataServiceResponse resp = getFieldVisitDataServiceResponse(getDischargeActivities(), getInspectionActivity(getReadings(), getInspections()));
 		
-		List<FieldVisitReading> readings = service.extractReadings(null, resp, "param3");
+		List<FieldVisitReading> readings = service.extractReadings(null, resp, "param3", null);
 		assertNotNull(readings);
 		assertTrue(readings.isEmpty());
 	}
@@ -173,7 +173,7 @@ public class FieldVisitReadingsBuilderServiceTest {
 		List<FieldVisitReading> result = service.extractReadings(
 			Instant.parse("2018-01-01T00:00:00Z"), getFieldVisitDataServiceResponse(getDischargeActivities(), 
 			getInspectionActivity(getReadings(), getInspections())), 
-			null
+			null, null
 		);
 
 		assertNotNull(result);
@@ -237,7 +237,7 @@ public class FieldVisitReadingsBuilderServiceTest {
 		List<FieldVisitReading> result = service.extractReadings(
 			Instant.parse("2018-01-01T00:00:00Z"), getFieldVisitDataServiceResponse(getDischargeActivities(), 
 			getInspectionActivity(getReadings(), getInspections())), 
-			"param1"
+			"param1", null
 		);
 
 		assertNotNull(result);
@@ -255,6 +255,22 @@ public class FieldVisitReadingsBuilderServiceTest {
 		assertEquals(result.get(0).getValue(), "1");
 		assertEquals(result.get(0).getVisitStatus(), "TODO");
 		assertEquals(result.get(0).getVisitTime(), Instant.parse("2018-01-01T00:00:00Z"));
+	}
+
+	@Test
+	public void extractFieldVisitReadingsFullTest3() {
+		List<FieldVisitReading> result = service.extractReadings(
+			Instant.parse("2018-01-01T00:00:00Z"), getFieldVisitDataServiceResponse(getDischargeActivities(), 
+			getInspectionActivity(getReadings(), getInspections())), 
+			"", Arrays.asList(InspectionType.FieldMeter.name())
+		);
+
+		assertNotNull(result);
+		assertEquals(result.size(), 4);
+		assertEquals(result.get(0).getComments().size(), 1);
+		assertEquals(result.get(1).getComments().size(), 0);
+		assertEquals(result.get(2).getComments().size(), 1);
+		assertEquals(result.get(3).getComments().size(), 1);
 	}
 
 	@Test

@@ -22,16 +22,16 @@ public class RatingModelInputValuesService {
 	}
 
 	public List<BigDecimal> get(String ratingModelIdentifier, Instant effectiveTime, List<BigDecimal> outputValues) {
-        ArrayList<Double> outputValueDoubles = outputValues.stream()
-            .map(v -> v.doubleValue())
-            .collect(Collectors.toCollection(ArrayList::new));
-        RatingModelInputValuesServiceRequest request = new RatingModelInputValuesServiceRequest()
-            .setRatingModelIdentifier(ratingModelIdentifier)
-            .setEffectiveTime(effectiveTime)
-            .setOutputValues(outputValueDoubles);
+		ArrayList<Double> outputValueDoubles = outputValues.stream()
+			.map(v -> v.doubleValue())
+			.collect(Collectors.toCollection(ArrayList::new));
+		RatingModelInputValuesServiceRequest request = new RatingModelInputValuesServiceRequest()
+			.setRatingModelIdentifier(ratingModelIdentifier)
+			.setEffectiveTime(effectiveTime)
+			.setOutputValues(outputValueDoubles);
 		RatingModelInputValuesServiceResponse response = aquariusRetrievalService.executePublishApiRequest(request);
-        return response.getInputValues().stream()
-            .map(v -> BigDecimal.valueOf(v))
-            .collect(Collectors.toList());
+		return response.getInputValues().stream()
+			.map(v -> BigDecimal.valueOf(v))
+			.collect(Collectors.toList());
 	}
 }

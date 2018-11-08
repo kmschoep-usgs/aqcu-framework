@@ -33,18 +33,18 @@ public class RatingModelInputValuesServiceTest {
 	@Before
 	@SuppressWarnings("unchecked")
 	public void setup() throws Exception {
-        service = new RatingModelInputValuesService(aquariusService);
+		service = new RatingModelInputValuesService(aquariusService);
 
 		given(aquariusService.executePublishApiRequest(any(IReturn.class))).willReturn(
-            new RatingModelInputValuesServiceResponse().setInputValues(new ArrayList<>(Arrays.asList(3.0D, 2.0D, 1.0D)))
-        );
+			new RatingModelInputValuesServiceResponse().setInputValues(new ArrayList<>(Arrays.asList(3.0D, 2.0D, 1.0D)))
+		);
 	}
 
 	@Test
 	public void getTest() throws Exception {
-        BigDecimal maxErrorResp = BigDecimal.valueOf(3.0D);
-        BigDecimal valueResp = BigDecimal.valueOf(2.0D);
-        BigDecimal minErrorResp = BigDecimal.valueOf(1.0D);
+		BigDecimal maxErrorResp = BigDecimal.valueOf(3.0D);
+		BigDecimal valueResp = BigDecimal.valueOf(2.0D);
+		BigDecimal minErrorResp = BigDecimal.valueOf(1.0D);
 		List<BigDecimal> resultList = service.get("", Instant.now(), new ArrayList<>());
 		assertEquals(3, resultList.size());
 		assertThat(resultList, containsInAnyOrder(maxErrorResp, valueResp, minErrorResp));

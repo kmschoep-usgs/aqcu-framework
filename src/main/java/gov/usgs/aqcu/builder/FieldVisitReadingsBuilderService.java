@@ -22,10 +22,9 @@ import gov.usgs.aqcu.model.FieldVisitReading;
 
 @Service
 public class FieldVisitReadingsBuilderService {
-    public static final List<String> ALLOWED_INSPECTION_TYPES = new ArrayList<>();
 	public static final String MON_METH_CREST_STAGE = "Crest stage";
 	public static final String MON_METH_MAX_MIN_INDICATOR = "Max-min indicator";
-    public static enum EmptyCsgReadings {
+	public static enum EmptyCsgReadings {
 		NOMK("No mark"),
 		NTRD("Not read"),
 		OTOP("Over topped");
@@ -41,32 +40,32 @@ public class FieldVisitReadingsBuilderService {
 		}
 	}
 
-	public List<FieldVisitReading> extractReadings(Instant visitTime, FieldVisitDataServiceResponse dataResponse, String parameter) {
+	public List<FieldVisitReading> extractReadings(Instant visitTime, FieldVisitDataServiceResponse dataResponse, String parameter, List<String> includeInspectionTypes) {
 		List<FieldVisitReading> result = new ArrayList<>();
 		
-        InspectionActivity activity = dataResponse.getInspectionActivity();
+		InspectionActivity activity = dataResponse.getInspectionActivity();
 		
 		if(activity != null && activity.getReadings() != null && !activity.getReadings().isEmpty()) {
 			List<Reading> readings = activity.getReadings();
-			            
-            // Optional filter to parameter
-            if(parameter != null && !parameter.isEmpty()) {
-                readings = filterToParameter(readings, parameter);
-            }
+						
+			// Optional filter to parameter
+			if(parameter != null && !parameter.isEmpty()) {
+				readings = filterToParameter(readings, parameter);
+			}
 
-            List<Inspection> inspections = activity.getInspections();
+			List<Inspection> inspections = activity.getInspections();
 
-            //TODO - see AQCU-265, this is currently being left out of rendered reports until Aquarius adds the information
-            String visitStatus = "TODO"; 
-            
-			Map<String,List<String>> inspectionCommentsBySerial = serialNumberToComment(filterInspections(inspections, ALLOWED_INSPECTION_TYPES));
+			//TODO - see AQCU-265, this is currently being left out of rendered reports until Aquarius adds the information
+			String visitStatus = "TODO"; 
+			
+			Map<String,List<String>> inspectionCommentsBySerial = serialNumberToComment(filterInspections(inspections, includeInspectionTypes));
 
 			for(Reading read : readings) {
 				List<String> comments = new ArrayList<>();
 				
 				//comments attached to the inspection activity, linked by the reading's serial number 
 				List<String> inspectionComments = inspectionCommentsBySerial.get(read.getSerialNumber());
-				if(inspectionComments != null) {
+				if(inspectionComments != null && !inspectionComments.isEmpty()) {
 					comments.addAll(inspectionComments);
 				}
 				
@@ -79,18 +78,18 @@ public class FieldVisitReadingsBuilderService {
 				result.add(new FieldVisitReading(visitTime, activity.getParty(), visitStatus, comments, read));
 			}
 			
-            //add possible "no read" inspections (only if not filtering by parameter)
-            if(parameter == null || parameter.isEmpty()) {
-                result.addAll(extractEmptyCrestStageReadings(visitTime, inspections, activity.getParty()));
-                result.addAll(extractEmptyMaxMinIndicatorReadings(visitTime, inspections, activity.getParty()));
-                result.addAll(extractEmptyHighWaterMarkReadings(visitTime, inspections, activity.getParty()));
-            }
-        }
+			//add possible empty inspections (only if not filtering by parameter)
+			if(parameter == null || parameter.isEmpty()) {
+				result.addAll(extractEmptyCrestStageReadings(visitTime, inspections, activity.getParty()));
+				result.addAll(extractEmptyMaxMinIndicatorReadings(visitTime, inspections, activity.getParty()));
+				result.addAll(extractEmptyHighWaterMarkReadings(visitTime, inspections, activity.getParty()));
+			}
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    protected List<Reading> filterToParameter(List<Reading> readings, String parameter) {
+	protected List<Reading> filterToParameter(List<Reading> readings, String parameter) {
 		// Filter to parameter
 		if(readings != null && !readings.isEmpty() && parameter != null && !parameter.isEmpty()) {
 			return readings.stream()
@@ -101,7 +100,7 @@ public class FieldVisitReadingsBuilderService {
 		}
 	}
 
-    /**
+	/**
 	 * Returns comments stored in inspections linked by serial number. These comments are known as 
 	 * "reference reading comments".
 	 */
@@ -180,8 +179,8 @@ public class FieldVisitReadingsBuilderService {
 	}
 	
 	protected List<FieldVisitReading> extractEmptyHighWaterMarkReadings(Instant visitTime, List<Inspection> inspections, String party) {
-        //TODO when Aquarius adds HWM method
-        List<FieldVisitReading> readings = new ArrayList<>();
+		//TODO when Aquarius adds HWM method
+		List<FieldVisitReading> readings = new ArrayList<>();
 		return readings;
 	}
 }

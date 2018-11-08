@@ -51,7 +51,7 @@ public class GradeLookupServiceTest {
 		.setGradeCode("id-b");
 
 
-    @Before
+	@Before
 	@SuppressWarnings("unchecked")
 	public void setup() {
 		service = new GradeLookupService(aquariusService);
