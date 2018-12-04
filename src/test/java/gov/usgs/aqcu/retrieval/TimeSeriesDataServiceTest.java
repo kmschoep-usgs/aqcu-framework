@@ -92,33 +92,37 @@ public class TimeSeriesDataServiceTest {
 	private static final ArrayList<TimeSeriesPoint> points = new ArrayList<>(Arrays.asList(
 		new TimeSeriesPoint()
 			.setTimestamp(new StatisticalDateTimeOffset().setDateTimeOffset(Instant.parse("2017-01-01T00:00:00Z")))
-			.setValue(new DoubleWithDisplay().setDisplay("1").setNumeric(1.0))
+			.setValue(new DoubleWithDisplay().setDisplay("1").setNumeric(1.0)),
+		new TimeSeriesPoint()
+			.setTimestamp(new StatisticalDateTimeOffset().setDateTimeOffset(Instant.parse("2017-01-02T00:00:00Z")))
+			.setValue(new DoubleWithDisplay().setDisplay("1").setNumeric(2.0))
 	));
 	
-	public static final TimeSeriesDataServiceResponse TS_DATA_RESPONSE = new TimeSeriesDataServiceResponse()
-		.setApprovals(approvals)
-		.setGapTolerances(gapTolerances)
-		.setGrades(grades)
-		.setInterpolationTypes(interps)
-		.setLabel("label")
-		.setLocationIdentifier("loc-id")
-		.setMethods(methods)
-		.setNotes(notes)
-		.setNumPoints(new Long("1"))
-		.setParameter("param")
-		.setPoints(points)
-		.setQualifiers(new ArrayList<Qualifier>(Arrays.asList(qualifierA, qualifierB, qualifierC)))
-		.setTimeRange(new StatisticalTimeRange()
-			.setStartTime(new StatisticalDateTimeOffset().setDateTimeOffset(Instant.parse("2017-01-01T00:00:00Z")))
-			.setEndTime(new StatisticalDateTimeOffset().setDateTimeOffset(Instant.parse("2017-03-01T00:00:00Z"))))
-		.setUniqueId("uuid")
-		.setUnit("unit");
+	public TimeSeriesDataServiceResponse TS_DATA_RESPONSE;
 
 	@Before
 	@SuppressWarnings("unchecked")
 	public void setup() throws Exception {
 		service = new TimeSeriesDataService(aquariusService);
 		parameters = new ReportRequestParameters();
+		TS_DATA_RESPONSE = new TimeSeriesDataServiceResponse()
+			.setApprovals(approvals)
+			.setGapTolerances(gapTolerances)
+			.setGrades(grades)
+			.setInterpolationTypes(interps)
+			.setLabel("label")
+			.setLocationIdentifier("loc-id")
+			.setMethods(methods)
+			.setNotes(notes)
+			.setNumPoints(new Long("1"))
+			.setParameter("param")
+			.setPoints(points)
+			.setQualifiers(new ArrayList<Qualifier>(Arrays.asList(qualifierA, qualifierB, qualifierC)))
+			.setTimeRange(new StatisticalTimeRange()
+				.setStartTime(new StatisticalDateTimeOffset().setDateTimeOffset(Instant.parse("2017-01-01T00:00:00Z")))
+				.setEndTime(new StatisticalDateTimeOffset().setDateTimeOffset(Instant.parse("2017-03-01T00:00:00Z"))))
+			.setUniqueId("uuid")
+			.setUnit("unit");
 		given(aquariusService.executePublishApiRequest(any(IReturn.class))).willReturn(TS_DATA_RESPONSE);
 	}
 
@@ -147,8 +151,24 @@ public class TimeSeriesDataServiceTest {
 	}
 
 	@Test
-	public void getFullTest() {
-		TimeSeriesDataServiceResponse result = service.get("tsid", Instant.parse("2017-01-01T00:00:00Z"), Instant.parse("2017-03-01T00:00:00Z"), false, null, null);
+	public void getUVFullTest() {
+		parameters.setStartDate(LocalDate.parse("2018-01-01"));
+		parameters.setEndDate(LocalDate.parse("2018-01-02"));
+		TimeSeriesDataServiceResponse result = service.get(parameters.getPrimaryTimeseriesIdentifier(), parameters, ZoneOffset.UTC, false, false, null, null);
 		assertEquals(result, TS_DATA_RESPONSE);
+		assertEquals(result.getPoints().size(), 2);
+	}
+
+	@Test
+	public void getDVFullTest() {
+		parameters.setStartDate(LocalDate.parse("2018-01-01"));
+		parameters.setEndDate(LocalDate.parse("2018-01-02"));
+		TimeSeriesDataServiceResponse result = service.get(parameters.getPrimaryTimeseriesIdentifier(), parameters, ZoneOffset.UTC, true, false, null, null);
+		assertEquals(result.getApprovals(), TS_DATA_RESPONSE.getApprovals());
+		assertEquals(result.getGapTolerances(), TS_DATA_RESPONSE.getGapTolerances());
+		assertEquals(result.getGrades(), TS_DATA_RESPONSE.getGrades());
+		assertEquals(result.getTimeRange(), TS_DATA_RESPONSE.getTimeRange());
+		assertEquals(result.getQualifiers(), TS_DATA_RESPONSE.getQualifiers());
+		assertEquals(result.getPoints().size(), 1);
 	}
 }
