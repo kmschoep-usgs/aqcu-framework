@@ -30,7 +30,14 @@ public class AquariusRetrievalService {
 	@Value("${aquarius.service.retries.unauthorized}")
 	protected int aquariusUnauthorizedRetryCount;
 
+	@Value("${aquarius.service.timeout}")
+	protected int aquariusTimeoutMs;
+
 	protected <TResponse> TResponse executePublishApiRequest(IReturn<TResponse> request) throws AquariusRetrievalException {
+		return executePublishApiRequest(request, null);
+	}
+
+	protected <TResponse> TResponse executePublishApiRequest(IReturn<TResponse> request, Integer timeoutMsOverride) throws AquariusRetrievalException {
 		String errorMessage = "";
 		int unauthorizedRetryCounter = 0;
 		boolean doRetry;
@@ -38,9 +45,17 @@ public class AquariusRetrievalService {
 		do {
 			doRetry = false;
 			try {
-				//Despite this being AutoCloseable we CANNOT close it or it will delete the session in AQ for our service account
-				//and cause any other in-flight requests to fail.
+				// Despite this being AutoCloseable we CANNOT close it or it will delete the session in AQ for our service account
+				// and cause any other in-flight requests to fail.
 				AquariusClient client = AquariusClient.createConnectedClient(aquariusUrl.replace("/AQUARIUS/", ""), aquariusUser, aquariusPassword);
+				
+				// Allow specifying a timeout MS per-request
+				if(timeoutMsOverride != null) {
+					client.Publish.setTimeout(timeoutMsOverride);
+				} else {
+					client.Publish.setTimeout(aquariusTimeoutMs);
+				}
+				
 				return client.Publish.get(request);
 			} catch (WebServiceException e) {
 				if((isAuthError(e) || isInvalidTokenError(e)) && unauthorizedRetryCounter < aquariusUnauthorizedRetryCount) {

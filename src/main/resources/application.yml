@@ -24,6 +24,7 @@ aquarius:
   service:
     retries:
       unauthorized: ${aquariusUnauthorizedRetires:3}
+    timeout: 30000
 
 #eureka:
 #  client:

@@ -97,32 +97,15 @@ public class TimeSeriesDataServiceTest {
 			.setTimestamp(new StatisticalDateTimeOffset().setDateTimeOffset(Instant.parse("2017-01-02T00:00:00Z")))
 			.setValue(new DoubleWithDisplay().setDisplay("1").setNumeric(2.0))
 	));
-	
-	public TimeSeriesDataServiceResponse TS_DATA_RESPONSE;
 
+	private TimeSeriesDataServiceResponse TS_DATA_RESPONSE;
+	
 	@Before
 	@SuppressWarnings("unchecked")
 	public void setup() throws Exception {
 		service = new TimeSeriesDataService(aquariusService);
 		parameters = new ReportRequestParameters();
-		TS_DATA_RESPONSE = new TimeSeriesDataServiceResponse()
-			.setApprovals(approvals)
-			.setGapTolerances(gapTolerances)
-			.setGrades(grades)
-			.setInterpolationTypes(interps)
-			.setLabel("label")
-			.setLocationIdentifier("loc-id")
-			.setMethods(methods)
-			.setNotes(notes)
-			.setNumPoints(new Long("1"))
-			.setParameter("param")
-			.setPoints(points)
-			.setQualifiers(new ArrayList<Qualifier>(Arrays.asList(qualifierA, qualifierB, qualifierC)))
-			.setTimeRange(new StatisticalTimeRange()
-				.setStartTime(new StatisticalDateTimeOffset().setDateTimeOffset(Instant.parse("2017-01-01T00:00:00Z")))
-				.setEndTime(new StatisticalDateTimeOffset().setDateTimeOffset(Instant.parse("2017-03-01T00:00:00Z"))))
-			.setUniqueId("uuid")
-			.setUnit("unit");
+		TS_DATA_RESPONSE = buildData();
 		given(aquariusService.executePublishApiRequest(any(IReturn.class))).willReturn(TS_DATA_RESPONSE);
 	}
 
@@ -170,5 +153,26 @@ public class TimeSeriesDataServiceTest {
 		assertEquals(result.getTimeRange(), TS_DATA_RESPONSE.getTimeRange());
 		assertEquals(result.getQualifiers(), TS_DATA_RESPONSE.getQualifiers());
 		assertEquals(result.getPoints().size(), 1);
+	}
+
+	public static TimeSeriesDataServiceResponse buildData() {
+		return new TimeSeriesDataServiceResponse()
+			.setApprovals(approvals)
+			.setGapTolerances(gapTolerances)
+			.setGrades(grades)
+			.setInterpolationTypes(interps)
+			.setLabel("label")
+			.setLocationIdentifier("loc-id")
+			.setMethods(methods)
+			.setNotes(notes)
+			.setNumPoints(new Long("1"))
+			.setParameter("param")
+			.setPoints(points)
+			.setQualifiers(new ArrayList<Qualifier>(Arrays.asList(qualifierA, qualifierB, qualifierC)))
+			.setTimeRange(new StatisticalTimeRange()
+				.setStartTime(new StatisticalDateTimeOffset().setDateTimeOffset(Instant.parse("2017-01-01T00:00:00Z")))
+				.setEndTime(new StatisticalDateTimeOffset().setDateTimeOffset(Instant.parse("2017-03-01T00:00:00Z"))))
+			.setUniqueId("uuid")
+			.setUnit("unit");
 	}
 }
