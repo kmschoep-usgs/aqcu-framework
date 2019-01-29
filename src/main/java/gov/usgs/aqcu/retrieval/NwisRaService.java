@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
@@ -23,6 +24,7 @@ import gov.usgs.aqcu.model.nwis.WaterQualitySampleRecords;
 import gov.usgs.aqcu.parameter.DateRangeRequestParameters;
 
 @Repository
+@ConditionalOnBean(NwisRaClient.class)
 public class NwisRaService {
 	private static final Logger LOG = LoggerFactory.getLogger(NwisRaService.class);
 
