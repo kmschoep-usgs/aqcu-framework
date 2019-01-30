@@ -1,12 +1,14 @@
 package gov.usgs.aqcu.client;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name="nwisRa", url="${nwis-ra.service.endpoint:https://placeholder.gov}")
+@FeignClient(name="nwisRa", url="${nwis-ra.service.endpoint:}")
+@ConditionalOnProperty(name="nwis-ra.service.endpoint")
 public interface NwisRaClient {
 
 	@RequestMapping(method=RequestMethod.GET, value="/data/view/parameters/json", consumes="application/json")
