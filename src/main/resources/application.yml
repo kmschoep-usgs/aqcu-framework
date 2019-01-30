@@ -16,6 +16,10 @@
 #  security:
 #    enabled: false
 
+nwis-ra:
+  service:
+    endpoint: ${nwisRaServiceEndpoint}
+
 javaToR:
   service:
     endpoint: ${javaToRServiceEndpoint}
