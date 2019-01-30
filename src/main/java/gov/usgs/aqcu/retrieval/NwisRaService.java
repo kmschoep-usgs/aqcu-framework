@@ -8,7 +8,8 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
@@ -24,7 +25,8 @@ import gov.usgs.aqcu.model.nwis.WaterQualitySampleRecords;
 import gov.usgs.aqcu.parameter.DateRangeRequestParameters;
 
 @Repository
-@ConditionalOnBean(NwisRaClient.class)
+@ConditionalOnClass(name="org.springframework.cloud.netflix.feign.FeignClient")
+@ConditionalOnProperty(name="nwis-ra.service.endpoint")
 public class NwisRaService {
 	private static final Logger LOG = LoggerFactory.getLogger(NwisRaService.class);
 
