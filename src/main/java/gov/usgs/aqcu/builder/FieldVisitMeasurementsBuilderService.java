@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.ControlConditionType;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.DischargeSummary;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.FieldVisitDataServiceResponse;
 
@@ -46,7 +45,7 @@ public class FieldVisitMeasurementsBuilderService {
 	}
 	
 	protected String extractControlCondition(FieldVisitDataServiceResponse fieldVisitDataServiceResponse) {
-		ControlConditionType controlCondition = fieldVisitDataServiceResponse.getControlConditionActivity() != null
+		String controlCondition = fieldVisitDataServiceResponse.getControlConditionActivity() != null
 				? fieldVisitDataServiceResponse.getControlConditionActivity().getControlCondition()
 				: null;
 	

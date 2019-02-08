@@ -35,7 +35,6 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.ControlConditionActivity;
-import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.ControlConditionType;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.DischargeActivity;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.DischargeSummary;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.DoubleWithDisplay;
@@ -131,7 +130,7 @@ public class FieldVisitMeasurementsBuilderServiceTest {
 	@Test
 	public void getControlCondition_happyTest() {
 		FieldVisitDataServiceResponse resp = new FieldVisitDataServiceResponse().setControlConditionActivity(
-				new ControlConditionActivity().setControlCondition(ControlConditionType.DebrisHeavy));
+				new ControlConditionActivity().setControlCondition("DebrisHeavy"));
 		assertEquals("DebrisHeavy", service.extractControlCondition(resp));
 	}
 
