@@ -214,7 +214,7 @@ public class FieldVisitReadingsBuilderServiceTest {
 		assertEquals(result.get(2).getSublocation(), "testsubloc");
 		assertEquals(result.get(2).getTime(), null);
 		assertEquals(result.get(2).getUncertainty(), null);
-		assertEquals(result.get(2).getValue(), null);
+		assertEquals(result.get(2).getValue(), "No mark");
 		assertEquals(result.get(2).getVisitStatus(), "TODO");
 		assertEquals(result.get(2).getVisitTime(), Instant.parse("2018-01-01T00:00:00Z"));
 		assertTrue(result.get(3).getAssociatedIvQualifiers().isEmpty());
@@ -227,7 +227,7 @@ public class FieldVisitReadingsBuilderServiceTest {
 		assertEquals(result.get(3).getSublocation(), "testsubloc");
 		assertEquals(result.get(3).getTime(), null);
 		assertEquals(result.get(3).getUncertainty(), null);
-		assertEquals(result.get(3).getValue(), null);
+		assertEquals(result.get(3).getValue(), "");
 		assertEquals(result.get(3).getVisitStatus(), "TODO");
 		assertEquals(result.get(3).getVisitTime(), Instant.parse("2018-01-01T00:00:00Z"));
 	}
@@ -386,7 +386,7 @@ public class FieldVisitReadingsBuilderServiceTest {
 		assertEquals(result.get(0).getSublocation(), "testsubloc");
 		assertEquals(result.get(0).getTime(), null);
 		assertEquals(result.get(0).getUncertainty(), null);
-		assertEquals(result.get(0).getValue(), null);
+		assertEquals(result.get(0).getValue(), "No mark");
 		assertEquals(result.get(0).getVisitTime(), Instant.parse("2018-01-01T00:00:00Z"));
 		assertEquals(result.get(0).getVisitStatus(), "TODO");
 	}
@@ -422,7 +422,7 @@ public class FieldVisitReadingsBuilderServiceTest {
 		assertEquals(result.get(0).getSublocation(), "testsubloc");
 		assertEquals(result.get(0).getTime(), null);
 		assertEquals(result.get(0).getUncertainty(), null);
-		assertEquals(result.get(0).getValue(), null);
+		assertEquals(result.get(0).getValue(), "");
 		assertEquals(result.get(0).getVisitTime(), Instant.parse("2018-01-01T00:00:00Z"));
 		assertEquals(result.get(0).getVisitStatus(), "TODO");
 	}
