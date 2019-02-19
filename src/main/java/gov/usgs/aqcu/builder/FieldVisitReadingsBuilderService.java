@@ -147,7 +147,7 @@ public class FieldVisitReadingsBuilderService {
 							readings.add(new FieldVisitReading (
 									visitTime, party, "TODO", 
 									new ArrayList<>(Arrays.asList(ins.getComments())), null, MON_METH_CREST_STAGE,
-									null, null, ins.getSubLocationIdentifier(), ReadingType.ExtremeMax
+									null, csg.getDisplay(), ins.getSubLocationIdentifier(), ReadingType.ExtremeMax
 								)
 							);
 						}
@@ -168,7 +168,7 @@ public class FieldVisitReadingsBuilderService {
 						readings.add(new FieldVisitReading (
 								visitTime, party, "TODO", 
 								new ArrayList<>(Arrays.asList(ins.getComments())), null, MON_METH_MAX_MIN_INDICATOR,
-								null, null, ins.getSubLocationIdentifier(), ReadingType.ExtremeMax
+								null, "", ins.getSubLocationIdentifier(), ReadingType.ExtremeMax
 							)
 						);
 					}
