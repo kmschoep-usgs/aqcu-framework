@@ -23,6 +23,7 @@ import gov.usgs.aqcu.model.nwis.ParameterRecords;
 import gov.usgs.aqcu.model.nwis.WaterLevelRecords;
 import gov.usgs.aqcu.model.nwis.WaterQualitySampleRecords;
 import gov.usgs.aqcu.parameter.DateRangeRequestParameters;
+import gov.usgs.aqcu.util.LogExecutionTime;
 
 @Repository
 @ConditionalOnClass(name="org.springframework.cloud.netflix.feign.FeignClient")
@@ -43,17 +44,20 @@ public class NwisRaService {
 	public NwisRaService(NwisRaClient nwisRaClient) {
 		this.nwisRaClient = nwisRaClient;
 	}
-
+	
+	@LogExecutionTime
 	public List<ParameterRecord> getAqParameterUnits() {
 		ResponseEntity<String> responseEntity = nwisRaClient.getParameters(AQ_PARAMS_FILTER_VALUE);
 		return deseriealize(responseEntity.getBody(), ParameterRecords.class).getRecords();
 	}
 
+	@LogExecutionTime
 	public List<ParameterRecord> getAqParameterNames() {
 		ResponseEntity<String> responseEntity = nwisRaClient.getParameters(AQ_NAME_PARAMS_FILTER_VALUE);
 		return deseriealize(responseEntity.getBody(), ParameterRecords.class).getRecords();
 	}
 
+	@LogExecutionTime
 	public WaterLevelRecords getGwLevels(DateRangeRequestParameters requestParameters, String siteId,
 			GroundWaterParameter gwParam, ZoneOffset zoneOffset) {
 		ResponseEntity<String> responseEntity = nwisRaClient.getWaterLevelRecords(siteId,
@@ -62,6 +66,7 @@ public class NwisRaService {
 		return deseriealize(responseEntity.getBody(), WaterLevelRecords.class);
 	}
 
+	@LogExecutionTime
 	public List<WaterQualitySampleRecord> getQwData(DateRangeRequestParameters requestParameters, String siteId,
 			String nwisPcode, ZoneOffset zoneOffset) {
 		ResponseEntity<String> responseEntity = nwisRaClient.getWaterQualitySampleRecords(siteId,

@@ -14,6 +14,8 @@ import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.Para
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.ParameterListServiceResponse;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.ParameterMetadata;
 
+import gov.usgs.aqcu.util.LogExecutionTime;
+
 @Repository
 public class ParameterListService {
 	public static final String VOLUMETRIC_FLOW_UNIT_GROUP_VALUE = "Volumetric Flow";
@@ -25,7 +27,8 @@ public class ParameterListService {
 	public ParameterListService(AquariusRetrievalService aquariusRetrievalService) {
 		this.aquariusRetrievalService = aquariusRetrievalService;
 	}
-
+	
+	@LogExecutionTime
 	public Map<String, ParameterMetadata> getParameterMetadata() {
 		List<ParameterMetadata> metadataList = new ArrayList<>();
 

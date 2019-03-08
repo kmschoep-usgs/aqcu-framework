@@ -14,6 +14,8 @@ import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.Loca
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.LocationDescriptionListServiceRequest;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.LocationDescriptionListServiceResponse;
 
+import gov.usgs.aqcu.util.LogExecutionTime;
+
 @Repository
 public class LocationDescriptionListService {
 	private static final Logger LOG = LoggerFactory.getLogger(LocationDescriptionListService.class);
@@ -24,7 +26,8 @@ public class LocationDescriptionListService {
 	public LocationDescriptionListService(AquariusRetrievalService aquariusRetrievalService) {
 		this.aquariusRetrievalService = aquariusRetrievalService;
 	}
-
+	
+	@LogExecutionTime
 	public LocationDescriptionListServiceResponse getRawResponse(String locationName, String locationIdentifier) {
 		LocationDescriptionListServiceRequest request = new LocationDescriptionListServiceRequest()
 				.setLocationName(locationName)

@@ -12,6 +12,8 @@ import org.springframework.stereotype.Repository;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.RatingModelInputValuesServiceRequest;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.RatingModelInputValuesServiceResponse;
 
+import gov.usgs.aqcu.util.LogExecutionTime;
+
 @Repository
 public class RatingModelInputValuesService {
 	private AquariusRetrievalService aquariusRetrievalService;
@@ -21,6 +23,7 @@ public class RatingModelInputValuesService {
 		this.aquariusRetrievalService = aquariusRetrievalService;
 	}
 
+	@LogExecutionTime
 	public List<BigDecimal> get(String ratingModelIdentifier, Instant effectiveTime, List<BigDecimal> outputValues) {
 		ArrayList<Double> outputValueDoubles = outputValues.stream()
 			.map(v -> v.doubleValue())

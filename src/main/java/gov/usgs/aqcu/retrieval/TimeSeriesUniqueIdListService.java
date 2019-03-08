@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.TimeSeriesUniqueIdListServiceRequest;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.TimeSeriesUniqueIds;
 
+import gov.usgs.aqcu.util.LogExecutionTime;
+
 @Repository
 public class TimeSeriesUniqueIdListService {
 	private AquariusRetrievalService aquariusRetrievalService;
@@ -19,13 +21,15 @@ public class TimeSeriesUniqueIdListService {
 	) {
 		this.aquariusRetrievalService = aquariusRetrievalService;
 	}
-
+	
+	@LogExecutionTime
 	public List<TimeSeriesUniqueIds> getRawResponse(String locationIdentifier) {
 		TimeSeriesUniqueIdListServiceRequest request = new TimeSeriesUniqueIdListServiceRequest()
 			.setLocationIdentifier(locationIdentifier);
 		return aquariusRetrievalService.executePublishApiRequest(request).getTimeSeriesUniqueIds();
 	}
-
+	
+	@LogExecutionTime
 	public List<String> getTimeSeriesUniqueIdList(String locationIdentifier) {
 		return getRawResponse(locationIdentifier).stream().map(u -> u.getUniqueId()).collect(Collectors.toList());
 	}

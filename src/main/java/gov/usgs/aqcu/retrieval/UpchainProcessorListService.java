@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.UpchainProcessorListByTimeSeriesServiceRequest;
+
+import gov.usgs.aqcu.util.LogExecutionTime;
+
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.ProcessorListServiceResponse;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.Processor;
 
@@ -24,6 +27,7 @@ public class UpchainProcessorListService {
 		this.aquariusRetrievalService = aquariusRetrievalService;
 	}
 	
+	@LogExecutionTime
 	public ProcessorListServiceResponse getRawResponse(String primaryTimeseriesIdentifier, Instant startDate, Instant endDate) {
 				UpchainProcessorListByTimeSeriesServiceRequest request = new UpchainProcessorListByTimeSeriesServiceRequest()
 				.setTimeSeriesUniqueId(primaryTimeseriesIdentifier)
@@ -33,6 +37,7 @@ public class UpchainProcessorListService {
 		return processorsResponse;
 	}
 
+	@LogExecutionTime
 	public List<String> getInputTimeSeriesUniqueIdList(List<Processor> processors) {
 		Set<String> uniqueIds = new HashSet<>();
 
@@ -44,7 +49,8 @@ public class UpchainProcessorListService {
 
 		return new ArrayList<>(uniqueIds);
 	}
-
+	
+	@LogExecutionTime
 	public List<String> getRatingModelUniqueIdList(List<Processor> processors) {
 		Set<String> uniqueIds = new HashSet<>();
 

@@ -15,6 +15,7 @@ import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.Time
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.TimeSeriesDataServiceResponse;
 
 import gov.usgs.aqcu.parameter.DateRangeRequestParameters;
+import gov.usgs.aqcu.util.LogExecutionTime;
 
 @Repository
 public class TimeSeriesDataService {
@@ -26,7 +27,8 @@ public class TimeSeriesDataService {
 	public TimeSeriesDataService(AquariusRetrievalService aquariusRetrievalService) {
 		this.aquariusRetrievalService = aquariusRetrievalService;
 	}
-
+	
+	@LogExecutionTime
 	public TimeSeriesDataServiceResponse get(String timeseriesIdentifier, DateRangeRequestParameters requestParameters, ZoneOffset zoneOffset, Boolean isDaily, Boolean isRaw, Boolean doIncludeGaps, String getParts) {
 		TimeSeriesDataServiceResponse timeSeriesResponse = new TimeSeriesDataServiceResponse();
 

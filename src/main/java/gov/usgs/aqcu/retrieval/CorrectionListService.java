@@ -12,6 +12,7 @@ import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.Corr
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.Correction;
 
 import gov.usgs.aqcu.model.ExtendedCorrection;
+import gov.usgs.aqcu.util.LogExecutionTime;
 
 @Repository
 public class CorrectionListService  {
@@ -23,7 +24,8 @@ public class CorrectionListService  {
 	) {
 		this.aquariusRetrievalService = aquariusRetrievalService;
 	}
-
+	
+	@LogExecutionTime
 	public CorrectionListServiceResponse getRawResponse(String timeseriesUniqueId, Instant startDate, Instant endDate) {
 		CorrectionListServiceRequest request = new CorrectionListServiceRequest()
 				.setTimeSeriesUniqueId(timeseriesUniqueId)

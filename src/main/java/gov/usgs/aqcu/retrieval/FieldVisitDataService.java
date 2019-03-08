@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.FieldVisitDataServiceRequest;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.FieldVisitDataServiceResponse;
 
+import gov.usgs.aqcu.util.LogExecutionTime;
+
 @Repository
 public class FieldVisitDataService {
 	private static final Logger LOG = LoggerFactory.getLogger(FieldVisitDataService.class);
@@ -18,7 +20,8 @@ public class FieldVisitDataService {
 	public FieldVisitDataService(AquariusRetrievalService aquariusRetrievalService) {
 		this.aquariusRetrievalService = aquariusRetrievalService;
 	}
-
+	
+	@LogExecutionTime
 	public FieldVisitDataServiceResponse get(String fieldVisitIdentifier) {
 		try {
 			FieldVisitDataServiceRequest request = new FieldVisitDataServiceRequest()
