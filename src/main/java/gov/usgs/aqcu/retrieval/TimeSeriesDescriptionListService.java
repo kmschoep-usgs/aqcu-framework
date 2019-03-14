@@ -13,6 +13,8 @@ import org.springframework.stereotype.Repository;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.TimeSeriesDescriptionListByUniqueIdServiceRequest;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.TimeSeriesDescriptionListByUniqueIdServiceResponse;
 import gov.usgs.aqcu.exception.AquariusProcessingException;
+import gov.usgs.aqcu.util.LogExecutionTime;
+
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.TimeSeriesDescription;
 
 
@@ -35,7 +37,8 @@ public class TimeSeriesDescriptionListService {
 		TimeSeriesDescriptionListByUniqueIdServiceResponse tssDesc = aquariusRetrievalService.executePublishApiRequest(request);
 		return tssDesc;
 	}
-
+	
+	@LogExecutionTime
 	public List<TimeSeriesDescription> getTimeSeriesDescriptionList(List<String> timeSeriesUniqueIds) {
 		List<TimeSeriesDescription> descList = getRawResponse(timeSeriesUniqueIds).getTimeSeriesDescriptions();
 

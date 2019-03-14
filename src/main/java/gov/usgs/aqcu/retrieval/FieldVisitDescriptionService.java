@@ -15,6 +15,7 @@ import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.Fiel
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.FieldVisitDescriptionListServiceResponse;
 
 import gov.usgs.aqcu.parameter.DateRangeRequestParameters;
+import gov.usgs.aqcu.util.LogExecutionTime;
 
 @Repository
 public class FieldVisitDescriptionService {
@@ -27,6 +28,7 @@ public class FieldVisitDescriptionService {
 		this.aquariusRetrievalService = aquariusRetrievalService;
 	}
 
+	@LogExecutionTime
 	public List<FieldVisitDescription> getDescriptions(String stationId, ZoneOffset zoneOffset, DateRangeRequestParameters requestParameters) {
 		List<FieldVisitDescription> descriptions = new ArrayList<>();
 		try {

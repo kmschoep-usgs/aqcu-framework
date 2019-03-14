@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import gov.usgs.aqcu.util.AqcuTimeUtils;
+import gov.usgs.aqcu.util.LogExecutionTime;
 
 @Repository
 public class RatingCurveListService {
@@ -36,7 +37,8 @@ public class RatingCurveListService {
 	) {
 		this.aquariusRetrievalService = aquariusRetrievalService;
 	}
-
+	
+	@LogExecutionTime
 	public RatingCurveListServiceResponse getRawResponse(String ratingModelIdentifier, Double utcOffset, Instant startDate, Instant endDate) {
 		RatingCurveListServiceRequest request = new RatingCurveListServiceRequest()
 				.setRatingModelIdentifier(ratingModelIdentifier)

@@ -17,7 +17,13 @@
         <failOnMissingWebXml>false</failOnMissingWebXml>
         <aquarius.sdk.version>18.8.1</aquarius.sdk.version>
     </properties>
-
+	
+	<parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.13.RELEASE</version>
+    </parent>
+    
     <distributionManagement>
         <repository>
             <id>release</id>
@@ -63,6 +69,11 @@
             <artifactId>spring-cloud-starter-feign</artifactId>
             <scope>provided</scope>
         </dependency>
+        
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
 
         <dependency>
             <groupId>com.aquaticinformatics</groupId>
@@ -152,6 +163,24 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.eluder.coveralls</groupId>
+                <artifactId>coveralls-maven-plugin</artifactId>
+                <version>4.3.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.7.9</version>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                </executions>
+			</plugin>
         </plugins>
     </build>
 

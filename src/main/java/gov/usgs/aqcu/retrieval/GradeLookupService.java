@@ -15,6 +15,8 @@ import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.Grad
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.Grade;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.GradeMetadata;
 
+import gov.usgs.aqcu.util.LogExecutionTime;
+
 @Repository
 public class GradeLookupService {
 	private static final Logger LOG = LoggerFactory.getLogger(GradeLookupService.class);
@@ -28,6 +30,7 @@ public class GradeLookupService {
 		this.aquariusRetrievalService = aquariusRetrievalService;
 	}
 
+	@LogExecutionTime
 	public Map<String, GradeMetadata> getByGradeList(List<Grade> includeGrades) {
 		List<GradeMetadata> gradeList = new ArrayList<>();
 		List<String> gradeIdentifiers = buildIdentifierList(includeGrades);

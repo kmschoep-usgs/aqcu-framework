@@ -15,6 +15,8 @@ import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.Qual
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.QualifierListServiceResponse;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.QualifierMetadata;
 
+import gov.usgs.aqcu.util.LogExecutionTime;
+
 @Repository
 public class QualifierLookupService {
 	private static final Logger LOG = LoggerFactory.getLogger(QualifierLookupService.class);
@@ -25,7 +27,8 @@ public class QualifierLookupService {
 	public QualifierLookupService(AquariusRetrievalService aquariusRetrievalService) {
 		this.aquariusRetrievalService = aquariusRetrievalService;
 	}
-
+	
+	@LogExecutionTime
 	public Map<String, QualifierMetadata> getByQualifierList(List<Qualifier> includeQualifiers) {
 		List<QualifierMetadata> qualifierList = new ArrayList<>();
 		List<String> qualifierIdentifiers = buildIdentifierList(includeQualifiers);
@@ -46,7 +49,7 @@ public class QualifierLookupService {
 				.map(x -> x.getIdentifier())
 				.collect(Collectors.toList());
 	}
-
+	
 	protected List<QualifierMetadata> get() throws Exception {
 		QualifierListServiceRequest request = new QualifierListServiceRequest();
 		QualifierListServiceResponse qualifierListResponse = aquariusRetrievalService.executePublishApiRequest(request);
