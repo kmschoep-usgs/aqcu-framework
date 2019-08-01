@@ -22,10 +22,12 @@ public class FieldVisitDataService {
 	}
 	
 	@LogExecutionTime
-	public FieldVisitDataServiceResponse get(String fieldVisitIdentifier) {
+	public FieldVisitDataServiceResponse get(String fieldVisitIdentifier, Boolean includeInvalid, String discreteMeasurementActivity) {
 		try {
 			FieldVisitDataServiceRequest request = new FieldVisitDataServiceRequest()
 					.setFieldVisitIdentifier(fieldVisitIdentifier)
+					.setIncludeInvalidActivities(includeInvalid)
+					.setDiscreteMeasurementActivity(discreteMeasurementActivity)
 					.setApplyRounding(true);
 			FieldVisitDataServiceResponse fieldVisitResponse  = aquariusRetrievalService.executePublishApiRequest(request);
 			return fieldVisitResponse;
@@ -34,5 +36,9 @@ public class FieldVisitDataService {
 			LOG.error(msg, e);
 			throw new RuntimeException(msg, e);
 		}
+	}
+
+	public FieldVisitDataServiceResponse get(String fieldVisitIdentifier) {
+		return get(fieldVisitIdentifier, null, null);
 	}
 }
