@@ -5,8 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -18,8 +16,6 @@ import gov.usgs.aqcu.util.LogExecutionTime;
 
 @Repository
 public class LocationDescriptionListService {
-	private static final Logger LOG = LoggerFactory.getLogger(LocationDescriptionListService.class);
-
 	private AquariusRetrievalService aquariusRetrievalService;
 
 	@Autowired
@@ -38,17 +34,10 @@ public class LocationDescriptionListService {
 
 	public LocationDescription getByLocationIdentifier(String locationIdentifier) {
 		LocationDescription locationDescription = null;
-		try {
-			List<LocationDescription> locationDescriptions = getRawResponse(null, locationIdentifier).getLocationDescriptions();
-			if(!locationDescriptions.isEmpty()) {
-				locationDescription = locationDescriptions.get(0);
-			}
-		} catch (Exception e) {
-			String msg = "An unexpected error occurred while attempting to fetch LocationDescriptions from Aquarius: ";
-			LOG.error(msg, e);
-			throw new RuntimeException(msg, e);
+		List<LocationDescription> locationDescriptions = getRawResponse(null, locationIdentifier).getLocationDescriptions();
+		if(!locationDescriptions.isEmpty()) {
+			locationDescription = locationDescriptions.get(0);
 		}
-
 		return locationDescription;
 	}
 	

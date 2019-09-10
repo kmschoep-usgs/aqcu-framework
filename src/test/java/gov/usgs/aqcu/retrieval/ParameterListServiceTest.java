@@ -1,7 +1,6 @@
 package gov.usgs.aqcu.retrieval;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -10,7 +9,6 @@ import static org.mockito.Matchers.any;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 import org.hamcrest.collection.IsMapContaining;
@@ -45,13 +43,6 @@ public class ParameterListServiceTest {
 				.willReturn(new ParameterListServiceResponse()
 						.setParameters(new ArrayList<ParameterMetadata>(Arrays
 								.asList(parameterMetadataA, parameterMetadataB, parameterMetadataC))));
-	}
-
-	@Test
-	public void getTest() throws Exception {
-		List<ParameterMetadata> parameterMetadataList = service.get();
-		assertEquals(3, parameterMetadataList.size());
-		assertThat(parameterMetadataList, containsInAnyOrder(parameterMetadataA, parameterMetadataB, parameterMetadataC));
 	}
 
 	@Test

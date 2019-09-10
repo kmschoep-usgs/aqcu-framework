@@ -44,7 +44,7 @@ public class QualifierLookupServiceTest {
 	public void setup() throws Exception {
 		service = new QualifierLookupService(aquariusService);
 		given(aquariusService.executePublishApiRequest(any(IReturn.class))).willReturn(new QualifierListServiceResponse()
-				.setQualifiers(new ArrayList<QualifierMetadata>(Arrays.asList(qualifierMetadataA, qualifierMetadataB, qualifierMetadataC, qualifierMetadataD))));
+			.setQualifiers(new ArrayList<QualifierMetadata>(Arrays.asList(qualifierMetadataA, qualifierMetadataB, qualifierMetadataC, qualifierMetadataD))));
 	}
 
 	@Test
@@ -52,7 +52,7 @@ public class QualifierLookupServiceTest {
 		List<String> actual = service.buildIdentifierList(Arrays.asList(qualifierA, qualifierB, qualifierC, qualifierD));
 		assertEquals(4, actual.size());
 		assertThat(actual, containsInAnyOrder("a", "b", "c", "d"));
-		}
+	}
 
 	@Test
 	public void filterListTest() {
@@ -61,13 +61,6 @@ public class QualifierLookupServiceTest {
 		assertThat(actual, IsMapContaining.hasEntry("a", qualifierMetadataA));
 		assertThat(actual, IsMapContaining.hasEntry("c", qualifierMetadataC));
 		assertThat(actual, IsMapContaining.hasEntry("d", qualifierMetadataD));
-		}
-
-	@Test
-	public void getTest() throws Exception {
-		List<QualifierMetadata> actual = service.get();
-		assertEquals(4, actual.size());
-		assertThat(actual, containsInAnyOrder(qualifierMetadataA, qualifierMetadataB, qualifierMetadataC, qualifierMetadataD));
 	}
 
 	@Test
@@ -78,5 +71,4 @@ public class QualifierLookupServiceTest {
 		assertThat(actual, IsMapContaining.hasEntry("c", qualifierMetadataC));
 		assertThat(actual, IsMapContaining.hasEntry("d", qualifierMetadataD));
 	}
-
 }
