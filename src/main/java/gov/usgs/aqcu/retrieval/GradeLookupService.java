@@ -5,8 +5,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.ArrayList;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -19,8 +17,6 @@ import gov.usgs.aqcu.util.LogExecutionTime;
 
 @Repository
 public class GradeLookupService {
-	private static final Logger LOG = LoggerFactory.getLogger(GradeLookupService.class);
-
 	private AquariusRetrievalService aquariusRetrievalService;
 
 	@Autowired
@@ -34,15 +30,9 @@ public class GradeLookupService {
 	public Map<String, GradeMetadata> getByGradeList(List<Grade> includeGrades) {
 		List<GradeMetadata> gradeList = new ArrayList<>();
 		List<String> gradeIdentifiers = buildIdentifierList(includeGrades);
-
-		try {
-			gradeList = get();
-		} catch (Exception e) {
-			String msg = "An unexpected error occurred while attempting to fetch GradeMetadata from Aquarius: ";
-			LOG.error(msg, e);
-			throw new RuntimeException(msg, e);
-		}
-
+		GradeListServiceRequest request = new GradeListServiceRequest();
+		GradeListServiceResponse gradeListResponse = aquariusRetrievalService.executePublishApiRequest(request);
+		gradeList = gradeListResponse.getGrades();
 		return filterList(gradeIdentifiers, gradeList);
 	}
 
@@ -50,12 +40,6 @@ public class GradeLookupService {
 		return includeGrades.stream()
 				.map(x -> x.getGradeCode())
 				.collect(Collectors.toList());
-	}
-
-	protected List<GradeMetadata> get() {
-		GradeListServiceRequest request = new GradeListServiceRequest();
-		GradeListServiceResponse gradeListResponse = aquariusRetrievalService.executePublishApiRequest(request);
-		return gradeListResponse.getGrades();
 	}
 
 	protected Map<String, GradeMetadata> filterList(List<String> includeIdentifiers, List<GradeMetadata> gradeList) {

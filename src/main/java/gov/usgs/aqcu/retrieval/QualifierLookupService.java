@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -19,8 +17,6 @@ import gov.usgs.aqcu.util.LogExecutionTime;
 
 @Repository
 public class QualifierLookupService {
-	private static final Logger LOG = LoggerFactory.getLogger(QualifierLookupService.class);
-
 	private AquariusRetrievalService aquariusRetrievalService;
 
 	@Autowired
@@ -32,15 +28,9 @@ public class QualifierLookupService {
 	public Map<String, QualifierMetadata> getByQualifierList(List<Qualifier> includeQualifiers) {
 		List<QualifierMetadata> qualifierList = new ArrayList<>();
 		List<String> qualifierIdentifiers = buildIdentifierList(includeQualifiers);
-
-		try {
-			qualifierList = get();
-		} catch (Exception e) {
-			String msg = "An unexpected error occurred while attempting to fetch QualifierMetadata from Aquarius: ";
-			LOG.error(msg, e);
-			throw new RuntimeException(msg, e);
-		}
-
+		QualifierListServiceRequest request = new QualifierListServiceRequest();
+		QualifierListServiceResponse qualifierListResponse = aquariusRetrievalService.executePublishApiRequest(request);
+		qualifierList = qualifierListResponse.getQualifiers();
 		return filterList(qualifierIdentifiers, qualifierList);
 	}
 
@@ -50,12 +40,6 @@ public class QualifierLookupService {
 				.collect(Collectors.toList());
 	}
 	
-	protected List<QualifierMetadata> get() throws Exception {
-		QualifierListServiceRequest request = new QualifierListServiceRequest();
-		QualifierListServiceResponse qualifierListResponse = aquariusRetrievalService.executePublishApiRequest(request);
-		return qualifierListResponse.getQualifiers();
-	}
-
 	protected Map<String, QualifierMetadata> filterList(List<String> includeIdentifiers, List<QualifierMetadata> qualifierList) {
 		Map<String, QualifierMetadata> filtered = qualifierList.stream()
 				.filter(x -> includeIdentifiers.contains(x.getIdentifier()))

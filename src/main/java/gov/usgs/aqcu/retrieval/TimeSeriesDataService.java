@@ -5,8 +5,6 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -19,8 +17,6 @@ import gov.usgs.aqcu.util.LogExecutionTime;
 
 @Repository
 public class TimeSeriesDataService {
-	private static final Logger LOG = LoggerFactory.getLogger(TimeSeriesDataService.class);
-
 	private AquariusRetrievalService aquariusRetrievalService;
 
 	@Autowired
@@ -63,15 +59,7 @@ public class TimeSeriesDataService {
 		 * */ 
 		
 		Instant endDate = adjustIfDv(requestParameters.getEndInstant(zoneOffset), isDaily);
-
-		try {
-			timeSeriesResponse = get(timeseriesIdentifier, requestParameters.getStartInstant(zoneOffset), endDate, isRaw, doIncludeGaps, getParts);
-		} catch (Exception e) {
-			String msg = "An unexpected error occurred while attempting to fetch TimeSeriesData" + 
-				(isRaw ? "Raw" : "Corrected") + "ServiceRequest from Aquarius: ";
-			LOG.error(msg, e);
-			throw new RuntimeException(msg, e);
-		}
+		timeSeriesResponse = get(timeseriesIdentifier, requestParameters.getStartInstant(zoneOffset), endDate, isRaw, doIncludeGaps, getParts);
 		
 		// Remove the first point from daily series because it is the DV point from the day prior to our request start date
 		if(isDaily && timeSeriesResponse != null && timeSeriesResponse.getPoints() != null && !timeSeriesResponse.getPoints().isEmpty()) {

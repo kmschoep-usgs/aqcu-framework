@@ -81,13 +81,6 @@ public class GradeLookupServiceTest {
 		}
 
 	@Test
-	public void getTest() throws Exception {
-		List<GradeMetadata> actual = service.get();
-		assertEquals(3, actual.size());
-		assertThat(actual, containsInAnyOrder(gradeMA, gradeMB, gradeMC));
-	}
-
-	@Test
 	public void getByGradeListTest() {
 		Map<String, GradeMetadata> actual = service.getByGradeList(Arrays.asList(gradeA, gradeB));
 		assertEquals(actual.size(), 2);
