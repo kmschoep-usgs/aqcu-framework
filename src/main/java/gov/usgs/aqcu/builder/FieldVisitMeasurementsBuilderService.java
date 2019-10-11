@@ -67,7 +67,7 @@ public class FieldVisitMeasurementsBuilderService {
 		fieldVisitMeasurement.setErrorMaxDischarge(dischargeError.getMaxErrorValue());
 		fieldVisitMeasurement.setErrorMinDischarge(dischargeError.getMinErrorValue());
 	
-		if(ratingModelIdentifier != null && !ratingModelIdentifier.isEmpty()) {
+		if(ratingModelIdentifier != null && !ratingModelIdentifier.isEmpty() && null != meanGageHeight) {
 			RatingModelErrorVector gageHeightError = getGageHeightError(ratingModelIdentifier, dischargeSummary.getMeasurementStartTime(), dischargeError, meanGageHeight);
 			fieldVisitMeasurement.setErrorMaxShiftInFeet(gageHeightError.getMaxErrorValue());
 			fieldVisitMeasurement.setShiftInFeet(gageHeightError.getValue());
