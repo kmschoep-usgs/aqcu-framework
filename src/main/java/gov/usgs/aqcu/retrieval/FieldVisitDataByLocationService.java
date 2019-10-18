@@ -25,7 +25,7 @@ public class FieldVisitDataByLocationService {
 	public FieldVisitDataByLocationServiceResponse get(String locationIdentifier, Boolean includeInvalid, List<ActivityType> activities) {
 		FieldVisitDataByLocationServiceRequest request = new FieldVisitDataByLocationServiceRequest()
                 .setLocationIdentifier(locationIdentifier)
-                .setActivities(new ArrayList<>(activities))
+                .setActivities(activities != null ? new ArrayList<>(activities) : null)
                 .setIncludeInvalidActivities(includeInvalid)
                 .setApplyRounding(true);
 
