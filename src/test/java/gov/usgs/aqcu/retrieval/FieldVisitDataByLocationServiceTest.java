@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
+import java.util.ArrayList;
+
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.FieldVisitDataByLocationServiceResponse;
 
 import org.junit.Before;
@@ -32,6 +34,12 @@ public class FieldVisitDataByLocationServiceTest {
 
 	@Test
 	public void get_happyTest() {
+		FieldVisitDataByLocationServiceResponse actual = service.get("a", true, new ArrayList<>());
+		assertEquals(expectedResponse, actual);
+	}
+
+	@Test
+	public void get_nullTest() {
 		FieldVisitDataByLocationServiceResponse actual = service.get("a", true, null);
 		assertEquals(expectedResponse, actual);
 	}
