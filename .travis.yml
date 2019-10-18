@@ -2,5 +2,7 @@
 dist: trusty
 language: java
 jdk: openjdk8
+install:
+  -true
 script:
-  - mvn clean verify jacoco:report coveralls:report
+  - mvn clean verify coveralls:report -P \!dependency-security-check
