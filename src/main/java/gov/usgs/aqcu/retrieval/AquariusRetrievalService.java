@@ -1,9 +1,9 @@
 package gov.usgs.aqcu.retrieval;
 
-import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 
 import com.aquaticinformatics.aquarius.sdk.timeseries.AquariusClient;
@@ -87,11 +87,11 @@ public class AquariusRetrievalService {
 	}
 
 	protected boolean isAuthError(WebServiceException e) {
-		return e.getStatusCode() == HttpStatus.SC_UNAUTHORIZED || e.getStatusCode() == HttpStatus.SC_FORBIDDEN;
+		return e.getStatusCode() == HttpStatus.UNAUTHORIZED.value() || e.getStatusCode() == HttpStatus.FORBIDDEN.value();
 	}
 
 	protected boolean isInvalidTokenError(WebServiceException e) {
-		return e.getStatusCode() == HttpStatus.SC_INTERNAL_SERVER_ERROR && 
+		return e.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR.value() && 
 				e.getStatusDescription().toLowerCase().contains(NO_ACTIVE_SESSION_ERROR_DESCRIPTION.toLowerCase());
 	}
 }

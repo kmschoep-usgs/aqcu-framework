@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import gov.usgs.aqcu.deserializer.WaterLevelRecordDeserializer;
-import gov.usgs.aqcu.model.nwis.NwisRaTimeZones;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonDeserialize(using = WaterLevelRecordDeserializer.class)

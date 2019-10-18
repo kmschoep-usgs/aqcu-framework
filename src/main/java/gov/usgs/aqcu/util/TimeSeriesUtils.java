@@ -30,10 +30,8 @@ public abstract class TimeSeriesUtils {
 		ExtendedAttributeFilter primaryFilter = AquariusRetrievalUtils.getPrimaryFilter();
 		if(timeSeriesDescription != null && timeSeriesDescription.getExtendedAttributes() != null && !timeSeriesDescription.getExtendedAttributes().isEmpty()) {
 			for(ExtendedAttribute ext : timeSeriesDescription.getExtendedAttributes()) {
-				if(ext.getName() != null && ext.getValue() != null) {
-					if(ext.getName().equals(primaryFilter.getFilterName()) && ext.getValue().equals(primaryFilter.getFilterValue())) {
-						return true;
-					}
+				if(ext.getName() != null && ext.getValue() != null && ext.getName().equals(primaryFilter.getFilterName()) && ext.getValue().equals(primaryFilter.getFilterValue())) {
+					return true;
 				}
 			}
 		}		

@@ -81,7 +81,7 @@ public class DateRangeRequestParameters {
 			requestPeriod = datesToRequestPeriod(startDate, endDate);
 		} else {
 			//Should never get here - Validation of parameters should have failed and control logic baled...
-			//TODO Perhaps throw a runtime exception?
+			throw new RuntimeException("Failed to convert request parameters to request period.");
 		}
 	}
 

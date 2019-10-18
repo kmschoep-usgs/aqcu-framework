@@ -248,10 +248,4 @@ public class RequestParametersTest {
 		String expected = "lastMonths=3&primaryTimeseriesIdentifier=test-override";
 		assertEquals(0, params.getAsQueryString("test-override", false).compareTo(expected));
 	}
-
-	@Test
-	public void getAsQueryStringEmptyTest() {
-		assertEquals("", params.getAsQueryString(null, true));
-		assertEquals("", params.getAsQueryString(null, false));
-	}
 }

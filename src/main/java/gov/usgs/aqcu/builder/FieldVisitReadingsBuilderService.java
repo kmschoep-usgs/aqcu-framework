@@ -8,9 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang.StringUtils;
-import org.springframework.stereotype.Service;
-
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.FieldVisitDataServiceResponse;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.Inspection;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.InspectionActivity;
@@ -18,13 +15,16 @@ import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.Insp
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.Reading;
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.ReadingType;
 
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
+
 import gov.usgs.aqcu.model.FieldVisitReading;
 
 @Service
 public class FieldVisitReadingsBuilderService {
 	public static final String MON_METH_CREST_STAGE = "Crest stage";
 	public static final String MON_METH_MAX_MIN_INDICATOR = "Max-min indicator";
-	public static enum EmptyCsgReadings {
+	public enum EmptyCsgReadings {
 		NOMK("No mark"),
 		NTRD("Not read"),
 		OTOP("Over topped");
@@ -163,15 +163,13 @@ public class FieldVisitReadingsBuilderService {
 		List<FieldVisitReading> readings = new ArrayList<>();
 		if(inspections != null && !inspections.isEmpty()) {
 			for(Inspection ins : inspections) {
-				if (ins.getInspectionType().equals(InspectionType.MaximumMinimumGage)) {
-					if(StringUtils.isNotBlank(ins.getComments())){
-						readings.add(new FieldVisitReading (
-								visitTime, party, "TODO", 
-								new ArrayList<>(Arrays.asList(ins.getComments())), null, MON_METH_MAX_MIN_INDICATOR,
-								null, "", ins.getSubLocationIdentifier(), ReadingType.ExtremeMax
-							)
-						);
-					}
+				if (ins.getInspectionType().equals(InspectionType.MaximumMinimumGage) && StringUtils.isNotBlank(ins.getComments())) {
+					readings.add(new FieldVisitReading (
+							visitTime, party, "TODO", 
+							new ArrayList<>(Arrays.asList(ins.getComments())), null, MON_METH_MAX_MIN_INDICATOR,
+							null, "", ins.getSubLocationIdentifier(), ReadingType.ExtremeMax
+						)
+					);
 				} 
 			}
 		}
