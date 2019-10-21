@@ -5,6 +5,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html). (Patch version X.Y.0 is implied if not specified.)
 
 ## [unreleased]
+### Added
+- FieldVisitDataByLocation Service
+
+### Changed
+- Updated to Spring Boot 2.2.0
+- Updated to Aquarius API 19.3
+
+## [0.0.7]
 ### Changed
 - Error handling pattern for retrieval services - now return specific errors
 
@@ -101,7 +109,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - RequestParameters
 - LocalDateGsonSerializer
 
-[Unreleased]: https://github.com/USGS-CIDA/aqcu-framework/compare/aqcu-framework-0.0.6...master
+[Unreleased]: https://github.com/USGS-CIDA/aqcu-framework/compare/aqcu-framework-0.0.7...master
+[0.0.6]: https://github.com/USGS-CIDA/aqcu-framework/compare/aqcu-framework-0.0.6...aqcu-framework-0.0.7
 [0.0.6]: https://github.com/USGS-CIDA/aqcu-framework/compare/aqcu-framework-0.0.5...aqcu-framework-0.0.6
 [0.0.5]: https://github.com/USGS-CIDA/aqcu-framework/compare/aqcu-framework-0.0.4...aqcu-framework-0.0.5
 [0.0.4]: https://github.com/USGS-CIDA/aqcu-framework/compare/aqcu-framework-0.0.3...aqcu-framework-0.0.4

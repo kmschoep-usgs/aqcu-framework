@@ -23,8 +23,8 @@ public class DataGapListBuilderService {
 
 			if(point.getValue().getNumeric() == null) {
 				//Gap Marker Found			
-				Temporal preTime = (i > 0) ? AqcuTimeUtils.getTemporal(timeSeriesPoints.get(i-1).getTimestamp(), isDaily, zoneOffset) : null;
-				Temporal postTime = (i < (timeSeriesPoints.size() -1)) ? AqcuTimeUtils.getTemporal(timeSeriesPoints.get(i+1).getTimestamp(), isDaily, zoneOffset) : null;
+				Temporal preTime = i > 0 ? AqcuTimeUtils.getTemporal(timeSeriesPoints.get(i-1).getTimestamp(), isDaily, zoneOffset) : null;
+				Temporal postTime = i < (timeSeriesPoints.size() -1) ? AqcuTimeUtils.getTemporal(timeSeriesPoints.get(i+1).getTimestamp(), isDaily, zoneOffset) : null;
 				DataGap gap = new DataGap();
 				gap.setStartTime(preTime);
 				gap.setEndTime(postTime);

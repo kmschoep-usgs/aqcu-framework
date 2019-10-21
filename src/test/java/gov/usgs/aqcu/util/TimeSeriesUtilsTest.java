@@ -135,7 +135,6 @@ public class TimeSeriesUtilsTest {
 	}
 
 	@Test
-	@SuppressWarnings("unchecked")
 	public void getMinMaxDataDvTest() {
 		boolean endOfPeriod = true;
 		ZoneOffset zoneOffset = ZoneOffset.of("-6");
@@ -153,7 +152,6 @@ public class TimeSeriesUtilsTest {
 	}
 
 	@Test
-	@SuppressWarnings("unchecked")
 	public void getMinMaxDataTsTest() {
 		boolean endOfPeriod = false;
 		ZoneOffset zoneOffset = ZoneOffset.UTC;

@@ -29,7 +29,7 @@ public enum MeasurementGrade {
 			measurementGradeMap.put(measurementGrade.measurementGradeType, measurementGrade);
 		}
 }
-	private MeasurementGrade(MeasurementGradeType measurementGradeType, BigDecimal percentageOfError) {
+	MeasurementGrade(MeasurementGradeType measurementGradeType, BigDecimal percentageOfError) {
 		this.measurementGradeType = measurementGradeType;
 		this.percentageOfError = percentageOfError;
 	}

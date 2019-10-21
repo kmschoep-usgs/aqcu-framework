@@ -123,8 +123,8 @@ public class RatingCurveListService {
 		//Filter Pair List
 		for(int i = 0; i < pairList.size(); i++) {
 			ImmutablePair<Integer,PeriodOfApplicability> pair = pairList.get(i);
-			ImmutablePair<Integer,PeriodOfApplicability> prevPair = (i > 0) ? pairList.get(i-1) : null;
-			PeriodOfApplicability nextPeriod = (i < pairList.size()-1) ? pairList.get(i+1).getValue() : null;
+			ImmutablePair<Integer,PeriodOfApplicability> prevPair = i > 0 ? pairList.get(i-1) : null;
+			PeriodOfApplicability nextPeriod = i < pairList.size()-1 ? pairList.get(i+1).getValue() : null;
 
 			PeriodOfApplicability effectiveRatingPeriod = createEffectiveRatingPeriod(pair.getValue(), nextPeriod);
 
