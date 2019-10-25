@@ -34,13 +34,13 @@ public class FieldVisitDataByLocationServiceTest {
 
 	@Test
 	public void get_happyTest() {
-		FieldVisitDataByLocationServiceResponse actual = service.get("a", true, new ArrayList<>());
+		FieldVisitDataByLocationServiceResponse actual = service.get("a", true, new ArrayList<>(), new ArrayList<>(), "b");
 		assertEquals(expectedResponse, actual);
 	}
 
 	@Test
 	public void get_nullTest() {
-		FieldVisitDataByLocationServiceResponse actual = service.get("a", true, null);
+		FieldVisitDataByLocationServiceResponse actual = service.get("a", true, null, null, null);
 		assertEquals(expectedResponse, actual);
 	}
 }
