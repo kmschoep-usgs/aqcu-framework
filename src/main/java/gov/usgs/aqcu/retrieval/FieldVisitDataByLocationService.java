@@ -27,14 +27,15 @@ public class FieldVisitDataByLocationService {
 	@LogExecutionTime
 	public FieldVisitDataByLocationServiceResponse get(String locationIdentifier, Boolean includeInvalid, List<ActivityType> includeActivities, List<String> includeParameters, String targetDatum) {
 		FieldVisitDataByLocationServiceRequest request = new FieldVisitDataByLocationServiceRequest()
-                .setLocationIdentifier(locationIdentifier)
-                .setIncludeInvalidActivities(includeInvalid)
-                .setActivities(includeActivities != null ? new ArrayList<>(includeActivities) : null)
-				.setParameters(includeParameters != null ? new ArrayList<>(includeParameters) : null)
-				.setConvertToStandardReferenceDatum(targetDatum)
-				.setApplyRounding(true);
+			.setLocationIdentifier(locationIdentifier)
+			.setIncludeInvalidActivities(includeInvalid)
+			.setActivities(includeActivities != null ? new ArrayList<>(includeActivities) : null)
+			.setParameters(includeParameters != null ? new ArrayList<>(includeParameters) : null)
+			.setConvertToStandardReferenceDatum(targetDatum)
+			.setApplyRounding(true);
 
 		FieldVisitDataByLocationServiceResponse fieldVisitResponse  = aquariusRetrievalService.executePublishApiRequest(request);
+		
 		return fieldVisitResponse;
 	}
 
