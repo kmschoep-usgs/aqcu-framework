@@ -19,8 +19,8 @@ public class LocationDataService {
 	
 	@LogExecutionTime
 	public LocationDataServiceResponse get(String locationIdentifier) {
-        LocationDataServiceRequest request = new LocationDataServiceRequest()
-            .setLocationIdentifier(locationIdentifier);
+		LocationDataServiceRequest request = new LocationDataServiceRequest()
+			.setLocationIdentifier(locationIdentifier);
 
 		LocationDataServiceResponse locationResponse  = aquariusRetrievalService.executePublishApiRequest(request);
 		return locationResponse;
