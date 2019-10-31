@@ -357,21 +357,21 @@ public class FieldVisitReadingsBuilderServiceTest {
 
 	@Test
 	public void extractEmptyCrestStageReadingsNullTest() {
-		List<FieldVisitReading> result = service.extractEmptyCrestStageReadings(null, null, null);
+		List<FieldVisitReading> result = service.extractEmptyCrestStageReadings(null, null, null, null);
 		assertNotNull(result);
 		assertTrue(result.isEmpty());
 	}
 
 	@Test
 	public void extractEmptyCrestStageReadingsEmptyTest() {
-		List<FieldVisitReading> result = service.extractEmptyCrestStageReadings(null, Arrays.asList(), null);
+		List<FieldVisitReading> result = service.extractEmptyCrestStageReadings(null, Arrays.asList(), null, null);
 		assertNotNull(result);
 		assertTrue(result.isEmpty());
 	}
 
 	@Test
 	public void extractEmptyCrestStageReadingsTest() {
-		List<FieldVisitReading> result = service.extractEmptyCrestStageReadings(Instant.parse("2018-01-01T00:00:00Z"), getInspections(), "testparty");
+		List<FieldVisitReading> result = service.extractEmptyCrestStageReadings(Instant.parse("2018-01-01T00:00:00Z"), getInspections(), "testparty", FieldVisitReadingsBuilderService.MON_METH_CREST_STAGE);
 		assertNotNull(result);
 		assertEquals(result.size(), 1);
 		assertEquals(result.get(0).getAssociatedIvQualifiers().size(), 0);
@@ -393,21 +393,21 @@ public class FieldVisitReadingsBuilderServiceTest {
 
 	@Test
 	public void extractEmptyMaxMinIndicatorReadingsNullTest() {
-		List<FieldVisitReading> result = service.extractEmptyMaxMinIndicatorReadings(null, null, null);
+		List<FieldVisitReading> result = service.extractEmptyMaxMinIndicatorReadings(null, null, null, null);
 		assertNotNull(result);
 		assertTrue(result.isEmpty());
 	}
 
 	@Test
 	public void extractEmptyMaxMinIndicatorReadingsEmptyTest() {
-		List<FieldVisitReading> result = service.extractEmptyMaxMinIndicatorReadings(null, Arrays.asList(), null);
+		List<FieldVisitReading> result = service.extractEmptyMaxMinIndicatorReadings(null, Arrays.asList(), null, null);
 		assertNotNull(result);
 		assertTrue(result.isEmpty());
 	}
 
 	@Test
 	public void extractEmptyMaxMinIndicatorReadingsTest() {
-		List<FieldVisitReading> result = service.extractEmptyMaxMinIndicatorReadings(Instant.parse("2018-01-01T00:00:00Z"), getInspections(), "testparty");
+		List<FieldVisitReading> result = service.extractEmptyMaxMinIndicatorReadings(Instant.parse("2018-01-01T00:00:00Z"), getInspections(), "testparty", FieldVisitReadingsBuilderService.MON_METH_MAX_MIN_INDICATOR);
 		assertNotNull(result);
 		assertEquals(result.size(), 1);
 		assertEquals(result.get(0).getAssociatedIvQualifiers().size(), 0);

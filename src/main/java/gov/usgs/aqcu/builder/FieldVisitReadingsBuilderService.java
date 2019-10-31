@@ -40,7 +40,7 @@ public class FieldVisitReadingsBuilderService {
 		}
 	}
 
-	public List<FieldVisitReading> extractReadings(Instant visitTime, FieldVisitDataServiceResponse dataResponse, String parameter, List<String> includeInspectionTypes) {
+	public List<FieldVisitReading> extractReadings(Instant visitTime, FieldVisitDataServiceResponse dataResponse, String parameter, List<String> includeInspectionTypes, String emptyCSGMonitoringMethod, String emptyMinMaxMonitoringMethod) {
 		List<FieldVisitReading> result = new ArrayList<>();
 		
 		InspectionActivity activity = dataResponse.getInspectionActivity();
@@ -80,13 +80,21 @@ public class FieldVisitReadingsBuilderService {
 			
 			//add possible empty inspections (only if not filtering by parameter)
 			if(parameter == null || parameter.isEmpty()) {
-				result.addAll(extractEmptyCrestStageReadings(visitTime, inspections, activity.getParty()));
-				result.addAll(extractEmptyMaxMinIndicatorReadings(visitTime, inspections, activity.getParty()));
+				result.addAll(extractEmptyCrestStageReadings(visitTime, inspections, activity.getParty(), emptyCSGMonitoringMethod));
+				result.addAll(extractEmptyMaxMinIndicatorReadings(visitTime, inspections, activity.getParty(), emptyMinMaxMonitoringMethod));
 				result.addAll(extractEmptyHighWaterMarkReadings(visitTime, inspections, activity.getParty()));
 			}
 		}
 
 		return result;
+	}
+
+	public List<FieldVisitReading> extractReadings(Instant visitTime, FieldVisitDataServiceResponse dataResponse, List<String> includeInspectionTypes, String emptyCSGMonitoringMethod, String emptyMinMaxMonitoringMethod) {
+		return extractReadings(visitTime, dataResponse, null, includeInspectionTypes, emptyCSGMonitoringMethod, emptyMinMaxMonitoringMethod);
+	}
+
+	public List<FieldVisitReading> extractReadings(Instant visitTime, FieldVisitDataServiceResponse dataResponse, String parameter, List<String> includeInspectionTypes) {
+		return extractReadings(visitTime, dataResponse, parameter, includeInspectionTypes, MON_METH_CREST_STAGE, MON_METH_MAX_MIN_INDICATOR);
 	}
 
 	protected List<Reading> filterToParameter(List<Reading> readings, String parameter) {
@@ -137,7 +145,7 @@ public class FieldVisitReadingsBuilderService {
 		}
 	}
 	
-	protected List<FieldVisitReading> extractEmptyCrestStageReadings(Instant visitTime, List<Inspection> inspections, String party) {
+	protected List<FieldVisitReading> extractEmptyCrestStageReadings(Instant visitTime, List<Inspection> inspections, String party, String monitoringMethod) {
 		List<FieldVisitReading> readings = new ArrayList<>();
 		if(inspections != null && !inspections.isEmpty()) {
 			for(Inspection ins : inspections) {
@@ -146,7 +154,7 @@ public class FieldVisitReadingsBuilderService {
 						if(ins.getComments() != null && (ins.getComments().contains(csg.name()) || ins.getComments().contains(csg.readingDisplay))) {
 							readings.add(new FieldVisitReading (
 									visitTime, party, "TODO", 
-									new ArrayList<>(Arrays.asList(ins.getComments())), null, MON_METH_CREST_STAGE,
+									new ArrayList<>(Arrays.asList(ins.getComments())), null, monitoringMethod,
 									null, csg.getDisplay(), ins.getSubLocationIdentifier(), ReadingType.ExtremeMax
 								)
 							);
@@ -159,14 +167,14 @@ public class FieldVisitReadingsBuilderService {
 		return readings;
 	}
 	
-	protected List<FieldVisitReading> extractEmptyMaxMinIndicatorReadings(Instant visitTime, List<Inspection> inspections, String party) {
+	protected List<FieldVisitReading> extractEmptyMaxMinIndicatorReadings(Instant visitTime, List<Inspection> inspections, String party, String monitoringMethod) {
 		List<FieldVisitReading> readings = new ArrayList<>();
 		if(inspections != null && !inspections.isEmpty()) {
 			for(Inspection ins : inspections) {
 				if (ins.getInspectionType().equals(InspectionType.MaximumMinimumGage) && StringUtils.isNotBlank(ins.getComments())) {
 					readings.add(new FieldVisitReading (
 							visitTime, party, "TODO", 
-							new ArrayList<>(Arrays.asList(ins.getComments())), null, MON_METH_MAX_MIN_INDICATOR,
+							new ArrayList<>(Arrays.asList(ins.getComments())), null, monitoringMethod,
 							null, "", ins.getSubLocationIdentifier(), ReadingType.ExtremeMax
 						)
 					);
