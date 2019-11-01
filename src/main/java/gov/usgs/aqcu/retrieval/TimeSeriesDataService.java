@@ -24,8 +24,12 @@ public class TimeSeriesDataService {
 		this.aquariusRetrievalService = aquariusRetrievalService;
 	}
 	
-	@LogExecutionTime
 	public TimeSeriesDataServiceResponse get(String timeseriesIdentifier, DateRangeRequestParameters requestParameters, ZoneOffset zoneOffset, Boolean isDaily, Boolean isRaw, Boolean doIncludeGaps, String getParts) {
+		return get(timeseriesIdentifier, requestParameters, zoneOffset,isDaily, isRaw, doIncludeGaps, true, getParts);
+	}
+
+	@LogExecutionTime
+	public TimeSeriesDataServiceResponse get(String timeseriesIdentifier, DateRangeRequestParameters requestParameters, ZoneOffset zoneOffset, Boolean isDaily, Boolean isRaw, Boolean doIncludeGaps, Boolean doRound, String getParts) {
 		TimeSeriesDataServiceResponse timeSeriesResponse = new TimeSeriesDataServiceResponse();
 
 		/** 
@@ -59,7 +63,7 @@ public class TimeSeriesDataService {
 		 * */ 
 		
 		Instant endDate = adjustIfDv(requestParameters.getEndInstant(zoneOffset), isDaily);
-		timeSeriesResponse = get(timeseriesIdentifier, requestParameters.getStartInstant(zoneOffset), endDate, isRaw, doIncludeGaps, getParts);
+		timeSeriesResponse = getData(timeseriesIdentifier, requestParameters.getStartInstant(zoneOffset), endDate, isRaw, doIncludeGaps, doRound, getParts);
 		
 		// Remove the first point from daily series because it is the DV point from the day prior to our request start date
 		if(isDaily && timeSeriesResponse != null && timeSeriesResponse.getPoints() != null && !timeSeriesResponse.getPoints().isEmpty()) {
@@ -69,7 +73,7 @@ public class TimeSeriesDataService {
 		return timeSeriesResponse;
 	}
 
-	protected TimeSeriesDataServiceResponse get(String timeSeriesIdentifier, Instant startDate, Instant endDate, Boolean isRaw, Boolean doIncludeGaps, String getParts) {
+	protected TimeSeriesDataServiceResponse getData(String timeSeriesIdentifier, Instant startDate, Instant endDate, Boolean isRaw, Boolean doIncludeGaps, Boolean doRound, String getParts) {
 		TimeSeriesDataServiceResponse timeSeriesResponse;
 
 		if(isRaw != null && !isRaw) {
@@ -77,7 +81,7 @@ public class TimeSeriesDataService {
 				.setTimeSeriesUniqueId(timeSeriesIdentifier)
 				.setQueryFrom(startDate)
 				.setQueryTo(endDate)
-				.setApplyRounding(true)
+				.setApplyRounding(doRound)
 				.setIncludeGapMarkers(doIncludeGaps)
 				.setGetParts(getParts);
 			timeSeriesResponse = aquariusRetrievalService.executePublishApiRequest(request);
@@ -86,7 +90,7 @@ public class TimeSeriesDataService {
 				.setTimeSeriesUniqueId(timeSeriesIdentifier)
 				.setQueryFrom(startDate)
 				.setQueryTo(endDate)
-				.setApplyRounding(true)
+				.setApplyRounding(doRound)
 				.setGetParts(getParts);
 			timeSeriesResponse = aquariusRetrievalService.executePublishApiRequest(request);
 		}

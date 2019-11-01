@@ -111,7 +111,7 @@ public class TimeSeriesDataServiceTest {
 
 	@Test
 	public void getQualifiersTest1() throws Exception {
-		TimeSeriesDataServiceResponse actual = service.get("", null, null, null, null, null);
+		TimeSeriesDataServiceResponse actual = service.getData("", null, null, null, null, null, null);
 		assertEquals(3, actual.getQualifiers().size());
 		assertThat(actual.getQualifiers(), containsInAnyOrder(qualifierA, qualifierB, qualifierC));
 	}
@@ -138,6 +138,15 @@ public class TimeSeriesDataServiceTest {
 		parameters.setStartDate(LocalDate.parse("2018-01-01"));
 		parameters.setEndDate(LocalDate.parse("2018-01-02"));
 		TimeSeriesDataServiceResponse result = service.get(parameters.getPrimaryTimeseriesIdentifier(), parameters, ZoneOffset.UTC, false, false, null, null);
+		assertEquals(result, TS_DATA_RESPONSE);
+		assertEquals(result.getPoints().size(), 2);
+	}
+
+	@Test
+	public void getUVNoRoundFullTest() {
+		parameters.setStartDate(LocalDate.parse("2018-01-01"));
+		parameters.setEndDate(LocalDate.parse("2018-01-02"));
+		TimeSeriesDataServiceResponse result = service.get(parameters.getPrimaryTimeseriesIdentifier(), parameters, ZoneOffset.UTC, false, false, false, false, null);
 		assertEquals(result, TS_DATA_RESPONSE);
 		assertEquals(result.getPoints().size(), 2);
 	}
