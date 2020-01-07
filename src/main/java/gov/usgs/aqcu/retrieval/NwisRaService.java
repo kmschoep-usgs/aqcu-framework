@@ -26,7 +26,7 @@ import gov.usgs.aqcu.parameter.DateRangeRequestParameters;
 import gov.usgs.aqcu.util.LogExecutionTime;
 
 @Repository
-@ConditionalOnClass(name="org.springframework.cloud.netflix.feign.FeignClient")
+@ConditionalOnClass(name="org.springframework.cloud.openfeign.FeignClient")
 @ConditionalOnProperty(name="nwis-ra.service.endpoint")
 public class NwisRaService {
 	private static final Logger LOG = LoggerFactory.getLogger(NwisRaService.class);
