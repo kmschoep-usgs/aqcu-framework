@@ -5,4 +5,4 @@ jdk: openjdk8
 install:
   - true
 script:
-  - mvn clean verify coveralls:report -P \!dependency-security-check
+  - mvn -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn clean verify coveralls:report -P \!dependency-security-check 

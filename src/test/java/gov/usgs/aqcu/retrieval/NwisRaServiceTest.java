@@ -2,6 +2,7 @@ package gov.usgs.aqcu.retrieval;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
@@ -59,7 +60,7 @@ public class NwisRaServiceTest {
 
 	@Test
 	public void getAqParameterUnitsTest() {
-		given(nwisRaClient.getParameters(NwisRaService.AQ_PARAMS_FILTER_VALUE))
+		given(nwisRaClient.getParameters(null, NwisRaService.AQ_PARAMS_FILTER_VALUE))
 				.willReturn(getAqParameterUnitsResponseEntity());
 		List<ParameterRecord> expected = Stream.of(getParameterRecord("A"), getParameterRecord("B"))
 				.collect(Collectors.toList());
@@ -69,7 +70,7 @@ public class NwisRaServiceTest {
 
 	@Test
 	public void getAqParameterNamesTest() {
-		given(nwisRaClient.getParameters(NwisRaService.AQ_NAME_PARAMS_FILTER_VALUE))
+		given(nwisRaClient.getParameters(null, NwisRaService.AQ_NAME_PARAMS_FILTER_VALUE))
 				.willReturn(getAqParameterNamesResponseEntity());
 		List<ParameterRecord> expected = Stream.of(getParameterRecord("C"), getParameterRecord("D"))
 				.collect(Collectors.toList());
@@ -79,7 +80,7 @@ public class NwisRaServiceTest {
 
 	@Test
 	public void getGwLevelsTest() {
-		given(nwisRaClient.getWaterLevelRecords(anyString(), anyString(), anyString(), anyString(), anyString()))
+		given(nwisRaClient.getWaterLevelRecords(eq(null), anyString(), anyString(), anyString(), anyString(), anyString()))
 				.willReturn(getGwLevelsResponseEntity());
 		List<WaterLevelRecord> expected = Stream.of(
 				getWaterLevelRecord(BigDecimal.ONE, OffsetDateTime.of(2018, 04, 02, 13, 12, 0, 0, ZoneOffset.of("-6"))),
@@ -88,13 +89,13 @@ public class NwisRaServiceTest {
 		List<WaterLevelRecord> actual = service.getGwLevels(parameters, "123", GroundWaterParameter.FAQ209,
 				ZoneOffset.UTC).getRecords();
 		ObjectCompare.compare(expected, actual);
-		verify(nwisRaClient).getWaterLevelRecords("123", NwisRaService.GW_LEV_COLUMN_GROUPS_TO_RETRIEVE,
+		verify(nwisRaClient).getWaterLevelRecords(null, "123", NwisRaService.GW_LEV_COLUMN_GROUPS_TO_RETRIEVE,
 				"20180401,20180423", "S", "LMSL");
 	}
 
 	@Test
 	public void getQwDataTest() {
-		given(nwisRaClient.getWaterQualitySampleRecords(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString()))
+		given(nwisRaClient.getWaterQualitySampleRecords(eq(null), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString()))
 				.willReturn(getQwDataResponseEntity());
 		List<WaterQualitySampleRecord> expected = Stream.of(
 				getWaterQualitySampleRecord("a", OffsetDateTime.of(2018, 04, 02, 13, 12, 0, 0, ZoneOffset.of("-6")), "00600", BigDecimal.ONE),
@@ -102,42 +103,42 @@ public class NwisRaServiceTest {
 				.collect(Collectors.toList());
 		List<WaterQualitySampleRecord> actual = service.getQwData(parameters, "123", "00600", ZoneOffset.UTC);
 		ObjectCompare.compare(expected, actual);
-		verify(nwisRaClient).getWaterQualitySampleRecords("123", NwisRaService.QW_COLUMN_GROUPS_TO_RETRIEVE,
+		verify(nwisRaClient).getWaterQualitySampleRecords(null, "123", NwisRaService.QW_COLUMN_GROUPS_TO_RETRIEVE,
 				"true", "true", "00600", "00600", "20180401,20180423");
 	}
 
 	@Test
 	public void getNwisPcodeNameNotFoundTest() {
-		given(nwisRaClient.getParameters(NwisRaService.AQ_NAME_PARAMS_FILTER_VALUE))
+		given(nwisRaClient.getParameters(null, NwisRaService.AQ_NAME_PARAMS_FILTER_VALUE))
 				.willReturn(getAqParameterNamesResponseEntityLinked());
 		assertNull(service.getNwisPcode("aqname", "unit"));
-		verify(nwisRaClient, times(1)).getParameters(NwisRaService.AQ_NAME_PARAMS_FILTER_VALUE);
-		verify(nwisRaClient, never()).getParameters(NwisRaService.AQ_PARAMS_FILTER_VALUE);
+		verify(nwisRaClient, times(1)).getParameters(null, NwisRaService.AQ_NAME_PARAMS_FILTER_VALUE);
+		verify(nwisRaClient, never()).getParameters(null, NwisRaService.AQ_PARAMS_FILTER_VALUE);
 	}
 
 	@Test
 	public void getNwisPcodeNameFoundUnitNotFoundTest() {
-		given(nwisRaClient.getParameters(NwisRaService.AQ_NAME_PARAMS_FILTER_VALUE))
+		given(nwisRaClient.getParameters(null, NwisRaService.AQ_NAME_PARAMS_FILTER_VALUE))
 				.willReturn(getAqParameterNamesResponseEntityLinked());
-		given(nwisRaClient.getParameters(NwisRaService.AQ_PARAMS_FILTER_VALUE))
+		given(nwisRaClient.getParameters(null, NwisRaService.AQ_PARAMS_FILTER_VALUE))
 				.willReturn(getAqParameterUnitsResponseEntityLinked());
 		assertNull(service.getNwisPcode("aqNameA", "unit"));
 		assertNull(service.getNwisPcode("aqNameB", "unitA"));
 		assertNull(service.getNwisPcode("aqNameA", "unitB"));
-		verify(nwisRaClient, times(3)).getParameters(NwisRaService.AQ_NAME_PARAMS_FILTER_VALUE);
-		verify(nwisRaClient, times(3)).getParameters(NwisRaService.AQ_PARAMS_FILTER_VALUE);
+		verify(nwisRaClient, times(3)).getParameters(null, NwisRaService.AQ_NAME_PARAMS_FILTER_VALUE);
+		verify(nwisRaClient, times(3)).getParameters(null, NwisRaService.AQ_PARAMS_FILTER_VALUE);
 	}
 
 	@Test
 	public void getNwisPcodeTest() {
-		given(nwisRaClient.getParameters(NwisRaService.AQ_NAME_PARAMS_FILTER_VALUE))
+		given(nwisRaClient.getParameters(null, NwisRaService.AQ_NAME_PARAMS_FILTER_VALUE))
 				.willReturn(getAqParameterNamesResponseEntityLinked());
-		given(nwisRaClient.getParameters(NwisRaService.AQ_PARAMS_FILTER_VALUE))
+		given(nwisRaClient.getParameters(null, NwisRaService.AQ_PARAMS_FILTER_VALUE))
 				.willReturn(getAqParameterUnitsResponseEntityLinked());
 		assertEquals("A", service.getNwisPcode("aqNameA", "unitA"));
 		assertEquals("B", service.getNwisPcode("aqNameB", "unitB"));
-		verify(nwisRaClient, times(2)).getParameters(NwisRaService.AQ_NAME_PARAMS_FILTER_VALUE);
-		verify(nwisRaClient, times(2)).getParameters(NwisRaService.AQ_PARAMS_FILTER_VALUE);
+		verify(nwisRaClient, times(2)).getParameters(null, NwisRaService.AQ_NAME_PARAMS_FILTER_VALUE);
+		verify(nwisRaClient, times(2)).getParameters(null, NwisRaService.AQ_PARAMS_FILTER_VALUE);
 	}
 
 	private ResponseEntity<String> getAqParameterNamesResponseEntity() {
