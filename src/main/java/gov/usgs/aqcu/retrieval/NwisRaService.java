@@ -12,6 +12,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -47,20 +51,20 @@ public class NwisRaService {
 	
 	@LogExecutionTime
 	public List<ParameterRecord> getAqParameterUnits() {
-		ResponseEntity<String> responseEntity = nwisRaClient.getParameters(AQ_PARAMS_FILTER_VALUE);
+		ResponseEntity<String> responseEntity = nwisRaClient.getParameters(getBearerToken(), AQ_PARAMS_FILTER_VALUE);
 		return deseriealize(responseEntity.getBody(), ParameterRecords.class).getRecords();
 	}
 
 	@LogExecutionTime
 	public List<ParameterRecord> getAqParameterNames() {
-		ResponseEntity<String> responseEntity = nwisRaClient.getParameters(AQ_NAME_PARAMS_FILTER_VALUE);
+		ResponseEntity<String> responseEntity = nwisRaClient.getParameters(getBearerToken(), AQ_NAME_PARAMS_FILTER_VALUE);
 		return deseriealize(responseEntity.getBody(), ParameterRecords.class).getRecords();
 	}
 
 	@LogExecutionTime
 	public WaterLevelRecords getGwLevels(DateRangeRequestParameters requestParameters, String siteId,
 			GroundWaterParameter gwParam, ZoneOffset zoneOffset) {
-		ResponseEntity<String> responseEntity = nwisRaClient.getWaterLevelRecords(siteId,
+		ResponseEntity<String> responseEntity = nwisRaClient.getWaterLevelRecords(getBearerToken(), siteId,
 				GW_LEV_COLUMN_GROUPS_TO_RETRIEVE, getPartialDateString(requestParameters, zoneOffset),
 				gwParam.getGwLevEnt(), gwParam.getSeaLevDatum());
 		return deseriealize(responseEntity.getBody(), WaterLevelRecords.class);
@@ -69,7 +73,7 @@ public class NwisRaService {
 	@LogExecutionTime
 	public List<WaterQualitySampleRecord> getQwData(DateRangeRequestParameters requestParameters, String siteId,
 			String nwisPcode, ZoneOffset zoneOffset) {
-		ResponseEntity<String> responseEntity = nwisRaClient.getWaterQualitySampleRecords(siteId,
+		ResponseEntity<String> responseEntity = nwisRaClient.getWaterQualitySampleRecords(getBearerToken(), siteId,
 				QW_COLUMN_GROUPS_TO_RETRIEVE, "true", "true", nwisPcode, nwisPcode,
 				getPartialDateString(requestParameters, zoneOffset));
 		return deseriealize(responseEntity.getBody(), WaterQualitySampleRecords.class).getRecords();
@@ -114,5 +118,16 @@ public class NwisRaService {
 			throw new RuntimeException(e);
 		}
 		return rtn;
+	}
+
+	protected String getBearerToken() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (null != authentication && !(authentication instanceof AnonymousAuthenticationToken)) {
+            OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) authentication.getDetails();
+            return "Bearer " + details.getTokenValue();
+        } else {
+			LOG.error("Requesting user not authenticated.");
+			return null;
+        }
 	}
 }
