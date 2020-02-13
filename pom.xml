@@ -3,11 +3,10 @@
   <modelVersion>4.0.0</modelVersion>
     <groupId>gov.usgs.aqcu</groupId>
     <artifactId>aqcu-framework</artifactId>
-    <version>0.0.9-SNAPSHOT</version>
+    <version>0.0.8-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
-        <wma.artifactory.url>https://cida.usgs.gov/artifactory</wma.artifactory.url>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -31,19 +30,6 @@
             <url>https://cida.usgs.gov/artifactory/wma-maven-centralized</url>
         </repository>
     </repositories>
-
-    <distributionManagement>
-        <repository>
-            <id>release</id>
-            <name>cidasdpdasartip.cr.usgs.gov-releases</name>
-            <url>${wma.artifactory.url}/aqcu-maven-releases</url>
-        </repository>
-        <snapshotRepository>
-            <id>snapshots</id>
-            <name>cidasdpdasartip.cr.usgs.gov-snapshots</name>
-            <url>${wma.artifactory.url}/aqcu-maven-snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
 
     <dependencyManagement>
         <dependencies>
