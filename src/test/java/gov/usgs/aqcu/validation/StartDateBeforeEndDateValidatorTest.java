@@ -12,7 +12,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import gov.usgs.aqcu.parameter.DateRangeRequestParameters;
-import gov.usgs.aqcu.validation.StartDateBeforeEndDateValidator;
 
 public class StartDateBeforeEndDateValidatorTest {
 

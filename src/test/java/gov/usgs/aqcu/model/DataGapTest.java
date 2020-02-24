@@ -6,10 +6,6 @@ import java.time.Instant;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
-import gov.usgs.aqcu.model.DataGap;
-import gov.usgs.aqcu.model.DataGapExtent;
-
-
 public class DataGapTest {
 
 	@Test
