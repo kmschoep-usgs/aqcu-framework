@@ -51,7 +51,7 @@ public class ReportRequestParametersValidationTest {
 		assertEquals(BASE_EMPTY_PARAMETER_ERROR_COUNT, validationErrors.size());
 
 		assertValidationResults(validationErrors,
-				"primaryTimeseriesIdentifier:must not be null",
+				"primaryTimeseriesIdentifier:must not be blank",
 				":Missing information required to build request time period. Must include at least one of: [lastMonths, waterYear, {startDate, endDate}].");
 	}
 
@@ -63,7 +63,7 @@ public class ReportRequestParametersValidationTest {
 		assertEquals(3, validationErrors.size());
 
 		assertValidationResults(validationErrors,
-				"primaryTimeseriesIdentifier:must not be null",
+				"primaryTimeseriesIdentifier:must not be blank",
 				"waterYear:must be greater than or equal to 2",
 				"lastMonths:must be greater than or equal to 1");
 	}
@@ -76,7 +76,7 @@ public class ReportRequestParametersValidationTest {
 		assertEquals(3, validationErrors.size());
 
 		assertValidationResults(validationErrors,
-				"primaryTimeseriesIdentifier:must not be null",
+				"primaryTimeseriesIdentifier:must not be blank",
 				"waterYear:must be less than or equal to 9999",
 				"lastMonths:must be less than or equal to 12");
 	}
@@ -90,7 +90,7 @@ public class ReportRequestParametersValidationTest {
 		assertEquals(2, validationErrors.size());
 
 		assertValidationResults(validationErrors,
-				"primaryTimeseriesIdentifier:must not be null",
+				"primaryTimeseriesIdentifier:must not be blank",
 				":The report period start date must be before or equal to the report period end date.");
 	}
 
