@@ -1,10 +1,10 @@
 package gov.usgs.aqcu.parameter;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 public class ReportRequestParameters extends DateRangeRequestParameters {
 
-	@NotNull
+	@NotBlank
 	private String primaryTimeseriesIdentifier;
 
 	public String getPrimaryTimeseriesIdentifier() {

@@ -8,8 +8,6 @@ import org.junit.Test;
 
 import com.aquaticinformatics.aquarius.sdk.timeseries.servicemodels.Publish.MeasurementGradeType;
 
-import gov.usgs.aqcu.model.MeasurementGrade;
-
 public class MeasurementGradeTest {
 
 	@Test

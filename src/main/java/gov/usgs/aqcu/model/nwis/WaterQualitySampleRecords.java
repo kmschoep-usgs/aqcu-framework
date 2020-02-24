@@ -4,8 +4,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import gov.usgs.aqcu.model.nwis.WaterQualitySampleRecord;
-
 /**
  * Simple wrapper to make deserialization of NWIS-RA responses easier
  * 
