@@ -26,13 +26,13 @@
   
     <distributionManagement>
         <repository>
-            <id>release</id>
-            <name>maven-releases</name>
+            <id>wma-maven-releases</id>
+            <name>wma-maven-releases</name>
             <url>${wma.artifactory.url}/wma-maven-releases</url>
         </repository>
         <snapshotRepository>
-            <id>snapshots</id>
-            <name>maven-snapshots</name>
+            <id>wma-maven-snapshots</id>
+            <name>wma-maven-snapshots</name>
             <url>${wma.artifactory.url}/wma-maven-snapshots</url>
         </snapshotRepository>
     </distributionManagement>
